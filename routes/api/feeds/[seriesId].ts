@@ -4,12 +4,12 @@ import { HandlerContext } from "$fresh/server.ts";
 import { serialize, tag, declaration } from "https://deno.land/x/serializexml@v0.3.2/mod.ts";
 
 function toItemTag(episode: Episode) {
-    console.log(episode.squareImage.at(-1).url)
+    const description = episode.titles.description || episode.titles.subtitle;
     return tag("item", [
         tag("title", episode.titles.title),
         tag("link", episode.url),
-        tag("description", episode.titles.subtitle),
-        tag("itunes:summary", episode.titles.subtitle),
+        tag("description", description),
+        tag("itunes:summary", description),
         tag("guid", episode.id, [["isPermaLink", "false"]]),
         tag("pubDate", episode.date),
         tag("enclosure", "", [
@@ -40,6 +40,9 @@ async function buildFeed(seriesId: any) {
                         serie.subtitle
                     ),
                     tag("ttl", "60"), //60 minutes
+                    tag("itunes:image", "", [
+                        ["href", serie.image.url],
+                    ]),
                     tag("image", [
                         tag("url", serie.image.uri),
                         tag("title", serie.title),

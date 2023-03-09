@@ -17,6 +17,7 @@ export type Episode = {
     titles: {
         title: string,
         description: string,
+        subtitle: string,
     },
     durationInSeconds: number,
     date: string,
