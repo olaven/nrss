@@ -7,7 +7,7 @@ export function SerieCard(props: { serie: Serie }) {
         <p className="text-2xl">{props.serie.description}</p>
         <img src={props.serie.images[0].uri} />
         <p>
-            Feed: {location.hostname}{`/api/feeds/${props.serie.seriesId}`}
+            Feed: https://{location.hostname}{`/api/feeds/${props.serie.seriesId}`}
         </p>
     </div >;
 }
