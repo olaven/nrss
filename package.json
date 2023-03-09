@@ -1,0 +1,10 @@
+{
+  "name": "nrss",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "olaven <olav@sundfoer.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript-deno-plugin": "^1.31.0"
+  }
+}
