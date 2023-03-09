@@ -44,7 +44,7 @@ async function buildFeed(seriesId: any) {
                         ["href", serie.image.url],
                     ]),
                     tag("image", [
-                        tag("url", serie.image.uri),
+                        tag("url", serie.image.url),
                         tag("title", serie.title),
                     ]),
                     ...serie.episodes.map(toItemTag),
