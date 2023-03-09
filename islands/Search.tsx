@@ -10,9 +10,9 @@ export default function Search() {
     const [query, setQuery] = useState<string>("");
     const [result, setResult] = useState<Serie[]>([]);
 
-    const onSearch = async (event) => {
+    const onSearch = async (event: any) => {
 
-        const [status, response] = await post("/api/search", {
+        const [status, response] = await post<any>("/api/search", {
             query
         });
 
@@ -25,7 +25,7 @@ export default function Search() {
                 placeholder="NRK-podcast"
                 className="border-2"
                 value={query}
-                onInput={(event) => { setQuery(event.target.value) }} />
+                onInput={(event: any) => { setQuery(event.target.value) }} />
             <button
                 className="my-2 bg-gray-100"
                 onClick={onSearch}>Søk</button>

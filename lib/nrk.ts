@@ -25,7 +25,7 @@ export type Episode = {
 async function withDownloadLink(withoutUrl: Omit<Episode, "url">) {
 
     // getting stream link
-    const [playbackStatus, playbackResponse] = await get(`https://psapi.nrk.no/playback/manifest/podcast/${withoutUrl.episodeId}`)
+    const [playbackStatus, playbackResponse] = await get<any>(`https://psapi.nrk.no/playback/manifest/podcast/${withoutUrl.episodeId}`)
 
     if (playbackStatus === OK) {
 
@@ -40,7 +40,7 @@ async function withDownloadLink(withoutUrl: Omit<Episode, "url">) {
 
 export const nrkRadio = {
     search: async (query: string): Promise<Serie[]> => {
-        const [status, response] = await get(`https://psapi.nrk.no/radio/search/search?q=${query}`);
+        const [status, response] = await get<any>(`https://psapi.nrk.no/radio/search/search?q=${query}`);
         if (status === OK) {
             const series = response.results.series.results
             return series as Serie[];
@@ -54,8 +54,8 @@ export const nrkRadio = {
             [episodeStatus, episodeResponse],
             [seriesStatus, serieResponse],
         ] = await Promise.all([
-            get(`https://psapi.nrk.no/radio/catalog/podcast/${seriesId}/episodes`),
-            get(`https://psapi.nrk.no/radio/catalog/podcast/${seriesId}`)
+            get<any>(`https://psapi.nrk.no/radio/catalog/podcast/${seriesId}/episodes`),
+            get<any>(`https://psapi.nrk.no/radio/catalog/podcast/${seriesId}`)
         ]);
 
 

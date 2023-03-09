@@ -3,23 +3,23 @@ import { HandlerContext } from "$fresh/server.ts";
 
 import { serialize, tag, declaration } from "https://deno.land/x/serializexml@v0.3.2/mod.ts";
 
-function toItemTag(episode: Episode): string {
+function toItemTag(episode: Episode) {
     return tag("item", [
-        tag("title", episode.title),
+        tag("title", episode.titles.title),
         tag("link", episode.url),
-        tag("description", episode.description),
-        tag("itunes:summary", episode.description),
-        tag("guid", episode.id, ["isPermaLink", "false"]),
+        tag("description", episode.titles.description),
+        tag("itunes:summary", episode.titles.description),
+        tag("guid", episode.id, [["isPermaLink", "false"]]),
         tag("pubDate", episode.date),
         tag("enclosure", "", [
             ["url", episode.url],
-            ["length", episode.durationInSeconds],
+            ["length", episode.durationInSeconds.toString()],
             ["type", "audio/mpeg3"],
         ]),
     ])
 }
 
-async function buildFeed(seriesId) {
+async function buildFeed(seriesId: any) {
     const serie = await nrkRadio.getSerieData(seriesId)
 
 
