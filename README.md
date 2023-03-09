@@ -1,11 +1,2 @@
-# fresh project
+# NRSS - RSS Feeds for NRK sin podcaster  
 
-### Usage
-
-Start the project:
-
-```
-deno task start
-```
-
-This will watch the project directory and restart as necessary.
