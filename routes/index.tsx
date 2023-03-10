@@ -13,7 +13,6 @@ interface HandlerData {
 export const handler: Handlers<HandlerData> = {
     async GET(request, ctx) {
         const url = new URL(request.url);
-        console.log(url)
         const query = url.searchParams.get("query");
         let result: Serie[] | undefined;
         if (query) {
