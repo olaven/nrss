@@ -2,11 +2,11 @@ import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import Search from "../components/Search.tsx"
 import { SerieCard } from "../components/SeriesCard.tsx";
-import { nrkRadio, Serie } from "../lib/nrk.ts";
+import { nrkRadio, SearchResult, SearchResultList, Serie } from "../lib/nrk.ts";
 
 interface HandlerData {
     query: string;
-    result?: Serie[];
+    result?: SearchResultList;
     origin: string;
 }
 
@@ -14,7 +14,7 @@ export const handler: Handlers<HandlerData> = {
     async GET(request, ctx) {
         const url = new URL(request.url);
         const query = url.searchParams.get("query");
-        let result: Serie[] | undefined;
+        let result: SearchResultList | undefined;
         if (query) {
             result = await nrkRadio.search(query);
         }
