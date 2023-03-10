@@ -79,5 +79,3 @@ export const nrkRadio = {
     }
 }
 
-const [dynga] = await nrkRadio.search("Dynga");
-const info = await nrkRadio.getSerieData(dynga.seriesId);
