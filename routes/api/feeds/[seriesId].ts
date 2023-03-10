@@ -4,11 +4,12 @@ import { HandlerContext } from "$fresh/server.ts";
 import { serialize, tag, declaration } from "https://deno.land/x/serializexml@v0.3.2/mod.ts";
 
 function toItemTag(episode: Episode) {
+    const description = episode.titles.description || episode.titles.subtitle;
     return tag("item", [
         tag("title", episode.titles.title),
         tag("link", episode.url),
-        tag("description", episode.titles.description),
-        tag("itunes:summary", episode.titles.description),
+        tag("description", description),
+        tag("itunes:summary", description),
         tag("guid", episode.id, [["isPermaLink", "false"]]),
         tag("pubDate", episode.date),
         tag("enclosure", "", [
@@ -21,7 +22,6 @@ function toItemTag(episode: Episode) {
 
 async function buildFeed(seriesId: any) {
     const serie = await nrkRadio.getSerieData(seriesId)
-
 
     // Quickly adapted from https://raw.githubusercontent.com/olaven/paperpod/1cde9abd3174b26e126aa74fc5a3b63fd078c0fd/packages/converter/src/rss.ts
     return serialize(
@@ -40,8 +40,11 @@ async function buildFeed(seriesId: any) {
                         serie.subtitle
                     ),
                     tag("ttl", "60"), //60 minutes
+                    tag("itunes:image", "", [
+                        ["href", serie.image.url],
+                    ]),
                     tag("image", [
-                        tag("url", serie.image.uri),
+                        tag("url", serie.image.url),
                         tag("title", serie.title),
                     ]),
                     ...serie.episodes.map(toItemTag),
