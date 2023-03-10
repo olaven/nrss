@@ -20,7 +20,7 @@ export const handler: Handlers<HandlerData> = {
         }
         return ctx.render({ query: query || "", result, origin: url.origin });
     },
-  };
+};
 
 export default function Home({ data }: PageProps<HandlerData>) {
     return (
@@ -29,10 +29,13 @@ export default function Home({ data }: PageProps<HandlerData>) {
                 <title>NRSS</title>
             </Head>
             <div className="p-4 mx-auto max-w-screen-md bg-blue-400">
-                <h1 className="text-4xl text-center">NRSS - NRK-podcast som RSS</h1>
+                <div className="text-center">
+                    <h1 className="text-2xl lg:text-3xl">NRSS</h1>
+                    <h2 className="lg:text-xl">NRK-podcast som RSS</h2>
+                </div>
                 <Search defaultValue={data.query} />
                 {data.result ? (
-                    <div className="w-1/2 mx-auto my-4">   
+                    <div className="w-full mx-auto my-4">
                         {data.result.map(result => <SerieCard serie={result} origin={data.origin} />)}
                     </div>
                 ) : null}
