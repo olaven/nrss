@@ -32,7 +32,7 @@ async function withDownloadLink(episode: OriginalEpisode): Promise<Episode> {
     if (playbackStatus === OK && playbackResponse) {
         return { ...episode, url: playbackResponse.playable.assets[0].url };
     } else {
-        throw `Error getting downloadLink for ${episode.episodeId}, serie: ${episode.originalTitle}`
+        throw `Error getting downloadLink for ${episode.episodeId}, serie: ${episode.originalTitle}. Status: ${playbackStatus}`
     }
 }
 
@@ -69,6 +69,3 @@ export const nrkRadio = {
 
     }
 }
-
-
-
