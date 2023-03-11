@@ -32,15 +32,15 @@ async function buildFeed(seriesId: string) {
             ["version", "1.0"],
             ["encoding", "UTF-8"],
         ]),
-        tag("atom:link", "", [
-            ["href", linkValue],
-            ["rel", "self"],
-            ["type", "application/rss+xml"]
-        ]),
         tag(
             "rss",
             [
                 tag("channel", [
+                    tag("atom:link", "", [
+                        ["href", `https://nrss.deno.dev/api/feeds/${seriesId}`],
+                        ["rel", "self"],
+                        ["type", "application/rss+xml"]
+                    ]),
                     tag("title", serie.titles.title),
                     tag("link", linkValue),
                     tag("itunes:author", "NRK"),
