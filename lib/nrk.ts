@@ -1,6 +1,6 @@
 import { get, OK } from "https://deno.land/x/kall@v0.1.0/mod.ts";
-import {components as searchComponents} from './nrk-search.ts';
-import {components as catalogComponents} from './nrk-catalog.ts';
+import { components as searchComponents } from './nrk-search.ts';
+import { components as catalogComponents } from './nrk-catalog.ts';
 
 
 type ArrayElement<A> = A extends readonly (infer T)[] ? T : never
@@ -28,16 +28,17 @@ interface Manifest {
 async function withDownloadLink(episode: OriginalEpisode): Promise<Episode> {
     // getting stream link
     const [playbackStatus, playbackResponse] = await get<Manifest>(`https://psapi.nrk.no/playback/manifest/podcast/${episode.episodeId}`)
+
     if (playbackStatus === OK && playbackResponse) {
-        return {...episode, url: playbackResponse.playable.assets[0].url};
+        return { ...episode, url: playbackResponse.playable.assets[0].url };
     } else {
-        throw `Error getting downloadLink for ${episode.episodeId}`
+        throw `Error getting downloadLink for ${episode.episodeId}, serie: ${episode.originalTitle}`
     }
 }
 
 export const nrkRadio = {
     search: async (query: string): Promise<SearchResultList> => {
-        
+
         const [status, response] = await get<searchComponents["schemas"]["searchresult"]>(`https://psapi.nrk.no/radio/search/search?q=${query}`);
         if (status === OK && response) {
             return response.results.series?.results;
@@ -68,4 +69,6 @@ export const nrkRadio = {
 
     }
 }
+
+
 
