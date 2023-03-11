@@ -24,6 +24,7 @@ function toItemTag(episode: Episode) {
 async function buildFeed(seriesId: string) {
     const serie = await nrkRadio.getSerieData(seriesId)
     const imageUrl = serie.squareImage.at(-1)?.url;
+    const linkValue = `https://radio.nrk.no/podkast/${serie.id}`;
 
     // Quickly adapted from https://raw.githubusercontent.com/olaven/paperpod/1cde9abd3174b26e126aa74fc5a3b63fd078c0fd/packages/converter/src/rss.ts
     return serialize(
@@ -31,16 +32,21 @@ async function buildFeed(seriesId: string) {
             ["version", "1.0"],
             ["encoding", "UTF-8"],
         ]),
+        tag("atom:link", "", [
+            ["href", linkValue],
+            ["rel", "self"],
+            ["type", "application/rss+xml"]
+        ]),
         tag(
             "rss",
             [
                 tag("channel", [
                     tag("title", serie.titles.title),
-                    tag("link", `https://radio.nrk.no/podkast/${serie.id}`),
+                    tag("link", linkValue),
                     tag("itunes:author", "NRK"),
                     tag(
                         "description",
-                        serie.titles.subtitle || ""
+                        serie.titles.subtitle || ""
                     ),
                     tag("ttl", "60"), //60 minutes
                     ...(imageUrl ? [
@@ -50,6 +56,7 @@ async function buildFeed(seriesId: string) {
                         tag("image", [
                             tag("url", imageUrl),
                             tag("title", serie.titles.title),
+                            tag("link", linkValue),
                         ])
                     ] : []),
                     ...serie.episodes.map(toItemTag),
@@ -70,7 +77,7 @@ export const handler = async (req: Request, _ctx: HandlerContext): Promise<Respo
 
     return new Response(feedContent, {
         headers: {
-            "Content-Type": "application/xml"
+            "Content-Type": "application/rss+xml"
         }
     });
 };
