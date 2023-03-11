@@ -1,17 +1,18 @@
-import { nrkRadio, Serie, Episode } from "../../../lib/nrk.ts"
+import { nrkRadio, Episode } from "../../../lib/nrk.ts"
 import { HandlerContext } from "$fresh/server.ts";
 
 import { serialize, tag, declaration } from "https://deno.land/x/serializexml@v0.3.2/mod.ts";
 
 function toItemTag(episode: Episode) {
-    const description = episode.titles.description || episode.titles.subtitle;
+    const description = episode.titles.subtitle || "";
     return tag("item", [
         tag("title", episode.titles.title),
         tag("link", episode.url),
         tag("description", description),
         tag("itunes:summary", description),
         tag("guid", episode.id, [["isPermaLink", "false"]]),
-        tag("pubDate", episode.date),
+        tag("pubDate", new Date(episode.date).toUTCString()),
+        tag("itunes:duration", episode.durationInSeconds.toString()),
         tag("enclosure", "", [
             ["url", episode.url],
             ["length", episode.durationInSeconds.toString()],
@@ -20,8 +21,9 @@ function toItemTag(episode: Episode) {
     ])
 }
 
-async function buildFeed(seriesId: any) {
+async function buildFeed(seriesId: string) {
     const serie = await nrkRadio.getSerieData(seriesId)
+    const imageUrl = serie.squareImage.at(-1)?.url;
 
     // Quickly adapted from https://raw.githubusercontent.com/olaven/paperpod/1cde9abd3174b26e126aa74fc5a3b63fd078c0fd/packages/converter/src/rss.ts
     return serialize(
@@ -33,20 +35,23 @@ async function buildFeed(seriesId: any) {
             "rss",
             [
                 tag("channel", [
-                    tag("title", serie.title),
+                    tag("title", serie.titles.title),
                     tag("link", `https://radio.nrk.no/podkast/${serie.id}`),
+                    tag("itunes:author", "NRK"),
                     tag(
                         "description",
-                        serie.subtitle
+                        serie.titles.subtitle || ""
                     ),
                     tag("ttl", "60"), //60 minutes
-                    tag("itunes:image", "", [
-                        ["href", serie.image.url],
-                    ]),
-                    tag("image", [
-                        tag("url", serie.image.url),
-                        tag("title", serie.title),
-                    ]),
+                    ...(imageUrl ? [
+                        tag("itunes:image", "", [
+                            ["href", imageUrl],
+                        ]),
+                        tag("image", [
+                            tag("url", imageUrl),
+                            tag("title", serie.titles.title),
+                        ])
+                    ] : []),
                     ...serie.episodes.map(toItemTag),
                 ]),
             ],

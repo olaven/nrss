@@ -4,15 +4,13 @@
 
 import config from "./deno.json" assert { type: "json" };
 import * as $0 from "./routes/api/feeds/[seriesId].ts";
-import * as $1 from "./routes/api/search.ts";
-import * as $2 from "./routes/index.tsx";
+import * as $1 from "./routes/index.tsx";
 import * as $$0 from "./islands/CopyButton.tsx";
 
 const manifest = {
   routes: {
     "./routes/api/feeds/[seriesId].ts": $0,
-    "./routes/api/search.ts": $1,
-    "./routes/index.tsx": $2,
+    "./routes/index.tsx": $1,
   },
   islands: {
     "./islands/CopyButton.tsx": $$0,
