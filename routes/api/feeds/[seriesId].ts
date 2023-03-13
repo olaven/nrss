@@ -1,7 +1,7 @@
 import { nrkRadio, Episode } from "../../../lib/nrk.ts"
 import { HandlerContext } from "$fresh/server.ts";
 
-import { serialize, tag, declaration } from "https://deno.land/x/serializexml@v0.3.2/mod.ts";
+import { serialize, tag, declaration } from "https://raw.githubusercontent.com/olaven/serialize-xml/master/mod.ts";
 
 function toItemTag(episode: Episode) {
     const description = episode.titles.subtitle || "";
