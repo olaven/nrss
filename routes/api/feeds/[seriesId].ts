@@ -1,7 +1,7 @@
 import { nrkRadio, Episode } from "../../../lib/nrk.ts"
 import { HandlerContext } from "$fresh/server.ts";
 
-import { serialize, tag, declaration } from "https://raw.githubusercontent.com/olaven/serialize-xml/master/mod.ts";
+import { serialize, tag, declaration } from "https://raw.githubusercontent.com/olaven/serialize-xml/v0.4.0/mod.ts";
 
 function toItemTag(episode: Episode) {
     const description = episode.titles.subtitle || "";
