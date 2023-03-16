@@ -39,7 +39,12 @@ async function buildFeed(seriesId: string) {
                     tag("title", serie.titles.title),
                     tag("link", linkValue),
                     tag("itunes:author", "NRK"),
-                    tag("itunes:category", "", [["text", serie.category.id]]),
+                    /* serie.category.id does not overlap with Apple's supported categories..
+                       These podcast feeds are not going to be indexed in itunes anyways, so
+                       a static, valid category is fine. The point is simply to pass third party
+                       podcast feed validation. 
+                       */
+                    tag("itunes:category", "", [["text", "Government"]]),
                     tag("itunes:owner",
                         [
                             tag("itunes:name", "NRK"),
