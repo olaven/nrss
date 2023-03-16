@@ -39,6 +39,13 @@ async function buildFeed(seriesId: string) {
                     tag("title", serie.titles.title),
                     tag("link", linkValue),
                     tag("itunes:author", "NRK"),
+                    tag("itunes:category", "", [["text", serie.category.id]]),
+                    tag("itunes:owner",
+                        [
+                            tag("itunes:name", "NRK"),
+                            tag("itunes:email", "nrkpodcast@nrk.no")
+                        ]
+                    ),
                     tag(
                         "description",
                         serie.titles.subtitle || ""
