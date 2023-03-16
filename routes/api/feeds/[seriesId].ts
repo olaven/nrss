@@ -7,7 +7,7 @@ function toItemTag(episode: Episode) {
     const description = episode.titles.subtitle || "";
     return tag("item", [
         tag("title", episode.titles.title),
-        tag("link", episode.url),
+        tag("link", episode._links.share.href),
         tag("description", description),
         tag("itunes:summary", description),
         tag("guid", episode.id, [["isPermaLink", "false"]]),
