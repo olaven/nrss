@@ -21,7 +21,7 @@ export const handler = async (req: Request, _ctx: HandlerContext): Promise<Respo
 
     return new Response(JSON.stringify(body), {
         headers: {
-            "Content-Type": "application/json+chapters"
+            "Content-Type": "application/json"
         }
     });
 };
