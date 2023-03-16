@@ -14,8 +14,12 @@ export const handler = async (req: Request, _ctx: HandlerContext): Promise<Respo
     console.log("going to get ep for ", episodeId);
     const episode = await nrkRadio.getEpisode(seriesId, episodeId);
     const chapters = toChapters(episode);
+    const body = {
+        version: "1.2.0",
+        chapters,
+    }
 
-    return new Response(JSON.stringify(chapters), {
+    return new Response(JSON.stringify(body), {
         headers: {
             "Content-Type": "application/json+chapters"
         }
