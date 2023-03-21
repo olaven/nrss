@@ -5,7 +5,6 @@ https://nrss.deno.dev/
 ## Local devlopment
 install Deno
 https://deno.land/manual/getting_started/installation
-**_NOTE:_**  The note content
 
 ### Run the application
 ``` shell
