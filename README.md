@@ -8,6 +8,6 @@ https://deno.land/manual/getting_started/installation
 
 ### Run the application
 ``` shell
-deno run main.ts
+deno task start
 ```
 Open http://localhost:8000/ to view it in the browser
