@@ -2,8 +2,10 @@ import { nrkRadio, Episode } from "../../../lib/nrk.ts"
 import { HandlerContext } from "$fresh/server.ts";
 
 import { serialize, tag, declaration } from "https://raw.githubusercontent.com/olaven/serialize-xml/v0.4.0/mod.ts";
+import { getHostName } from "../../../utils.ts";
 
-function toItemTag(episode: Episode) {
+function toItemTag(seriesId: string, episode: Episode) {
+
     const description = episode.titles.subtitle || "";
     return tag("item", [
         tag("title", episode.titles.title),
@@ -13,6 +15,10 @@ function toItemTag(episode: Episode) {
         tag("guid", episode.id, [["isPermaLink", "false"]]),
         tag("pubDate", new Date(episode.date).toUTCString()),
         tag("itunes:duration", episode.durationInSeconds.toString()),
+        tag("podcast:chapters", "", [
+            ["url", `${getHostName()}/api/feeds/${seriesId}/${episode.episodeId}/chapters`],
+            ["type", "application/json+chapters"],
+        ]),
         tag("enclosure", "", [
             ["url", episode.url],
             ["length", episode.durationInSeconds.toString()],
@@ -66,13 +72,14 @@ async function buildFeed(seriesId: string) {
                             tag("link", linkValue),
                         ])
                     ] : []),
-                    ...serie.episodes.map(toItemTag),
+                    ...serie.episodes.map(episode => toItemTag(seriesId, episode)),
                 ]),
             ],
             [
                 ["version", "2.0"],
                 ["xmlns:itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd"],
                 ["xmlns:content", "http://purl.org/rss/1.0/modules/content/"],
+                ["xmlns:podcast", "https://podcastindex.org/namespace/1.0"],
             ]
         )
     );
@@ -84,7 +91,7 @@ export const handler = async (req: Request, _ctx: HandlerContext): Promise<Respo
 
     return new Response(feedContent, {
         headers: {
-            "Content-Type": "application/rss+xml"
+            "Content-Type": "application/xml"
         }
     });
 };
