@@ -7,12 +7,10 @@ function toChapters(episode: OriginalEpisode) {
     startTime: toSeconds(parse(indexPoint.startPoint)),
   }));
 }
-export const handler = async (
-  req: Request,
-  _ctx: HandlerContext,
-): Promise<Response> => {
-  const seriesId = _ctx.params.seriesId;
-  const episodeId = _ctx.params.episodeId;
+
+export const handler = async (_req: Request, ctx: HandlerContext): Promise<Response> => {
+  const seriesId = ctx.params.seriesId;
+  const episodeId = ctx.params.episodeId;
 
   console.log("going to get ep for ", episodeId);
   const episode = await nrkRadio.getEpisode(seriesId, episodeId);
