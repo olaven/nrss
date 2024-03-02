@@ -1,13 +1,13 @@
-import { Episode, nrkRadio } from "../../../lib/nrk.ts";
+import { nrkRadio, OriginalEpisode } from "../../../lib/nrk.ts";
 import { FreshContext } from "$fresh/server.ts";
 import { declaration, serialize, tag } from "https://raw.githubusercontent.com/olaven/serialize-xml/v0.4.0/mod.ts";
 import { getHostName } from "../../../utils.ts";
 
-function toItemTag(seriesId: string, episode: Episode) {
+function toItemTag(seriesId: string, episode: OriginalEpisode) {
   const description = episode.titles.subtitle || "";
   return tag("item", [
     tag("title", episode.titles.title),
-    tag("link", episode._links.share.href),
+    tag("link", episode._links.share?.href),
     tag("description", description),
     tag("itunes:summary", description),
     tag("guid", episode.id, [["isPermaLink", "false"]]),
