@@ -4,8 +4,8 @@ import { components as catalogComponents } from "./nrk-catalog.ts";
 
 type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
 export type Serie = catalogComponents["schemas"]["SeriesViewModel"];
-type OriginalEpisode = catalogComponents["schemas"]["EpisodeHalResource"];
-export type OriginalEpisode = OriginalEpisode & { url: string };
+type _OriginalEpisode = catalogComponents["schemas"]["EpisodeHalResource"];
+export type OriginalEpisode = _OriginalEpisode & { url: string };
 export type SearchResultList = searchComponents["schemas"]["seriesResult"]["results"];
 export type SearchResult = ArrayElement<SearchResultList> & {
   description?: string;
@@ -27,7 +27,7 @@ interface Manifest {
 }
 
 async function withDownloadLink(
-  episode: OriginalEpisode,
+  episode: _OriginalEpisode,
 ): Promise<OriginalEpisode> {
   // getting stream link
   const [playbackStatus, playbackResponse] = await get<Manifest>(
@@ -80,10 +80,7 @@ export const nrkRadio = {
       throw `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`;
     }
   },
-  getEpisode: async (
-    seriesId: string,
-    episodeId: string,
-  ): Promise<OriginalEpisode> => {
+  getEpisode: async (seriesId: string, episodeId: string): Promise<OriginalEpisode | null> => {
     const url = `https://psapi.nrk.no/radio/catalog/podcast/${seriesId}/episodes/${episodeId}`;
     const [status, episode] = await get<OriginalEpisode>(url);
     if (status !== OK) {
