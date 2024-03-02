@@ -508,7 +508,9 @@ export interface components {
     /** @description Aggregated info for clips */
     ExtraMaterialClipsHalEmbedded: {
       metadata?: {
-        displayAspectRatio: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["DisplayAspectRatio"];
+        displayAspectRatio: external[
+          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+        ]["components"]["schemas"]["DisplayAspectRatio"];
         /**
          * @description Clip length. The string is formatted as https://en.wikipedia.org/wiki/ISO_8601#Durations
          * @example PT2M0S
@@ -517,7 +519,9 @@ export interface components {
         id: string;
         /** @enum {undefined} */
         playability: "nonPlayable" | "playable";
-        preplay: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PreplayVm"];
+        preplay: external[
+          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+        ]["components"]["schemas"]["PreplayVm"];
         /** @description Link to full metadata */
         _links: {
           self: components["schemas"]["HalLink"];
@@ -886,36 +890,56 @@ export interface external {
   "https://psapi.nrk.no/documentation/openapi/playback/openapi.json": {
     paths: {
       "/playback/debug": {
-        get: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["operations"]["getPlaybackDebug"];
+        get: external[
+          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+        ]["operations"]["getPlaybackDebug"];
       };
       "/playback/dnslist": {
-        get: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["operations"]["getPlaybackDnsList"];
+        get: external[
+          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+        ]["operations"]["getPlaybackDnsList"];
       };
       "/playback/manifest/{id}": {
         /** This endpoint is just for clients that doesn't know its context */
-        get: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["operations"]["getPlaybackManifestRedirect"];
+        get: external[
+          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+        ]["operations"]["getPlaybackManifestRedirect"];
       };
       "/playback/manifest/program/{programId}": {
-        get: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["operations"]["getPlaybackProgramManifest"];
+        get: external[
+          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+        ]["operations"]["getPlaybackProgramManifest"];
       };
       "/playback/manifest/channel/{channelId}": {
-        get: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["operations"]["getPlaybackChannelManifest"];
+        get: external[
+          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+        ]["operations"]["getPlaybackChannelManifest"];
       };
       "/playback/manifest/clip/{clipId}": {
-        get: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["operations"]["getPlaybackClipManifest"];
+        get: external[
+          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+        ]["operations"]["getPlaybackClipManifest"];
       };
       "/playback/metadata/{id}": {
         /** This endpoint is just for clients that doesn't know its context */
-        get: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["operations"]["getPlaybackMetadataRedirect"];
+        get: external[
+          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+        ]["operations"]["getPlaybackMetadataRedirect"];
       };
       "/playback/metadata/program/{programId}": {
-        get: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["operations"]["getPlaybackProgramMetadata"];
+        get: external[
+          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+        ]["operations"]["getPlaybackProgramMetadata"];
       };
       "/playback/metadata/channel/{channelId}": {
-        get: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["operations"]["getPlaybackChannelMetadata"];
+        get: external[
+          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+        ]["operations"]["getPlaybackChannelMetadata"];
       };
       "/playback/metadata/clip/{clipId}": {
-        get: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["operations"]["getPlaybackClipMetadata"];
+        get: external[
+          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+        ]["operations"]["getPlaybackClipMetadata"];
       };
     };
     components: {
@@ -935,8 +959,12 @@ export interface external {
               href: string;
             };
           };
-          playbackData: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlaybackDataVm"];
-          locationData: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["LocationDataVm"];
+          playbackData: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlaybackDataVm"];
+          locationData: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["LocationDataVm"];
         };
         PlaybackDataVm: {
           maxBitrate: number;
@@ -951,9 +979,15 @@ export interface external {
           isBeta: boolean;
           originalUa: string;
           wurflId: string | null;
-          distributionFormat: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["DistributionFormat"];
-          deviceGroupName: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["DeviceGroupName"];
-          playerPlatform: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayerPlatform"];
+          distributionFormat: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["DistributionFormat"];
+          deviceGroupName: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["DeviceGroupName"];
+          playerPlatform: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayerPlatform"];
           customManifestParameters: (
             | "AudioOnly"
             | "DolbyOnly"
@@ -965,7 +999,9 @@ export interface external {
             | "NoSignalDiscontinuities"
             | "SignalDiscontinuities"
           )[];
-          subtitlesDistribution: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["SubtitlesDistribution"];
+          subtitlesDistribution: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["SubtitlesDistribution"];
         };
         /** @enum {string} */
         DistributionFormat:
@@ -975,7 +1011,12 @@ export interface external {
           | "ProgressiveDownload"
           | "ProgressiveMp3";
         /** @enum {string} */
-        DeviceGroupName: "Desktop" | "Mobile" | "SetTopUnit" | "Tablet" | "Tv";
+        DeviceGroupName:
+          | "Desktop"
+          | "Mobile"
+          | "SetTopUnit"
+          | "Tablet"
+          | "Tv";
         /** @enum {string} */
         PlayerPlatform:
           | "Altibox"
@@ -1021,28 +1062,51 @@ export interface external {
           forwardedFor: string;
           realIp: string;
         };
-        ManifestResponse: Partial<
-          external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableManifest"]
-        > &
-          Partial<
-            external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["NonPlayableManifest"]
+        ManifestResponse:
+          & Partial<
+            external[
+              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+            ]["components"]["schemas"]["PlayableManifest"]
+          >
+          & Partial<
+            external[
+              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+            ]["components"]["schemas"]["NonPlayableManifest"]
           >;
         PlayableManifest: {
           /** @enum {string} */
           playability: "playable";
-          playable: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableElementVm"];
+          playable: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayableElementVm"];
           statistics: {
-            scores: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ScoresStatisticsVm"];
-            ga: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["GoogleAnalyticsVm"];
-            conviva: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ConvivaStatisticsVm"];
-            luna: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["LunaStatisticsVm"];
+            scores: external[
+              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+            ]["components"]["schemas"]["ScoresStatisticsVm"];
+            ga: external[
+              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+            ]["components"]["schemas"]["GoogleAnalyticsVm"];
+            conviva: external[
+              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+            ]["components"]["schemas"]["ConvivaStatisticsVm"];
+            luna: external[
+              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+            ]["components"]["schemas"]["LunaStatisticsVm"];
           };
           nonPlayable: unknown | null;
           id: string;
-          streamingMode: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableStreamingMode"];
-          availability: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["AvailabilityVm"];
-          displayAspectRatio: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["DisplayAspectRatio"];
-          sourceMedium: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableSourceMedium"];
+          streamingMode: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayableStreamingMode"];
+          availability: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["AvailabilityVm"];
+          displayAspectRatio: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["DisplayAspectRatio"];
+          sourceMedium: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayableSourceMedium"];
           _links: {
             self: {
               href: string;
@@ -1063,12 +1127,22 @@ export interface external {
             ga: unknown | null;
             luna: unknown | null;
           };
-          nonPlayable: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["NonPlayableElementVm"];
+          nonPlayable: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["NonPlayableElementVm"];
           id: string;
-          streamingMode: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableStreamingMode"];
-          availability: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["AvailabilityVm"];
-          displayAspectRatio: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["DisplayAspectRatio"];
-          sourceMedium: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableSourceMedium"];
+          streamingMode: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayableStreamingMode"];
+          availability: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["AvailabilityVm"];
+          displayAspectRatio: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["DisplayAspectRatio"];
+          sourceMedium: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayableSourceMedium"];
           _links: {
             self: {
               href: string;
@@ -1084,19 +1158,31 @@ export interface external {
           endSequenceStartTime: string | null;
           duration: string | null;
           /** @description List of mediaAssets */
-          assets: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["MediaUrlVm"][];
+          assets: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["MediaUrlVm"][];
           /** @description Livebuffer if element is live */
-          liveBuffer: Partial<
-            external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["LiveBufferVm"]
-          > | null;
+          liveBuffer:
+            | Partial<
+              external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["LiveBufferVm"]
+            >
+            | null;
           /** @description List of subtitles */
-          subtitles: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["SubtitlesVm"][];
+          subtitles: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["SubtitlesVm"][];
         };
         MediaUrlVm: {
           /** @description The media URL itself. */
           url: string;
-          format: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableFormat"];
-          mimeType: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableMimeType"];
+          format: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayableFormat"];
+          mimeType: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayableMimeType"];
           /** @description True if program is marked as HDSecure, false otherwise */
           encrypted: boolean;
         };
@@ -1120,7 +1206,9 @@ export interface external {
           bufferStartTime: string | null;
           /** @description Live buffer length */
           bufferDuration: string;
-          bufferType: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["LiveBufferType"];
+          bufferType: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["LiveBufferType"];
         };
         /**
          * @description Type of liveBuffer
@@ -1128,9 +1216,15 @@ export interface external {
          */
         LiveBufferType: "fixed" | "growing" | "none" | "sliding";
         SubtitlesVm: {
-          type: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["SubtitleType"];
-          language: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["SubtitleLanguage"];
-          label: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["SubtitleLabel"];
+          type: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["SubtitleType"];
+          language: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["SubtitleLanguage"];
+          label: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["SubtitleLabel"];
           defaultOn: boolean;
           webVtt: string;
         };
@@ -1139,7 +1233,10 @@ export interface external {
         /** @enum {string} */
         SubtitleLanguage: "en" | "nb";
         /** @enum {string} */
-        SubtitleLabel: "English" | "Norsk tekst" | "Tekstet for hørselshemmede";
+        SubtitleLabel:
+          | "English"
+          | "Norsk tekst"
+          | "Tekstet for hørselshemmede";
         ScoresStatisticsVm: {
           springStreamSite: string;
           springStreamStream: string;
@@ -1178,14 +1275,18 @@ export interface external {
            * When duration is unknown, eg channels: -1
            */
           duration: number;
-          streamType: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ConvivaStreamType"];
+          streamType: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["ConvivaStreamType"];
           /**
            * @description The URL from where this video content will be downloaded. For
            * manifest-based streaming protocols, it should be the URL of the top-level
            * manifest.
            */
           streamUrl: string;
-          custom: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ConvivaCustomProperties"];
+          custom: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["ConvivaCustomProperties"];
         };
         /** @enum {string} */
         ConvivaStreamType: "LIVE" | "VOD";
@@ -1221,7 +1322,9 @@ export interface external {
            * Example: underholdning
            */
           category: string;
-          mediaType: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ConvivaMediaType"];
+          mediaType: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["ConvivaMediaType"];
           /**
            * @description Name of selected CDN
            * Example: Telenor-Cdn
@@ -1239,7 +1342,9 @@ export interface external {
            * Example: tv.nrk.no, nrk.no, nrksuper.no
            */
           serviceName: string;
-          contentType: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ConvivaContentType"];
+          contentType: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["ConvivaContentType"];
         };
         /**
          * @description MediaType for current content
@@ -1257,8 +1362,12 @@ export interface external {
           | "Podcast"
           | "Program";
         LunaStatisticsVm: {
-          config: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["LunaConfig"];
-          data: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["LunaPayload"];
+          config: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["LunaConfig"];
+          data: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["LunaPayload"];
         };
         LunaConfig: {
           beacon: string;
@@ -1288,27 +1397,37 @@ export interface external {
            * @description Only applicable for on-demand media elements. Will be null for live media
            * elements.
            */
-          onDemand: Partial<
-            external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["OnDemandUsageRights"]
-          > | null;
+          onDemand:
+            | Partial<
+              external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["OnDemandUsageRights"]
+            >
+            | null;
           /**
            * @description Only applicable for live media elements. Will be null for on-demand media
            * elements.
            */
           live:
-            | (Partial<{
+            | (
+              & Partial<{
                 /** @enum {string} */
                 type: "channel";
                 /** @enum {boolean} */
                 isOngoing: true;
                 transmissionInterval: unknown | null;
-              }> &
-                Partial<{
-                  /** @enum {string} */
-                  type: "transmission";
-                  isOngoing: boolean;
-                  transmissionInterval: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["LiveTransmissionIntervalVm"];
-                }>)
+              }>
+              & Partial<{
+                /** @enum {string} */
+                type: "transmission";
+                isOngoing: boolean;
+                transmissionInterval: external[
+                  "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+                ]["components"]["schemas"][
+                  "LiveTransmissionIntervalVm"
+                ];
+              }>
+            )
             | null;
           externalEmbeddingAllowed: boolean;
         };
@@ -1326,8 +1445,12 @@ export interface external {
         /** @enum {string} */
         PlayableSourceMedium: "audio" | "video";
         NonPlayableElementVm: {
-          reason: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["NonPlayableReason"];
-          messageType: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["NonPlayableMessageType"];
+          reason: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["NonPlayableReason"];
+          messageType: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["NonPlayableMessageType"];
           /**
            * @description Standard message for end user describing why the media element is not
            * playable.
@@ -1389,7 +1512,9 @@ export interface external {
         /** @description Image to show before play */
         PosterVm: {
           /** @description List of images in different sizes */
-          images: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PosterImageVm"][];
+          images: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PosterImageVm"][];
         };
         /** @description Title to show before play */
         TitlesVm: {
@@ -1397,12 +1522,18 @@ export interface external {
           subtitle: string;
         };
         PreplayVm: {
-          titles: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["TitlesVm"];
+          titles: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["TitlesVm"];
           /** @description Description to show before play */
           description: string;
-          poster: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PosterVm"];
+          poster: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PosterVm"];
           /** @description List of index points */
-          indexPoints: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["IndexPointVm"][];
+          indexPoints: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["IndexPointVm"][];
         };
         LegalAgeRating: {
           code: string;
@@ -1412,7 +1543,9 @@ export interface external {
         LegalAgeBodyRated: {
           /** @enum {string} */
           status: "rated";
-          rating: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["LegalAgeRating"];
+          rating: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["LegalAgeRating"];
         };
         LegalAgeBodyExempt: {
           /** @enum {string} */
@@ -1420,11 +1553,16 @@ export interface external {
         };
         LegalAgeVm: {
           legalReference: string;
-          body: Partial<
-            external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["LegalAgeBodyExempt"]
-          > &
-            Partial<
-              external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["LegalAgeBodyRated"]
+          body:
+            & Partial<
+              external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["LegalAgeBodyExempt"]
+            >
+            & Partial<
+              external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["LegalAgeBodyRated"]
             >;
         };
         PlayableMetadataVm: {
@@ -1434,33 +1572,63 @@ export interface external {
         PlayableMetadata: {
           /** @enum {string} */
           playability: "playable";
-          playable: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableMetadataVm"];
+          playable: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayableMetadataVm"];
           nonPlayable: unknown | null;
           id: string;
-          streamingMode: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableStreamingMode"];
+          streamingMode: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayableStreamingMode"];
           duration: string | null;
-          availability: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["AvailabilityVm"];
-          legalAge: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["LegalAgeVm"];
-          preplay: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PreplayVm"];
-          displayAspectRatio: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["DisplayAspectRatio"];
-          skipDialogInfo: Partial<
-            external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["SkipDialogInfoVm"]
-          > | null;
-          sourceMedium: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableSourceMedium"];
+          availability: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["AvailabilityVm"];
+          legalAge: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["LegalAgeVm"];
+          preplay: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PreplayVm"];
+          displayAspectRatio: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["DisplayAspectRatio"];
+          skipDialogInfo:
+            | Partial<
+              external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["SkipDialogInfoVm"]
+            >
+            | null;
+          sourceMedium: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayableSourceMedium"];
           _links: {
             self: {
               href: string;
             };
-            manifests: Partial<
-              {
-                href: string;
-                name: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ManifestLinkName"];
-              }[]
-            > | null;
-            next: Partial<
-              external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["NextLink"]
-            > | null;
-            series?: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["SeriesLink"];
+            manifests:
+              | Partial<
+                {
+                  href: string;
+                  name: external[
+                    "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+                  ]["components"]["schemas"][
+                    "ManifestLinkName"
+                  ];
+                }[]
+              >
+              | null;
+            next:
+              | Partial<
+                external[
+                  "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+                ]["components"]["schemas"]["NextLink"]
+              >
+              | null;
+            series?: external[
+              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+            ]["components"]["schemas"]["SeriesLink"];
             progress?: {
               href: string;
               /** @enum {boolean} */
@@ -1468,50 +1636,90 @@ export interface external {
             };
           };
           _embedded: {
-            manifests: Partial<
-              {
-                id: string;
-                availabilityLabel: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["AvailabilityLabel"];
-                _links: {
-                  self: {
-                    href: string;
-                    name: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ManifestLinkName"];
+            manifests:
+              | Partial<
+                {
+                  id: string;
+                  availabilityLabel: external[
+                    "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+                  ]["components"]["schemas"][
+                    "AvailabilityLabel"
+                  ];
+                  _links: {
+                    self: {
+                      href: string;
+                      name: external[
+                        "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+                      ]["components"]["schemas"][
+                        "ManifestLinkName"
+                      ];
+                    };
                   };
-                };
-              }[]
-            > | null;
+                }[]
+              >
+              | null;
           };
         };
         NonPlayableMetadata: {
           /** @enum {string} */
           playability: "nonPlayable";
           playable: unknown | null;
-          nonPlayable: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["NonPlayableElementVm"];
+          nonPlayable: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["NonPlayableElementVm"];
           id: string;
-          streamingMode: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableStreamingMode"];
+          streamingMode: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayableStreamingMode"];
           duration: string | null;
-          availability: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["AvailabilityVm"];
-          legalAge: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["LegalAgeVm"];
-          preplay: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PreplayVm"];
-          displayAspectRatio: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["DisplayAspectRatio"];
-          skipDialogInfo: Partial<
-            external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["SkipDialogInfoVm"]
-          > | null;
-          sourceMedium: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableSourceMedium"];
+          availability: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["AvailabilityVm"];
+          legalAge: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["LegalAgeVm"];
+          preplay: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PreplayVm"];
+          displayAspectRatio: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["DisplayAspectRatio"];
+          skipDialogInfo:
+            | Partial<
+              external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["SkipDialogInfoVm"]
+            >
+            | null;
+          sourceMedium: external[
+            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+          ]["components"]["schemas"]["PlayableSourceMedium"];
           _links: {
             self: {
               href: string;
             };
-            manifests: Partial<
-              {
-                href: string;
-                name: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ManifestLinkName"];
-              }[]
-            > | null;
-            next: Partial<
-              external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["NextLink"]
-            > | null;
-            series?: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["SeriesLink"];
+            manifests:
+              | Partial<
+                {
+                  href: string;
+                  name: external[
+                    "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+                  ]["components"]["schemas"][
+                    "ManifestLinkName"
+                  ];
+                }[]
+              >
+              | null;
+            next:
+              | Partial<
+                external[
+                  "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+                ]["components"]["schemas"]["NextLink"]
+              >
+              | null;
+            series?: external[
+              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+            ]["components"]["schemas"]["SeriesLink"];
             progress?: {
               href: string;
               /** @enum {boolean} */
@@ -1519,25 +1727,40 @@ export interface external {
             };
           };
           _embedded: {
-            manifests: Partial<
-              {
-                id: string;
-                availabilityLabel: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["AvailabilityLabel"];
-                _links: {
-                  self: {
-                    href: string;
-                    name: external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ManifestLinkName"];
+            manifests:
+              | Partial<
+                {
+                  id: string;
+                  availabilityLabel: external[
+                    "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+                  ]["components"]["schemas"][
+                    "AvailabilityLabel"
+                  ];
+                  _links: {
+                    self: {
+                      href: string;
+                      name: external[
+                        "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+                      ]["components"]["schemas"][
+                        "ManifestLinkName"
+                      ];
+                    };
                   };
-                };
-              }[]
-            > | null;
+                }[]
+              >
+              | null;
           };
         };
-        MetadataResponse: Partial<
-          external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["PlayableMetadata"]
-        > &
-          Partial<
-            external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["NonPlayableMetadata"]
+        MetadataResponse:
+          & Partial<
+            external[
+              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+            ]["components"]["schemas"]["PlayableMetadata"]
+          >
+          & Partial<
+            external[
+              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+            ]["components"]["schemas"]["NonPlayableMetadata"]
           >;
       };
     };
@@ -1547,7 +1770,9 @@ export interface external {
           /** OK */
           200: {
             content: {
-              "application/json": external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["DebugData"];
+              "application/json": external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["DebugData"];
             };
           };
         };
@@ -1557,7 +1782,9 @@ export interface external {
           /** OK */
           200: {
             content: {
-              "application/json": external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["DnsList"];
+              "application/json": external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["DnsList"];
             };
           };
         };
@@ -1593,7 +1820,9 @@ export interface external {
           /** OK */
           200: {
             content: {
-              "application/json": external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ManifestResponse"];
+              "application/json": external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["ManifestResponse"];
             };
           };
         };
@@ -1623,7 +1852,9 @@ export interface external {
           /** OK */
           200: {
             content: {
-              "application/json": external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ManifestResponse"];
+              "application/json": external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["ManifestResponse"];
             };
           };
         };
@@ -1651,7 +1882,9 @@ export interface external {
           /** OK */
           200: {
             content: {
-              "application/json": external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ManifestResponse"];
+              "application/json": external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["ManifestResponse"];
             };
           };
         };
@@ -1679,7 +1912,9 @@ export interface external {
           /** OK */
           200: {
             content: {
-              "application/json": external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["ManifestResponse"];
+              "application/json": external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["ManifestResponse"];
             };
           };
         };
@@ -1709,7 +1944,9 @@ export interface external {
           /** OK */
           200: {
             content: {
-              "application/json": external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["MetadataResponse"];
+              "application/json": external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["MetadataResponse"];
             };
           };
         };
@@ -1729,7 +1966,9 @@ export interface external {
           /** OK */
           200: {
             content: {
-              "application/json": external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["MetadataResponse"];
+              "application/json": external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["MetadataResponse"];
             };
           };
         };
@@ -1749,7 +1988,9 @@ export interface external {
           /** OK */
           200: {
             content: {
-              "application/json": external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["MetadataResponse"];
+              "application/json": external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["MetadataResponse"];
             };
           };
         };
@@ -1771,7 +2012,9 @@ export interface external {
           /** OK */
           200: {
             content: {
-              "application/json": external["https://psapi.nrk.no/documentation/openapi/playback/openapi.json"]["components"]["schemas"]["MetadataResponse"];
+              "application/json": external[
+                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
+              ]["components"]["schemas"]["MetadataResponse"];
             };
           };
         };
