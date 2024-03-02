@@ -15,6 +15,15 @@ export const handler = async (_req: Request, ctx: FreshContext): Promise<Respons
 
   console.log("going to get ep for ", episodeId);
   const episode = await nrkRadio.getEpisode(seriesId, episodeId);
+
+  if (!episode) {
+    return new Response(JSON.stringify({ message: `Episode ${episodeId} is missing` }), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      status: 500,
+    });
+  }
   const chapters = toChapters(episode);
   const body = {
     version: "1.2.0",
