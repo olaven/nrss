@@ -9,7 +9,7 @@ export default function SeriesCard(props: { serie: SearchResult; origin: string 
       <div className="mx-auto h-full w-full space-y-2">
         <h2 className="text-xl">{props.serie.title}</h2>
         <p className="text-md">{props.serie.description}</p>
-        <img src={image.uri} width={image.width} />
+        <img src={image.uri} width={image.width} alt="" />
         <code className="font-mono bg-black text-white select-all p-2">{feedUrl.toString()}</code>
         <CopyButton text={feedUrl.toString()}>
           Kopier URL
