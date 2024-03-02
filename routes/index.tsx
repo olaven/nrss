@@ -1,7 +1,7 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import Search from "../components/Search.tsx";
-import { SerieCard } from "../components/SeriesCard.tsx";
+import SeriesCard from "../components/SeriesCard.tsx";
 import { nrkRadio, SearchResult, SearchResultList, Serie } from "../lib/nrk.ts";
 
 interface HandlerData {
@@ -38,7 +38,7 @@ export default function Home({ data }: PageProps<HandlerData>) {
           ? (
             <div className="w-full mx-auto my-4">
               {data.result.map((result) => (
-                <SerieCard
+                <SeriesCard
                   serie={result}
                   origin={data.origin}
                 />
