@@ -2,7 +2,7 @@ import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import Search from "../components/Search.tsx";
 import SeriesCard from "../components/SeriesCard.tsx";
-import { nrkRadio, SearchResult, SearchResultList, Serie } from "../lib/nrk.ts";
+import { nrkRadio, SearchResultList } from "../lib/nrk.ts";
 
 interface HandlerData {
   query: string;
