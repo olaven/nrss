@@ -1,5 +1,5 @@
 import { Episode, nrkRadio } from "../../../lib/nrk.ts";
-import { HandlerContext } from "$fresh/server.ts";
+import { FreshContext } from "$fresh/server.ts";
 import { declaration, serialize, tag } from "https://raw.githubusercontent.com/olaven/serialize-xml/v0.4.0/mod.ts";
 import { getHostName } from "../../../utils.ts";
 
@@ -86,7 +86,7 @@ async function buildFeed(seriesId: string) {
   );
 }
 
-export const handler = async (_req: Request, ctx: HandlerContext): Promise<Response> => {
+export const handler = async (_req: Request, ctx: FreshContext): Promise<Response> => {
   const seriesId = ctx.params.seriesId;
   const feedContent = await buildFeed(seriesId);
 

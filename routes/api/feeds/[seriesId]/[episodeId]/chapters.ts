@@ -1,3 +1,4 @@
+import { FreshContext } from "$fresh/server.ts";
 import { parse, toSeconds } from "https://esm.sh/iso8601-duration@2.1.1";
 import { nrkRadio, OriginalEpisode } from "../../../../../lib/nrk.ts";
 
@@ -8,7 +9,7 @@ function toChapters(episode: OriginalEpisode) {
   }));
 }
 
-export const handler = async (_req: Request, ctx: HandlerContext): Promise<Response> => {
+export const handler = async (_req: Request, ctx: FreshContext): Promise<Response> => {
   const seriesId = ctx.params.seriesId;
   const episodeId = ctx.params.episodeId;
 
