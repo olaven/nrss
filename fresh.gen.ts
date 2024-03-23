@@ -2,6 +2,7 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
+import * as $_app from "./routes/_app.tsx";
 import * as $api_feeds_seriesId_ from "./routes/api/feeds/[seriesId].ts";
 import * as $api_feeds_seriesId_episodeId_chapters from "./routes/api/feeds/[seriesId]/[episodeId]/chapters.ts";
 import * as $index from "./routes/index.tsx";
@@ -10,6 +11,7 @@ import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
+    "./routes/_app.tsx": $_app,
     "./routes/api/feeds/[seriesId].ts": $api_feeds_seriesId_,
     "./routes/api/feeds/[seriesId]/[episodeId]/chapters.ts": $api_feeds_seriesId_episodeId_chapters,
     "./routes/index.tsx": $index,
