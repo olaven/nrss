@@ -10,7 +10,7 @@ export default function Search(props: { defaultValue: string }) {
         id="query"
         defaultValue={props.defaultValue}
       />
-      <button type="submit" className="my-2 bg-gray-100 rounded-md">
+      <button type="submit" className="my-2 bg-gray-100 border-2 border-gray-400 rounded-md">
         Søk
       </button>
     </form>
