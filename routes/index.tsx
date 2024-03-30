@@ -46,18 +46,7 @@ export default function Home({ data }: PageProps<HandlerData>) {
       <div className="p-4 mx-auto max-w-screen-md">
         <Header />
         <Search defaultValue={data.query} />
-        {data.result
-          ? (
-            <div className="w-full mx-auto my-4 space-y-4">
-              {data.result.map((result) => (
-                <SeriesCard
-                  serie={result}
-                  origin={data.origin}
-                />
-              ))}
-            </div>
-          )
-          : null}
+        <SearchResult result={data.result} origin={data.origin} />
         <div
           class="markdown-body"
           dangerouslySetInnerHTML={{ __html: render(data?.rawMarkdown) }}
@@ -65,5 +54,25 @@ export default function Home({ data }: PageProps<HandlerData>) {
         <Footer />
       </div>
     </>
+  );
+}
+
+function SearchResult({ result, origin }: { result: SearchResultList; origin: string }) {
+  if (!result) {
+    return null;
+  }
+  if (result.length === 0) {
+    return <h2 className="text-2xl font-semibold mb-8">Ingen resultater</h2>;
+  }
+  return (
+    <div className="w-full mx-auto my-4 space-y-4">
+      <h2 className="text-2xl font-semibold">Søkeresultat: {result.length} treff</h2>
+      {result.map((result) => (
+        <SeriesCard
+          serie={result}
+          origin={origin}
+        />
+      ))}
+    </div>
   );
 }
