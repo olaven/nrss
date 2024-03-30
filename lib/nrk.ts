@@ -4,9 +4,13 @@ import { components as catalogComponents } from "./nrk-catalog.ts";
 import { z } from "zod";
 
 type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
+type PodcastEpisodes = catalogComponents["schemas"]["EpisodesHalResource"];
+type Podcast = catalogComponents["schemas"]["SeriesHalResource"];
+type PodcastEpisodesSingle = catalogComponents["schemas"]["EpisodeHalResource"];
+
 export type Serie = catalogComponents["schemas"]["SeriesViewModel"];
-type _OriginalEpisode = catalogComponents["schemas"]["EpisodeHalResource"];
-export type OriginalEpisode = _OriginalEpisode & { url: string };
+export type OriginalEpisode = PodcastEpisodesSingle & { url: string };
+export type PodcastEpisode = catalogComponents["schemas"]["PodcastEpisodeHalResource"];
 export type SearchResultList = searchComponents["schemas"]["seriesResult"]["results"];
 export type SearchResult = ArrayElement<SearchResultList> & {
   description?: string;
@@ -32,7 +36,7 @@ type Manifest = z.infer<typeof manifestSchema>;
 const nrkAPI = `https://psapi.nrk.no`;
 
 async function withDownloadLink(
-  episode: _OriginalEpisode,
+  episode: PodcastEpisodesSingle,
 ): Promise<OriginalEpisode> {
   // getting stream link
   const [playbackStatus, playbackResponseRaw] = await get<Manifest>(
@@ -63,10 +67,10 @@ export const nrkRadio = {
       [episodeStatus, episodeResponse],
       [seriesStatus, serieResponse],
     ] = await Promise.all([
-      get<catalogComponents["schemas"]["EpisodesHalResource"]>(
+      get<PodcastEpisodes>(
         `${nrkAPI}/radio/catalog/podcast/${seriesId}/episodes`,
       ),
-      get<catalogComponents["schemas"]["SeriesHalResource"]>(
+      get<Podcast>(
         `${nrkAPI}/radio/catalog/podcast/${seriesId}`,
       ),
     ]);
@@ -85,9 +89,9 @@ export const nrkRadio = {
     }
     throw `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`;
   },
-  getEpisode: async (seriesId: string, episodeId: string): Promise<OriginalEpisode | null> => {
+  getEpisode: async (seriesId: string, episodeId: string): Promise<PodcastEpisode | null> => {
     const url = `${nrkAPI}/radio/catalog/podcast/${seriesId}/episodes/${episodeId}`;
-    const [status, episode] = await get<OriginalEpisode>(url);
+    const [status, episode] = await get<PodcastEpisode>(url);
     if (status === OK && episode) {
       return episode;
     }
