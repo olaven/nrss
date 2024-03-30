@@ -26,12 +26,14 @@ interface Manifest {
   };
 }
 
+const nrkAPI = `https://psapi.nrk.no`;
+
 async function withDownloadLink(
   episode: _OriginalEpisode,
 ): Promise<OriginalEpisode> {
   // getting stream link
   const [playbackStatus, playbackResponse] = await get<Manifest>(
-    `https://psapi.nrk.no/playback/manifest/podcast/${episode.episodeId}`,
+    `${nrkAPI}/playback/manifest/podcast/${episode.episodeId}`,
   );
 
   if (playbackStatus === OK && playbackResponse) {
@@ -45,7 +47,7 @@ export const nrkRadio = {
   search: async (query: string): Promise<SearchResultList> => {
     const [status, response] = await get<
       searchComponents["schemas"]["searchresult"]
-    >(`https://psapi.nrk.no/radio/search/search?q=${query}`);
+    >(`${nrkAPI}/radio/search/search?q=${query}`);
     if (status === OK && response) {
       return response.results.series?.results;
     }
@@ -57,10 +59,10 @@ export const nrkRadio = {
       [seriesStatus, serieResponse],
     ] = await Promise.all([
       get<catalogComponents["schemas"]["EpisodesHalResource"]>(
-        `https://psapi.nrk.no/radio/catalog/podcast/${seriesId}/episodes`,
+        `${nrkAPI}/radio/catalog/podcast/${seriesId}/episodes`,
       ),
       get<catalogComponents["schemas"]["SeriesHalResource"]>(
-        `https://psapi.nrk.no/radio/catalog/podcast/${seriesId}`,
+        `${nrkAPI}/radio/catalog/podcast/${seriesId}`,
       ),
     ]);
 
@@ -79,7 +81,7 @@ export const nrkRadio = {
     throw `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`;
   },
   getEpisode: async (seriesId: string, episodeId: string): Promise<OriginalEpisode | null> => {
-    const url = `https://psapi.nrk.no/radio/catalog/podcast/${seriesId}/episodes/${episodeId}`;
+    const url = `${nrkAPI}/radio/catalog/podcast/${seriesId}/episodes/${episodeId}`;
     const [status, episode] = await get<OriginalEpisode>(url);
     if (status === OK && episode) {
       return episode;
