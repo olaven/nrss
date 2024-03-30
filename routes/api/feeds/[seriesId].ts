@@ -88,11 +88,21 @@ async function buildFeed(seriesId: string) {
 
 export const handler = async (_req: Request, ctx: FreshContext): Promise<Response> => {
   const seriesId = ctx.params.seriesId;
-  const feedContent = await buildFeed(seriesId);
+  try {
+    const feedContent = await buildFeed(seriesId);
 
-  return new Response(feedContent, {
-    headers: {
-      "Content-Type": "application/xml",
-    },
-  });
+    return new Response(feedContent, {
+      headers: {
+        "Content-Type": "application/xml",
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ message: "Could not generate feed" }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
 };

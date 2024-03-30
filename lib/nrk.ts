@@ -47,6 +47,7 @@ export const nrkRadio = {
       searchComponents["schemas"]["searchresult"]
     >(`https://psapi.nrk.no/radio/search/search?q=${query}`);
     if (status === OK && response) {
+      console.log("res", response.results);
       return response.results.series?.results;
     } else {
       throw `Something went wrong with ${query} - got status ${status}`;
