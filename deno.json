@@ -14,7 +14,6 @@
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
     "twind": "https://esm.sh/twind@0.16.17",
     "twind/": "https://esm.sh/twind@0.16.17/",
-    "zod": "https://deno.land/x/zod@v3.22.4/mod.ts",
     "openapi-typescript": "npm:openapi-typescript@6.7.5"
   },
   "compilerOptions": {

@@ -9,6 +9,10 @@ const nrkTypes: { filename: string; url: URL }[] = [
     filename: "./lib/nrk-catalog.ts",
     url: new URL("https://psapi.nrk.no/documentation/openapi/programsider-radio/openapi.yml"),
   },
+  {
+    filename: "./lib/nrk-playback.ts",
+    url: new URL("https://psapi.nrk.no/documentation/openapi/playback/2.0/openapi.json"),
+  },
 ] as const;
 
 async function generateTypes() {
