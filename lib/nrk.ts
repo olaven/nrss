@@ -30,7 +30,9 @@ const manifestSchema = z.object({
   }),
 });
 
-/** Incomplete manifest types. */
+/** Incomplete manifest types.
+ * TODO: Add OpenAPI Manifest to `generate-types.ts`.
+ */
 type Manifest = z.infer<typeof manifestSchema>;
 
 const nrkAPI = `https://psapi.nrk.no`;
