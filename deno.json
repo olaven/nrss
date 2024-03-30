@@ -1,5 +1,8 @@
 {
   "lock": false,
+  "name": "NRSS",
+  "source": "https://github.com/olaven/NRSS",
+  "author": " Olav Sundfør <olav@sundfoer.com>",
   "tasks": {
     "start": "deno run -A --watch=static/,routes/ dev.ts",
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx"

@@ -1,5 +1,6 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
+import Footer from "../components/Footer.tsx";
 import Header from "../components/Header.tsx";
 import Search from "../components/Search.tsx";
 import SeriesCard from "../components/SeriesCard.tsx";
@@ -68,6 +69,7 @@ export default function Home({ data }: PageProps<HandlerData>) {
           </a>{" "}
           for en oversikt over hvordan det gjøres i populære podcastspillere.
         </p>
+        <Footer />
       </div>
     </>
   );
