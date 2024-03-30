@@ -28,11 +28,18 @@ interface Manifest {
 
 async function withDownloadLink(
   episode: _OriginalEpisode,
+  type: catalogComponents["schemas"]["Type"],
 ): Promise<OriginalEpisode> {
   // getting stream link
-  const [playbackStatus, playbackResponse] = await get<Manifest>(
+  let [playbackStatus, playbackResponse] = await get<Manifest>(
     `https://psapi.nrk.no/playback/manifest/podcast/${episode.episodeId}`,
   );
+
+  if (type === "series") {
+    [playbackStatus, playbackResponse] = await get<Manifest>(
+      `https://psapi.nrk.no/playback/manifest/program/${episode.episodeId}`,
+    );
+  }
 
   if (playbackStatus === OK && playbackResponse) {
     return { ...episode, url: playbackResponse.playable.assets[0].url };
@@ -47,14 +54,13 @@ export const nrkRadio = {
       searchComponents["schemas"]["searchresult"]
     >(`https://psapi.nrk.no/radio/search/search?q=${query}`);
     if (status === OK && response) {
-      console.log("res", response.results);
       return response.results.series?.results;
     } else {
       throw `Something went wrong with ${query} - got status ${status}`;
     }
   },
   getSerieData: async (seriesId: string) => {
-    const [
+    let [
       [episodeStatus, episodeResponse],
       [seriesStatus, serieResponse],
     ] = await Promise.all([
@@ -66,20 +72,33 @@ export const nrkRadio = {
       ),
     ]);
 
+    if (episodeStatus !== OK || seriesStatus !== OK) {
+      [
+        [episodeStatus, episodeResponse],
+        [seriesStatus, serieResponse],
+      ] = await Promise.all([
+        get<catalogComponents["schemas"]["EpisodesHalResource"]>(
+          `https://psapi.nrk.no/radio/catalog/series/${seriesId}/episodes`,
+        ),
+        get<catalogComponents["schemas"]["SeriesHalResource"]>(
+          `https://psapi.nrk.no/radio/catalog/series/${seriesId}`,
+        ),
+      ]);
+    }
+
     if (
       episodeStatus === OK && seriesStatus === OK &&
       serieResponse?.series && episodeResponse?._embedded.episodes?.length
     ) {
       const episodes = await Promise.all(
-        episodeResponse._embedded.episodes.map((episode) => withDownloadLink(episode)),
+        episodeResponse._embedded.episodes.map((episode) => withDownloadLink(episode, serieResponse.type)),
       );
       return {
         ...serieResponse.series,
         episodes,
       };
-    } else {
-      throw `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`;
     }
+    throw `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`;
   },
   getEpisode: async (seriesId: string, episodeId: string): Promise<OriginalEpisode | null> => {
     const url = `https://psapi.nrk.no/radio/catalog/podcast/${seriesId}/episodes/${episodeId}`;
