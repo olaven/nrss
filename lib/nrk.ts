@@ -48,9 +48,8 @@ export const nrkRadio = {
     >(`https://psapi.nrk.no/radio/search/search?q=${query}`);
     if (status === OK && response) {
       return response.results.series?.results;
-    } else {
-      throw `Something went wrong with ${query} - got status ${status}`;
     }
+    throw `Something went wrong with ${query} - got status ${status}`;
   },
   getSerieData: async (seriesId: string) => {
     const [
@@ -76,17 +75,15 @@ export const nrkRadio = {
         ...serieResponse.series,
         episodes,
       };
-    } else {
-      throw `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`;
     }
+    throw `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`;
   },
   getEpisode: async (seriesId: string, episodeId: string): Promise<OriginalEpisode | null> => {
     const url = `https://psapi.nrk.no/radio/catalog/podcast/${seriesId}/episodes/${episodeId}`;
     const [status, episode] = await get<OriginalEpisode>(url);
-    if (status !== OK) {
-      throw `Error getting episode ${episodeId}. Status: ${status}. Series: ${seriesId}`;
+    if (status === OK && episode) {
+      return episode;
     }
-
-    return episode;
+    throw `Error getting episode ${episodeId}. Status: ${status}. Series: ${seriesId}`;
   },
 };
