@@ -1,6 +1,7 @@
 import { get, OK } from "https://deno.land/x/kall@v0.1.0/mod.ts";
 import { components as searchComponents } from "./nrk-search.ts";
 import { components as catalogComponents } from "./nrk-catalog.ts";
+import { z } from "zod";
 
 type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
 export type Serie = catalogComponents["schemas"]["SeriesViewModel"];
@@ -11,20 +12,22 @@ export type SearchResult = ArrayElement<SearchResultList> & {
   description?: string;
 };
 
-/* Incomplete manifest types */
-interface Manifest {
-  id: string;
-  playable: {
-    endSequenceStartTime: null;
-    duration: string;
-    assets: {
-      url: string;
-      format: string;
-      mimeType: string;
-      encrypted: boolean;
-    }[];
-  };
-}
+const manifestSchema = z.object({
+  id: z.string(),
+  playable: z.object({
+    endSequenceStartTime: z.null(),
+    duration: z.string(),
+    assets: z.array(z.object({
+      url: z.string(),
+      format: z.string(),
+      mimeType: z.string(),
+      encrypted: z.boolean(),
+    })),
+  }),
+});
+
+/** Incomplete manifest types. */
+type Manifest = z.infer<typeof manifestSchema>;
 
 const nrkAPI = `https://psapi.nrk.no`;
 
@@ -32,9 +35,11 @@ async function withDownloadLink(
   episode: _OriginalEpisode,
 ): Promise<OriginalEpisode> {
   // getting stream link
-  const [playbackStatus, playbackResponse] = await get<Manifest>(
+  const [playbackStatus, playbackResponseRaw] = await get<Manifest>(
     `${nrkAPI}/playback/manifest/podcast/${episode.episodeId}`,
   );
+
+  const playbackResponse = manifestSchema.parse(playbackResponseRaw);
 
   if (playbackStatus === OK && playbackResponse) {
     return { ...episode, url: playbackResponse.playable.assets[0].url };
