@@ -1,4 +1,4 @@
-# NRSS - RSS Feeds for NRK sin podcaster
+# NRSS - RSS feeds for NRK's podcasts
 
 Live version: [nrss.deno.dev](https://nrss.deno.dev/)
 
