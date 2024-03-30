@@ -30,7 +30,7 @@ function toItemTag(seriesId: string, episode: OriginalEpisode) {
 
 async function buildFeed(seriesId: string) {
   const serie = await nrkRadio.getSerieData(seriesId);
-  const imageUrl = serie.squareImage.at(-1)?.url;
+  const imageUrl = serie.squareImage?.at(-1)?.url ?? "";
   const linkValue = `https://radio.nrk.no/podkast/${serie.id}`;
 
   // Quickly adapted from https://raw.githubusercontent.com/olaven/paperpod/1cde9abd3174b26e126aa74fc5a3b63fd078c0fd/packages/converter/src/rss.ts
