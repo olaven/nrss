@@ -13,7 +13,7 @@ export default function App({ Component }: PageProps) {
 
         <title>NRSS</title>
       </head>
-      <body>
+      <body class="bg-slate-50">
         <Component />
       </body>
     </html>

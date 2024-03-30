@@ -32,7 +32,16 @@ export default function Home({ data }: PageProps<HandlerData>) {
     <>
       <Head>
         <title>{data.query ? `Søk: ${data.query} - ` : ""}NRSS</title>
-        <style dangerouslySetInnerHTML={{ __html: CSS }} />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+          ${CSS}
+          .markdown-body {
+            background-color: rgb(248 250 252);
+          }
+          `,
+          }}
+        />
       </Head>
       <div className="p-4 mx-auto max-w-screen-md">
         <Header />
