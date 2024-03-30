@@ -26,7 +26,7 @@ export default function Home({ data }: PageProps<HandlerData>) {
   return (
     <>
       <Head>
-        <title>NRSS</title>
+        <title>{data.query ? `Søk: ${data.query} - ` : ""}NRSS</title>
       </Head>
       <div className="p-4 mx-auto max-w-screen-md bg-blue-400">
         <div className="text-center">
