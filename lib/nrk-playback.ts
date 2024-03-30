@@ -250,7 +250,6 @@ export interface external {
           | external["schemas/playback-channel.json"]["components"]["schemas"]["PlayableManifest"]
           | external["schemas/playback-channel.json"]["components"]["schemas"]["NonPlayableManifest"];
         PlayableManifest: {
-          playability: "playable";
           /** @enum {string} */
           playability: "playable";
           playable: external["schemas/playback-channel.json"]["components"]["schemas"]["PlayableElement"];
@@ -286,7 +285,6 @@ export interface external {
           };
         };
         NonPlayableManifest: {
-          playability: "nonPlayable";
           /** @enum {string} */
           playability: "nonPlayable";
           /** @description This is always null when the channel is non-playable. */
@@ -669,7 +667,6 @@ export interface external {
         };
         /** @description Channels are always exempt from legal age rating. */
         LegalAgeBodyExempt: {
-          status: "exempt";
           /** @enum {string} */
           status: "exempt";
         };
@@ -689,7 +686,6 @@ export interface external {
           resolve: string;
         };
         PlayablePlaybackMetadataResponse: {
-          playability: "playable";
           /** @enum {string} */
           playability: "playable";
           playable: external["schemas/playback-channel.json"]["components"]["schemas"]["ResolvePlayable"];
@@ -760,7 +756,6 @@ export interface external {
         };
         /** @description Metadata response for non-playable content. */
         NonPlayablePlaybackMetadataResponse: {
-          playability: "nonPlayable";
           /** @enum {string} */
           playability: "nonPlayable";
           /** @description This is always null when the content is non-playable. */
@@ -1026,7 +1021,6 @@ export interface external {
           | external["schemas/playback-clip.json"]["components"]["schemas"]["PlayableManifest"]
           | external["schemas/playback-clip.json"]["components"]["schemas"]["NonPlayableManifest"];
         PlayableManifest: {
-          playability: "playable";
           /** @enum {string} */
           playability: "playable";
           playable: external["schemas/playback-clip.json"]["components"]["schemas"]["PlayableElement"];
@@ -1062,7 +1056,6 @@ export interface external {
           };
         };
         NonPlayableManifest: {
-          playability: "nonPlayable";
           /** @enum {string} */
           playability: "nonPlayable";
           /** @description This is always null when the content is non-playable. */
@@ -1449,7 +1442,6 @@ export interface external {
         };
         /** @description Clips are always exempt from legal age rating. */
         LegalAgeBodyExempt: {
-          status: "exempt";
           /** @enum {string} */
           status: "exempt";
         };
@@ -1469,7 +1461,6 @@ export interface external {
           resolve: string;
         };
         PlayablePlaybackMetadataResponse: {
-          playability: "playable";
           /** @enum {string} */
           playability: "playable";
           playable: external["schemas/playback-clip.json"]["components"]["schemas"]["ResolvePlayable"];
@@ -1527,7 +1518,6 @@ export interface external {
         };
         /** @description Metadata response for non-playable clips. */
         NonPlayablePlaybackMetadataResponse: {
-          playability: "nonPlayable";
           /** @enum {string} */
           playability: "nonPlayable";
           /** @description This is always null when the clip is non-playable. */
@@ -1662,7 +1652,6 @@ export interface external {
           | external["schemas/playback-clip.json"]["components"]["schemas"]["RadioClipPlayableManifest"]
           | external["schemas/playback-clip.json"]["components"]["schemas"]["NonPlayableManifest"];
         RadioClipPlayableManifest: {
-          playability: "playable";
           /** @enum {string} */
           playability: "playable";
           playable: external["schemas/playback-clip.json"]["components"]["schemas"]["RadioClipPlayableElement"];
@@ -1762,7 +1751,6 @@ export interface external {
           | external["schemas/playback-podcast.json"]["components"]["schemas"]["PlayableManifest"]
           | external["schemas/playback-podcast.json"]["components"]["schemas"]["NonPlayableManifest"];
         PlayableManifest: {
-          playability: "playable";
           /** @enum {string} */
           playability: "playable";
           playable: external["schemas/playback-podcast.json"]["components"]["schemas"]["PlayableElement"];
@@ -1795,7 +1783,6 @@ export interface external {
           };
         };
         NonPlayableManifest: {
-          playability: "nonPlayable";
           /** @enum {string} */
           playability: "nonPlayable";
           /** @description This is always null when the podcast is non-playable. */
@@ -2104,13 +2091,11 @@ export interface external {
           displayAge: string;
         };
         LegalAgeBodyRated: {
-          status: "rated";
           /** @enum {string} */
           status: "rated";
           rating: external["schemas/playback-podcast.json"]["components"]["schemas"]["LegalAgeRating"];
         };
         LegalAgeBodyExempt: {
-          status: "exempt";
           /** @enum {string} */
           status: "exempt";
         };
@@ -2132,7 +2117,6 @@ export interface external {
           resolve: string;
         };
         PlayablePlaybackMetadataResponse: {
-          playability: "playable";
           /** @enum {string} */
           playability: "playable";
           playable: external["schemas/playback-podcast.json"]["components"]["schemas"]["ResolvePlayable"];
@@ -2223,7 +2207,6 @@ export interface external {
         };
         /** @description Metadata response for non-playable content. */
         NonPlayablePlaybackMetadataResponse: {
-          playability: "nonPlayable";
           /** @enum {string} */
           playability: "nonPlayable";
           /** @description This is always null when the podcast is non-playable. */
@@ -2384,7 +2367,6 @@ export interface external {
           | external["schemas/playback-program.json"]["components"]["schemas"]["PlayableManifest"]
           | external["schemas/playback-program.json"]["components"]["schemas"]["NonPlayableManifest"];
         PlayableManifest: {
-          playability: "playable";
           /** @enum {string} */
           playability: "playable";
           playable: external["schemas/playback-program.json"]["components"]["schemas"]["PlayableElement"];
@@ -2421,7 +2403,6 @@ export interface external {
           };
         };
         NonPlayableManifest: {
-          playability: "nonPlayable";
           /** @enum {string} */
           playability: "nonPlayable";
           /** @description This is always null when the program is non-playable. */
@@ -2883,7 +2864,6 @@ export interface external {
           | external["schemas/playback-program.json"]["components"]["schemas"]["NextUpInteractionPoint"];
         /** @description Indicates an interval in which the client may prompt the user to jump to a particular position in the media stream. At 'startTime' the client may display e.g. a button showing the 'displayValue' text. If the user clicks the button, the client should jump to the 'seekToTime'. If the client does nothing, the client should hide the button again at 'endTime'. */
         SeekToInteractionPoint: {
-          type: "SeekToInteractionPoint";
           /** @enum {string} */
           type: "seekToPoint";
           /**
@@ -2961,7 +2941,6 @@ export interface external {
         } | null;
         /** @description Indicates an interval in which the client may prompt the user to jump to the next program (whatever that may be in the user's context). At 'startTime' the client may display e.g. a button showing a countdown. If the user clicks the button, the client should jump to the next episode. If the client does nothing, the client should hide the button again at 'endTime'. */
         NextUpInteractionPoint: {
-          type: "NextUpInteractionPoint";
           /** @enum {string} */
           type: "nextUpPoint";
           /**
@@ -3028,13 +3007,11 @@ export interface external {
           displayAge: string;
         };
         LegalAgeBodyRated: {
-          status: "rated";
           /** @enum {string} */
           status: "rated";
           rating: external["schemas/playback-program.json"]["components"]["schemas"]["LegalAgeRating"];
         };
         LegalAgeBodyExempt: {
-          status: "exempt";
           /** @enum {string} */
           status: "exempt";
         };
@@ -3056,7 +3033,6 @@ export interface external {
           resolve: string;
         };
         PlayablePlaybackMetadataResponse: {
-          playability: "playable";
           /** @enum {string} */
           playability: "playable";
           playable: external["schemas/playback-program.json"]["components"]["schemas"]["ResolvePlayable"];
@@ -3135,7 +3111,6 @@ export interface external {
         };
         /** @description Metadata response for a non-playable program. */
         NonPlayablePlaybackMetadataResponse: {
-          playability: "nonPlayable";
           /** @enum {string} */
           playability: "nonPlayable";
           /** @description This is always null when the program is non-playable. */
