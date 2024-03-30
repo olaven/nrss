@@ -1,5 +1,6 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
+import Header from "../components/Header.tsx";
 import Search from "../components/Search.tsx";
 import SeriesCard from "../components/SeriesCard.tsx";
 import { nrkRadio, SearchResultList } from "../lib/nrk.ts";
@@ -29,12 +30,7 @@ export default function Home({ data }: PageProps<HandlerData>) {
         <title>{data.query ? `Søk: ${data.query} - ` : ""}NRSS</title>
       </Head>
       <div className="p-4 mx-auto max-w-screen-md">
-        <div className="text-center">
-          <h1 className="text-2xl lg:text-3xl font-semibold">
-            <a href="/">📻 NRSS</a>
-          </h1>
-          <h2 className="lg:text-xl">NRK-podcast som RSS</h2>
-        </div>
+        <Header />
         <Search defaultValue={data.query} />
         {data.result
           ? (
