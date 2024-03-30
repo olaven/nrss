@@ -30,7 +30,9 @@ export default function Home({ data }: PageProps<HandlerData>) {
       </Head>
       <div className="p-4 mx-auto max-w-screen-md bg-blue-400">
         <div className="text-center">
-          <h1 className="text-2xl lg:text-3xl">NRSS</h1>
+          <h1 className="text-2xl lg:text-3xl font-semibold">
+            <a href="/">📻 NRSS</a>
+          </h1>
           <h2 className="lg:text-xl">NRK-podcast som RSS</h2>
         </div>
         <Search defaultValue={data.query} />
