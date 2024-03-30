@@ -14,8 +14,6 @@
     "preact-render-to-string": "https://esm.sh/*preact-render-to-string@5.2.4",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
-    "twind": "https://esm.sh/twind@0.16.17",
-    "twind/": "https://esm.sh/twind@0.16.17/",
     "$gfm": "https://deno.land/x/gfm@0.6.0/mod.ts"
   },
   "compilerOptions": {
