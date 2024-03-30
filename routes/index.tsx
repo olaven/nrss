@@ -28,7 +28,7 @@ export default function Home({ data }: PageProps<HandlerData>) {
       <Head>
         <title>{data.query ? `Søk: ${data.query} - ` : ""}NRSS</title>
       </Head>
-      <div className="p-4 mx-auto max-w-screen-md bg-blue-400">
+      <div className="p-4 mx-auto max-w-screen-md">
         <div className="text-center">
           <h1 className="text-2xl lg:text-3xl font-semibold">
             <a href="/">📻 NRSS</a>
@@ -38,7 +38,7 @@ export default function Home({ data }: PageProps<HandlerData>) {
         <Search defaultValue={data.query} />
         {data.result
           ? (
-            <div className="w-full mx-auto my-4">
+            <div className="w-full mx-auto my-4 space-y-4">
               {data.result.map((result) => (
                 <SeriesCard
                   serie={result}
