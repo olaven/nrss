@@ -6,7 +6,7 @@ A webapp built with Deno's [Fresh](https://fresh.deno.dev/) that generates
 public accessible RSS-feeds for their produced podcasts via their
 [API](https://psapi.nrk.no/documentation/).
 
-## Local devlopment
+## Local development
 
 1. [Install Deno](https://deno.land/manual/getting_started/installation)
 1. Run the app: `deno task start`
