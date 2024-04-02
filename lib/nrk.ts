@@ -1,37 +1,31 @@
 import { get, OK } from "https://deno.land/x/kall@v0.1.0/mod.ts";
 import { components as searchComponents } from "./nrk-search.ts";
 import { components as catalogComponents } from "./nrk-catalog.ts";
+import { external as playbackComponents } from "./nrk-playback.ts";
 
 type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
+type PodcastEpisodes = catalogComponents["schemas"]["EpisodesHalResource"];
+type Podcast = catalogComponents["schemas"]["SeriesHalResource"];
+type PodcastEpisodesSingle = catalogComponents["schemas"]["EpisodeHalResource"];
+
 export type Serie = catalogComponents["schemas"]["SeriesViewModel"];
-type _OriginalEpisode = catalogComponents["schemas"]["EpisodeHalResource"];
-export type OriginalEpisode = _OriginalEpisode & { url: string };
+export type OriginalEpisode = PodcastEpisodesSingle & { url: string };
+export type PodcastEpisode = catalogComponents["schemas"]["PodcastEpisodeHalResource"];
 export type SearchResultList = searchComponents["schemas"]["seriesResult"]["results"];
 export type SearchResult = ArrayElement<SearchResultList> & {
   description?: string;
 };
 
-/* Incomplete manifest types */
-interface Manifest {
-  id: string;
-  playable: {
-    endSequenceStartTime: null;
-    duration: string;
-    assets: {
-      url: string;
-      format: string;
-      mimeType: string;
-      encrypted: boolean;
-    }[];
-  };
-}
+type Manifest = playbackComponents["schemas/playback-channel.json"]["components"]["schemas"]["PlayableManifest"];
+
+const nrkAPI = `https://psapi.nrk.no`;
 
 async function withDownloadLink(
-  episode: _OriginalEpisode,
+  episode: PodcastEpisodesSingle,
 ): Promise<OriginalEpisode> {
   // getting stream link
   const [playbackStatus, playbackResponse] = await get<Manifest>(
-    `https://psapi.nrk.no/playback/manifest/podcast/${episode.episodeId}`,
+    `${nrkAPI}/playback/manifest/podcast/${episode.episodeId}`,
   );
 
   if (playbackStatus === OK && playbackResponse) {
@@ -45,23 +39,22 @@ export const nrkRadio = {
   search: async (query: string): Promise<SearchResultList> => {
     const [status, response] = await get<
       searchComponents["schemas"]["searchresult"]
-    >(`https://psapi.nrk.no/radio/search/search?q=${query}`);
+    >(`${nrkAPI}/radio/search/search?q=${query}`);
     if (status === OK && response) {
       return response.results.series?.results;
-    } else {
-      throw `Something went wrong with ${query} - got status ${status}`;
     }
+    throw `Something went wrong with ${query} - got status ${status}`;
   },
   getSerieData: async (seriesId: string) => {
     const [
       [episodeStatus, episodeResponse],
       [seriesStatus, serieResponse],
     ] = await Promise.all([
-      get<catalogComponents["schemas"]["EpisodesHalResource"]>(
-        `https://psapi.nrk.no/radio/catalog/podcast/${seriesId}/episodes`,
+      get<PodcastEpisodes>(
+        `${nrkAPI}/radio/catalog/podcast/${seriesId}/episodes`,
       ),
-      get<catalogComponents["schemas"]["SeriesHalResource"]>(
-        `https://psapi.nrk.no/radio/catalog/podcast/${seriesId}`,
+      get<Podcast>(
+        `${nrkAPI}/radio/catalog/podcast/${seriesId}`,
       ),
     ]);
 
@@ -76,17 +69,15 @@ export const nrkRadio = {
         ...serieResponse.series,
         episodes,
       };
-    } else {
-      throw `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`;
     }
+    throw `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`;
   },
-  getEpisode: async (seriesId: string, episodeId: string): Promise<OriginalEpisode | null> => {
-    const url = `https://psapi.nrk.no/radio/catalog/podcast/${seriesId}/episodes/${episodeId}`;
-    const [status, episode] = await get<OriginalEpisode>(url);
-    if (status !== OK) {
-      throw `Error getting episode ${episodeId}. Status: ${status}. Series: ${seriesId}`;
+  getEpisode: async (seriesId: string, episodeId: string): Promise<PodcastEpisode | null> => {
+    const url = `${nrkAPI}/radio/catalog/podcast/${seriesId}/episodes/${episodeId}`;
+    const [status, episode] = await get<PodcastEpisode>(url);
+    if (status === OK && episode) {
+      return episode;
     }
-
-    return episode;
+    throw `Error getting episode ${episodeId}. Status: ${status}. Series: ${seriesId}`;
   },
 };

@@ -5,34 +5,58 @@
 
 export interface paths {
   "/radio/search/title": {
-    /** Gives results for titles */
+    /**
+     * Title search
+     * @description Gives results for titles
+     */
     get: operations["TitleSearch"];
   };
   "/radio/search/title/suggest": {
-    /** Gives suggestion for misspelling on titles only */
+    /**
+     * Title suggest search
+     * @description Gives suggestion for misspelling on titles only
+     */
     get: operations["TitleSuggestSearch"];
   };
   "/radio/search/suggest": {
-    /** Deprecated. Use '/radio/search/title/suggest'. Gives suggestion for misspelling */
+    /**
+     * Deprecated
+     * @deprecated
+     * @description Deprecated. Use '/radio/search/title/suggest'. Gives suggestion for misspelling
+     */
     get: operations["TitleSuggestSearchDeprecated"];
   };
   "/radio/search/search": {
-    /** Search endpoint for all content */
+    /**
+     * Search
+     * @description Search endpoint for all content
+     */
     get: operations["Search"];
   };
   "/radio/search/search/suggest": {
-    /** Gives suggestion for misspelling */
+    /**
+     * Search suggest search
+     * @description Gives suggestion for misspelling
+     */
     get: operations["RadioSuggestSearch"];
   };
   "/radio/search/categories/{category}": {
-    /** Alphabetical listing of all series, podcasts and umbrella seasons that are not excluded from search results in given category. Categories correspond to those in pages-api, including 'alt-innhold'. For the category 'podcast', all podcasts are listed, also those excluded from search results. */
+    /**
+     * List all series, podcast and umbrella seasons in category
+     * @description Alphabetical listing of all series, podcasts and umbrella seasons that are not excluded from search results in given category. Categories correspond to those in pages-api, including 'alt-innhold'. For the category 'podcast', all podcasts are listed, also those excluded from search results.
+     */
     get: operations["RadioListAllForCategory"];
   };
   "/radio/search/int/search": {
-    /** Search endpoint for `internal use only`. Searches series and episodes. */
+    /**
+     * Internal search
+     * @description Search endpoint for `internal use only`. Searches series and episodes.
+     */
     get: operations["InternalSearch"];
   };
 }
+
+export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
@@ -47,8 +71,6 @@ export interface components {
       description?: string;
       trimmedDescription?: string;
       images?: components["schemas"]["image"][];
-    } & {
-      seriesId: unknown;
     };
     /** Episode search result */
     episodesearchintresult: {
@@ -57,11 +79,7 @@ export interface components {
       /** @description If type is `customSeasonEpisode` */
       seasonId?: string;
       /** @enum {string} */
-      type:
-        | "seriesEpisode"
-        | "podcastEpisode"
-        | "singleProgram"
-        | "customSeasonEpisode";
+      type: "seriesEpisode" | "podcastEpisode" | "singleProgram" | "customSeasonEpisode";
       title: string;
       subtitle?: string;
       trimmedSubtitle?: string;
@@ -88,8 +106,6 @@ export interface components {
         /** @description if `isSuggestResult` is true, `suggestQuery` displays the suggested value which is used in the current result set */
         suggestQuery?: string;
       };
-    } & {
-      isSuggestResult: unknown;
     };
     /**
      * Channel result
@@ -131,7 +147,7 @@ export interface components {
      */
     seriesResult: {
       links?: components["schemas"]["nextLink"];
-      results?: {
+      results?: ({
         /** @description Unique id */
         id: string;
         seriesId: string;
@@ -145,7 +161,7 @@ export interface components {
         images: components["schemas"]["image"][];
         images_1_1?: components["schemas"]["image"][];
         highlights?: components["schemas"]["seriesHighlight"];
-      }[];
+      })[];
     };
     /**
      * Episode results
@@ -153,7 +169,7 @@ export interface components {
      */
     episodeResult: {
       links?: components["schemas"]["nextLink"];
-      results?: {
+      results?: ({
         /** @description Unique id */
         id: string;
         episodeId: string;
@@ -162,11 +178,7 @@ export interface components {
         /** @description Only included in type `customSeasonEpisode` */
         seasonId?: string;
         /** @enum {string} */
-        type:
-          | "seriesEpisode"
-          | "podcastEpisode"
-          | "customSeasonEpisode"
-          | "singleProgram";
+        type: "seriesEpisode" | "podcastEpisode" | "customSeasonEpisode" | "singleProgram";
         title: string;
         /** @description Not included in type `singleProgram` */
         seriesTitle?: string;
@@ -175,7 +187,7 @@ export interface components {
         /** Format: date */
         date: string;
         highlights?: components["schemas"]["episodeHighlight"];
-      }[];
+      })[];
     };
     nextLink: {
       /**
@@ -336,30 +348,48 @@ export interface components {
       totalCount: number;
     };
   };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 
+export type $defs = Record<string, never>;
+
+export type external = Record<string, never>;
+
 export interface operations {
-  /** Gives results for titles */
+  /**
+   * Title search
+   * @description Gives results for titles
+   */
   TitleSearch: {
     parameters: {
-      header: {
-        accept?: "application/json;api-version=2";
-      };
       query: {
-        /** The query text */
+        /**
+         * @description The query text
+         * @example stanghelle
+         */
         q: string;
-        /** Number of results to take */
+        /** @description Number of results to take */
         take?: number;
-        /** Number of results to skip */
+        /**
+         * @description Number of results to skip
+         * @example 0
+         */
         skip?: number;
-        /** Filters only playable content */
+        /** @description Filters only playable content */
         filterNotPlayable?: boolean;
-        /** Returns only the specified type */
+        /** @description Returns only the specified type */
         type?: "series" | "episode";
+      };
+      header?: {
+        accept?: "application/json;api-version=2";
       };
     };
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           "application/json": components["schemas"]["titlesearchresult"];
@@ -367,16 +397,22 @@ export interface operations {
       };
     };
   };
-  /** Gives suggestion for misspelling on titles only */
+  /**
+   * Title suggest search
+   * @description Gives suggestion for misspelling on titles only
+   */
   TitleSuggestSearch: {
     parameters: {
       query: {
-        /** The query text */
+        /**
+         * @description The query text
+         * @example smukker
+         */
         q: string;
       };
     };
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           "application/json": string[];
@@ -384,18 +420,28 @@ export interface operations {
       };
     };
   };
-  /** Deprecated. Use '/radio/search/title/suggest'. Gives suggestion for misspelling */
+  /**
+   * Deprecated
+   * @deprecated
+   * @description Deprecated. Use '/radio/search/title/suggest'. Gives suggestion for misspelling
+   */
   TitleSuggestSearchDeprecated: {
     parameters: {
       query: {
-        /** The query text */
+        /**
+         * @description The query text
+         * @example stanghelle
+         */
         q: string;
-        /** Defaults to 10 if not set */
+        /**
+         * @description Defaults to 10 if not set
+         * @example 10
+         */
         take?: number;
       };
     };
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           "application/json": string[];
@@ -403,26 +449,38 @@ export interface operations {
       };
     };
   };
-  /** Search endpoint for all content */
+  /**
+   * Search
+   * @description Search endpoint for all content
+   */
   Search: {
     parameters: {
       query: {
-        /** The query text */
+        /**
+         * @description The query text
+         * @example stanghelle
+         */
         q: string;
-        /** Number of results to take per type in the result set (see type parameter) */
+        /** @description Number of results to take per type in the result set (see type parameter) */
         take?: number;
-        /** Number of results to skip */
+        /**
+         * @description Number of results to skip
+         * @example 0
+         */
         skip?: number;
-        /** Which page of results to get */
+        /**
+         * @description Which page of results to get
+         * @example 2
+         */
         page?: number;
-        /** Filters only playable content, applies to `episodes` and `series` */
+        /** @description Filters only playable content, applies to `episodes` and `series` */
         filterNotPlayable?: boolean;
-        /** Returns only the specified type */
+        /** @description Returns only the specified type */
         type?: "series" | "episode" | "channel" | "category";
       };
     };
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           "application/json": components["schemas"]["searchresult"];
@@ -430,16 +488,22 @@ export interface operations {
       };
     };
   };
-  /** Gives suggestion for misspelling */
+  /**
+   * Search suggest search
+   * @description Gives suggestion for misspelling
+   */
   RadioSuggestSearch: {
     parameters: {
       query: {
-        /** The query text */
+        /**
+         * @description The query text
+         * @example smukker
+         */
         q: string;
       };
     };
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           "application/json": string[];
@@ -447,25 +511,28 @@ export interface operations {
       };
     };
   };
-  /** Alphabetical listing of all series, podcasts and umbrella seasons that are not excluded from search results in given category. Categories correspond to those in pages-api, including 'alt-innhold'. For the category 'podcast', all podcasts are listed, also those excluded from search results. */
+  /**
+   * List all series, podcast and umbrella seasons in category
+   * @description Alphabetical listing of all series, podcasts and umbrella seasons that are not excluded from search results in given category. Categories correspond to those in pages-api, including 'alt-innhold'. For the category 'podcast', all podcasts are listed, also those excluded from search results.
+   */
   RadioListAllForCategory: {
     parameters: {
-      path: {
-        category: string;
-      };
-      query: {
+      query?: {
         take?: number;
         skip?: number;
       };
+      path: {
+        category: string;
+      };
     };
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           "application/json": components["schemas"]["categoriesResponse"];
         };
       };
-      /** Category not found */
+      /** @description Category not found */
       404: {
         content: {
           "text/plain": unknown;
@@ -473,28 +540,41 @@ export interface operations {
       };
     };
   };
-  /** Search endpoint for `internal use only`. Searches series and episodes. */
+  /**
+   * Internal search
+   * @description Search endpoint for `internal use only`. Searches series and episodes.
+   */
   InternalSearch: {
     parameters: {
       query: {
-        /** The query text */
+        /**
+         * @description The query text
+         * @example stanghelle
+         */
         q: string;
-        /** Defaults to 10 if not set */
+        /**
+         * @description Defaults to 10 if not set
+         * @example 10
+         */
         take?: number;
-        /** Defaults to `desc` if not set */
+        /**
+         * @description Defaults to `desc` if not set
+         * @example asc
+         */
         sort?: string;
-        /** options `series` or `episode` */
+        /**
+         * @description options `series` or `episode`
+         * @example series
+         */
         type?: string;
       };
     };
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
-          "application/json": (
-            | components["schemas"]["episodesearchintresult"]
-            | components["schemas"]["seriessearchintresult"]
-          )[];
+          "application/json":
+            (components["schemas"]["episodesearchintresult"] | components["schemas"]["seriessearchintresult"])[];
         };
       };
     };
