@@ -1,19 +1,21 @@
-# NRSS - RSS Feeds for NRK sin podcaster
+# NRSS - RSS feeds for NRK's podcasts
 
-https://nrss.deno.dev/
+Live version: [nrss.deno.dev](https://nrss.deno.dev/)
 
-## Local devlopment
+A webapp built with Deno's [Fresh](https://fresh.deno.dev/) that generates
+public accessible RSS-feeds for their produced podcasts via their
+[API](https://psapi.nrk.no/documentation/).
 
-install Deno
-https://deno.land/manual/getting_started/installation
+## Local development
 
-### Run the application
+1. [Install Deno](https://deno.land/manual/getting_started/installation)
+1. Run the app: `deno task start`
+1. Open [localhost:8000](http://localhost:8000) in your browser
 
-```shell
-deno task start
-```
+## What is this?
 
-Open http://localhost:8000/ to view it in the browser
+This is made as a reaction that the goverment funded NRK is closing their own
+content to their own app instead of building under open standards like RSS.
 
 ## Known Problems
 

@@ -5,66 +5,113 @@
 
 export interface paths {
   "/radio/catalog/episode/context/{episodeId}": {
-    /** Takes a episode id and returns the context. Supports ODM and podcast episodes. */
+    /**
+     * Episode context
+     * @description Takes a episode id and returns the context. Supports ODM and podcast episodes.
+     */
     get: operations["GetEpisodeContext"];
   };
   "/radio/catalog/programsContext/{programId}": {
-    /** Gets navigation aid for a programId. */
+    /**
+     * Program context
+     * @description Gets navigation aid for a programId.
+     */
     get: operations["GetProgramContext"];
   };
   "/radio/catalog/programs/{programId}": {
-    /** Gets the program page for a program id */
+    /**
+     * Program
+     * @description Gets the program page for a program id
+     */
     get: operations["GetProgram"];
   };
   "/radio/catalog/series/{seriesId}/type": {
-    /** Gets the radio series type */
+    /**
+     * Series type
+     * @description Gets the radio series type
+     */
     get: operations["GetSeriesType"];
   };
   "/radio/catalog/series/{seriesId}": {
-    /** Gets a radio series page */
+    /**
+     * Series
+     * @description Gets a radio series page
+     */
     get: operations["GetSeries"];
   };
   "/radio/catalog/series/{seriesId}/episodes": {
-    /** Gets episodes for a radio series */
+    /**
+     * Series episodes
+     * @description Gets episodes for a radio series
+     */
     get: operations["GetSeriesepisodes"];
   };
   "/radio/catalog/series/{seriesId}/seasons/{seasonId}": {
-    /** Gets a season for a radio series */
+    /**
+     * Series season
+     * @description Gets a season for a radio series
+     */
     get: operations["GetSeriesSeason"];
   };
   "/radio/catalog/series/{seriesId}/seasons/{seasonId}/episodes": {
-    /** Gets episodes for a radio series season */
+    /**
+     * Series season episodes
+     * @description Gets episodes for a radio series season
+     */
     get: operations["GetSeriesSeasonEpisodes"];
   };
   "/radio/catalog/extramaterial/{id}/clips": {
-    /** Gets clip extramaterials for a radio or podcast series */
+    /**
+     * Series extramaterial clips
+     * @description Gets clip extramaterials for a radio or podcast series
+     */
     get: operations["GetExtramaterialClips"];
   };
   "/radio/catalog/version/{id}": {
-    /** Gets the preferred series type (ODM or podcast) */
+    /**
+     * Version
+     * @description Gets the preferred series type (ODM or podcast)
+     */
     get: operations["GetVersion"];
   };
   "/radio/catalog/podcast/{podcastId}": {
-    /** Gets a podcast page */
+    /**
+     * Podcast
+     * @description Gets a podcast page
+     */
     get: operations["GetPodcast"];
   };
   "/radio/catalog/podcast/{podcastId}/episodes": {
-    /** Gets episodes for a podcast series */
+    /**
+     * Podcast episodes
+     * @description Gets episodes for a podcast series
+     */
     get: operations["GetPodcastepisodes"];
   };
   "/radio/catalog/podcast/{podcastId}/episodes/{podcastEpisodeId}": {
-    /** Gets a podcast episode */
+    /**
+     * Podcast episode
+     * @description Gets a podcast episode
+     */
     get: operations["GetPodcastEpisode"];
   };
   "/radio/catalog/podcast/{podcastId}/seasons/{seasonId}": {
-    /** Gets a season for a podcast series */
+    /**
+     * Podcast season
+     * @description Gets a season for a podcast series
+     */
     get: operations["GetPodcastSeason"];
   };
   "/radio/catalog/podcast/{podcastId}/seasons/{seasonId}/episodes": {
-    /** Gets episodes for a podcast series season */
+    /**
+     * Podcast season episodes
+     * @description Gets episodes for a podcast series season
+     */
     get: operations["GetPodcastSeasonEpisodes"];
   };
 }
+
+export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
@@ -119,8 +166,6 @@ export interface components {
       badges?: components["schemas"]["Badge"][];
       /** @description Number of new episodes in this season. Used in conjunction with `progressesForNewEpisodes`-link to check progresses for new episodes in season. New-badge should be removed if the number of new episodes matches the number of episodes with started/finished progress. Only applicable for seasons in Umbrella-podcasts. Otherwise not in response. */
       newEpisodesCount?: number;
-    } & {
-      links: unknown;
     };
     SeasonSeriesHalEmbeddedLinks: {
       self: components["schemas"]["HalLink"];
@@ -168,6 +213,9 @@ export interface components {
       date: string;
       titles: components["schemas"]["Titles"];
       originalTitle?: string;
+      /** @description Video clip ID for podcast episode. */
+      clipId?: string;
+      category?: components["schemas"]["Category"];
       /** @description The array is empty if no images are present */
       image?: components["schemas"]["Image"][];
       /** @description Duration of the episode. We use the [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601#Durations) format for duration. */
@@ -178,7 +226,6 @@ export interface components {
       /** Format: int32 */
       productionYear?: number;
       availability: components["schemas"]["AvailabilityVm"];
-      contributors?: components["schemas"]["ContributorVm"][];
       /** @description Array of badges indication statuses */
       badges?: components["schemas"]["Badge"][];
     };
@@ -258,6 +305,7 @@ export interface components {
       /** @description The array is empty if no images are present */
       image: components["schemas"]["Image"][];
       titles: components["schemas"]["Titles"];
+      temporalTitles: components["schemas"]["TemporalTitles"];
       availability: components["schemas"]["AvailabilityVm"];
       category: components["schemas"]["OdmCategory"];
       usageRights?: components["schemas"]["UsageRightsVm"];
@@ -275,11 +323,14 @@ export interface components {
       date: string;
       category: components["schemas"]["Category"];
       programInformation: components["schemas"]["ProgramInformation"];
+      /** @description Video clip ID for podcast episode. */
+      clipId?: string;
       /** @description The array is empty if no images are present */
       image: components["schemas"]["Image"][];
       titles: components["schemas"]["Titles"];
       /** @description Podcast indexpoints use the same contract as odm index points but only Title and StartPoint will be set */
       indexPoints?: components["schemas"]["IndexPoint"][];
+      contributors?: components["schemas"]["ContributorVm"][];
       availability: components["schemas"]["AvailabilityVm"];
       usageRights?: components["schemas"]["UsageRightsVm"];
       duration: components["schemas"]["Duration"];
@@ -342,6 +393,27 @@ export interface components {
       title: string;
       subtitle?: string | null;
     };
+    /** @description Table of titles and when they should be displayed. The array of titles will in many cases be empty, but the default title is always present */
+    TemporalTitles: {
+      titles: components["schemas"]["TemporalTitle"][];
+      defaultTitles: {
+        /** @description The series title */
+        mainTitle: string;
+        /** @description The program title */
+        subtitle: string;
+      };
+    };
+    /** @description List of titles. May be empty */
+    TemporalTitle: {
+      from: string;
+      to: string;
+      titles: {
+        /** @description The series title */
+        mainTitle: string;
+        /** @description The program title */
+        subtitle: string;
+      };
+    };
     UsageRightsVm: {
       from: components["schemas"]["UsageRightsDateVm"];
       to: components["schemas"]["UsageRightsDateVm"];
@@ -356,12 +428,7 @@ export interface components {
       displayValue: components["schemas"]["GeoBlockDisplayValue"];
     };
     /** @enum {string} */
-    AvailabilityStatus:
-      | "coming"
-      | "available"
-      | "expires"
-      | "expired"
-      | "notAvailableOnline";
+    AvailabilityStatus: "coming" | "available" | "expires" | "expired" | "notAvailableOnline";
     /**
      * @example {
      *   "href": "/some/url"
@@ -507,26 +574,22 @@ export interface components {
     };
     /** @description Aggregated info for clips */
     ExtraMaterialClipsHalEmbedded: {
-      metadata?: {
-        displayAspectRatio: external[
-          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-        ]["components"]["schemas"]["DisplayAspectRatio"];
+      metadata?: ({
+        displayAspectRatio: external["../playback/openapi.json"]["components"]["schemas"]["DisplayAspectRatio"];
         /**
          * @description Clip length. The string is formatted as https://en.wikipedia.org/wiki/ISO_8601#Durations
          * @example PT2M0S
          */
         duration: string;
         id: string;
-        /** @enum {undefined} */
+        /** @enum {unknown} */
         playability: "nonPlayable" | "playable";
-        preplay: external[
-          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-        ]["components"]["schemas"]["PreplayVm"];
+        preplay: external["../playback/openapi.json"]["components"]["schemas"]["PreplayVm"];
         /** @description Link to full metadata */
         _links: {
           self: components["schemas"]["HalLink"];
         };
-      }[];
+      })[];
     };
     ExtraMaterialClipsHalLinks: {
       self: components["schemas"]["HalLink"];
@@ -534,414 +597,70 @@ export interface components {
     };
     Badge: {
       label?: string;
-      /** @enum {undefined} */
+      /** @enum {unknown} */
       type?: "new";
     };
   };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 
-export interface operations {
-  /** Takes a episode id and returns the context. Supports ODM and podcast episodes. */
-  GetEpisodeContext: {
-    parameters: {
-      path: {
-        /** The episode id */
-        episodeId: string;
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["EpisodeContext"];
-        };
-      };
-      /** Episode not found */
-      404: unknown;
-    };
-  };
-  /** Gets navigation aid for a programId. */
-  GetProgramContext: {
-    parameters: {
-      path: {
-        /** The program id */
-        programId: string;
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["EpisodeContext"];
-        };
-      };
-      /** Program not found */
-      404: unknown;
-    };
-  };
-  /** Gets the program page for a program id */
-  GetProgram: {
-    parameters: {
-      path: {
-        /** The program id */
-        programId: string;
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["OdmProgramsHalResource"];
-        };
-      };
-      /** Program not found */
-      404: unknown;
-    };
-  };
-  /** Gets the radio series type */
-  GetSeriesType: {
-    parameters: {
-      path: {
-        /** The series id */
-        seriesId: string;
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["SeriesTypeHalResource"];
-        };
-      };
-      /** Series not found */
-      404: unknown;
-    };
-  };
-  /** Gets a radio series page */
-  GetSeries: {
-    parameters: {
-      path: {
-        /** The series id */
-        seriesId: string;
-      };
-      query: {
-        /** This parameter only affects Standard and News Series. Default is 10. */
-        pageSize?: number;
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["SeriesHalResource"];
-        };
-      };
-      /** Series not found */
-      404: unknown;
-    };
-  };
-  /** Gets episodes for a radio series */
-  GetSeriesepisodes: {
-    parameters: {
-      path: {
-        /** The series id */
-        seriesId: string;
-      };
-      query: {
-        /** Number of episodes returned. Default is 10 */
-        pageSize?: number;
-        /** Which page to take from */
-        page?: number;
-        /** Sorts episodes by date (Only applies for standard series episodes) */
-        sort?: components["schemas"]["SortDirection"];
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["EpisodesHalResource"];
-        };
-      };
-      /** Series not found */
-      404: unknown;
-    };
-  };
-  /** Gets a season for a radio series */
-  GetSeriesSeason: {
-    parameters: {
-      path: {
-        /** The series id */
-        seriesId: string;
-        /** The season id */
-        seasonId: string;
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["SeasonHalResource"];
-        };
-      };
-      /** Series or season not found */
-      404: unknown;
-    };
-  };
-  /** Gets episodes for a radio series season */
-  GetSeriesSeasonEpisodes: {
-    parameters: {
-      path: {
-        /** The series id */
-        seriesId: string;
-        /** The season id */
-        seasonId: string;
-      };
-      query: {
-        /** Number of episodes returned. Default is 10 */
-        pageSize?: number;
-        /** Which page to take from */
-        page?: number;
-        /** Sorts episodes by date (only applies for standard series episodes) */
-        sort?: components["schemas"]["SortDirection"];
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["EpisodesHalResource"];
-        };
-      };
-      /** Series or season not found */
-      404: unknown;
-    };
-  };
-  /** Gets clip extramaterials for a radio or podcast series */
-  GetExtramaterialClips: {
-    parameters: {
-      path: {
-        /** The series or podcast id */
-        id: string;
-      };
-      query: {
-        /** Number of clips returned. Default is 10 */
-        pageSize?: number;
-        /** Which page to take from. Default is 1 */
-        page?: number;
-        /** Sorts videos by date. Default is 'desc' */
-        sort?: components["schemas"]["SortDirection"];
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ExtraMaterialClipsHalResource"];
-        };
-      };
-      /** No podcast or series with id found */
-      404: unknown;
-    };
-  };
-  /** Gets the preferred series type (ODM or podcast) */
-  GetVersion: {
-    parameters: {
-      path: {
-        /** The series or podcast id */
-        id: string;
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["SeriesHalResource"];
-        };
-      };
-      /** Not found */
-      404: unknown;
-    };
-  };
-  /** Gets a podcast page */
-  GetPodcast: {
-    parameters: {
-      path: {
-        /** The podcast id */
-        podcastId: string;
-      };
-      query: {
-        /** Default is 10. */
-        pageSize?: number;
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["SeriesHalResource"];
-        };
-      };
-      /** Podcast not found */
-      404: unknown;
-    };
-  };
-  /** Gets episodes for a podcast series */
-  GetPodcastepisodes: {
-    parameters: {
-      path: {
-        /** The podcast id */
-        podcastId: string;
-      };
-      query: {
-        /** Number of episodes returned. Default is 10 */
-        pageSize?: number;
-        /** Which page to take from */
-        page?: number;
-        /** Sorts episodes by date (only applies for standard series episodes) */
-        sort?: components["schemas"]["SortDirection"];
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["EpisodesHalResource"];
-        };
-      };
-      /** Podcast not found */
-      404: unknown;
-    };
-  };
-  /** Gets a podcast episode */
-  GetPodcastEpisode: {
-    parameters: {
-      path: {
-        /** The podcast id */
-        podcastId: string;
-        /** The podcast episode id */
-        podcastEpisodeId: string;
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["PodcastEpisodeHalResource"];
-        };
-      };
-      /** Podcast or episode not found */
-      404: unknown;
-    };
-  };
-  /** Gets a season for a podcast series */
-  GetPodcastSeason: {
-    parameters: {
-      path: {
-        /** The podcast id */
-        podcastId: string;
-        /** The season id */
-        seasonId: string;
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["PodcastSeasonHalResource"];
-        };
-      };
-      /** Podcast or season not found */
-      404: unknown;
-    };
-  };
-  /** Gets episodes for a podcast series season */
-  GetPodcastSeasonEpisodes: {
-    parameters: {
-      path: {
-        /** The podcast id */
-        podcastId: string;
-        /** The season id */
-        seasonId: string;
-      };
-      query: {
-        /** Number of episodes returned. Default is 10 */
-        pageSize?: number;
-        /** Which page to take from */
-        page?: number;
-        /** Sorts episodes by date (only applies for standard series episodes) */
-        sort?: components["schemas"]["SortDirection"];
-      };
-    };
-    responses: {
-      /** Success */
-      200: {
-        content: {
-          "application/json": components["schemas"]["EpisodesHalResource"];
-        };
-      };
-      /** Podcast or season not found */
-      404: unknown;
-    };
-  };
-}
+export type $defs = Record<string, never>;
 
 export interface external {
-  "https://psapi.nrk.no/documentation/openapi/playback/openapi.json": {
+  "../playback/openapi.json": {
     paths: {
       "/playback/debug": {
-        get: external[
-          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-        ]["operations"]["getPlaybackDebug"];
+        /** Debug info for detected client and client-ip */
+        get: operations["getPlaybackDebug"];
       };
       "/playback/dnslist": {
-        get: external[
-          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-        ]["operations"]["getPlaybackDnsList"];
+        /** List all DNS-aliases used for streaming. */
+        get: operations["getPlaybackDnsList"];
       };
       "/playback/manifest/{id}": {
-        /** This endpoint is just for clients that doesn't know its context */
-        get: external[
-          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-        ]["operations"]["getPlaybackManifestRedirect"];
+        /**
+         * Playback Manifest for the specified program, clip or channel.
+         * @description This endpoint is just for clients that doesn't know its context
+         */
+        get: operations["getPlaybackManifestRedirect"];
       };
       "/playback/manifest/program/{programId}": {
-        get: external[
-          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-        ]["operations"]["getPlaybackProgramManifest"];
+        /** Playback Manifest for the specified program. */
+        get: operations["getPlaybackProgramManifest"];
       };
       "/playback/manifest/channel/{channelId}": {
-        get: external[
-          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-        ]["operations"]["getPlaybackChannelManifest"];
+        /** Playback Manifest for the specified channel. */
+        get: operations["getPlaybackChannelManifest"];
       };
       "/playback/manifest/clip/{clipId}": {
-        get: external[
-          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-        ]["operations"]["getPlaybackClipManifest"];
+        /** Playback Manifest for the specified clip. */
+        get: operations["getPlaybackClipManifest"];
       };
       "/playback/metadata/{id}": {
-        /** This endpoint is just for clients that doesn't know its context */
-        get: external[
-          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-        ]["operations"]["getPlaybackMetadataRedirect"];
+        /**
+         * Playback Metadata for the specified program, clip or channel.
+         * @description This endpoint is just for clients that doesn't know its context
+         */
+        get: operations["getPlaybackMetadataRedirect"];
       };
       "/playback/metadata/program/{programId}": {
-        get: external[
-          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-        ]["operations"]["getPlaybackProgramMetadata"];
+        /** Playback Metadata for the specified program. */
+        get: operations["getPlaybackProgramMetadata"];
       };
       "/playback/metadata/channel/{channelId}": {
-        get: external[
-          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-        ]["operations"]["getPlaybackChannelMetadata"];
+        /** Playback Metadata for the specified channel. */
+        get: operations["getPlaybackChannelMetadata"];
       };
       "/playback/metadata/clip/{clipId}": {
-        get: external[
-          "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-        ]["operations"]["getPlaybackClipMetadata"];
+        /** Playback Metadata for the specified clip . */
+        get: operations["getPlaybackClipMetadata"];
       };
     };
+    webhooks: Record<string, never>;
     components: {
       schemas: {
         DnsList: {
@@ -959,12 +678,8 @@ export interface external {
               href: string;
             };
           };
-          playbackData: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlaybackDataVm"];
-          locationData: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["LocationDataVm"];
+          playbackData: external["../playback/openapi.json"]["components"]["schemas"]["PlaybackDataVm"];
+          locationData: external["../playback/openapi.json"]["components"]["schemas"]["LocationDataVm"];
         };
         PlaybackDataVm: {
           maxBitrate: number;
@@ -979,15 +694,9 @@ export interface external {
           isBeta: boolean;
           originalUa: string;
           wurflId: string | null;
-          distributionFormat: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["DistributionFormat"];
-          deviceGroupName: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["DeviceGroupName"];
-          playerPlatform: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayerPlatform"];
+          distributionFormat: external["../playback/openapi.json"]["components"]["schemas"]["DistributionFormat"];
+          deviceGroupName: external["../playback/openapi.json"]["components"]["schemas"]["DeviceGroupName"];
+          playerPlatform: external["../playback/openapi.json"]["components"]["schemas"]["PlayerPlatform"];
           customManifestParameters: (
             | "AudioOnly"
             | "DolbyOnly"
@@ -999,24 +708,12 @@ export interface external {
             | "NoSignalDiscontinuities"
             | "SignalDiscontinuities"
           )[];
-          subtitlesDistribution: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["SubtitlesDistribution"];
+          subtitlesDistribution: external["../playback/openapi.json"]["components"]["schemas"]["SubtitlesDistribution"];
         };
         /** @enum {string} */
-        DistributionFormat:
-          | "Dash"
-          | "Hds"
-          | "Hls"
-          | "ProgressiveDownload"
-          | "ProgressiveMp3";
+        DistributionFormat: "Dash" | "Hds" | "Hls" | "ProgressiveDownload" | "ProgressiveMp3";
         /** @enum {string} */
-        DeviceGroupName:
-          | "Desktop"
-          | "Mobile"
-          | "SetTopUnit"
-          | "Tablet"
-          | "Tv";
+        DeviceGroupName: "Desktop" | "Mobile" | "SetTopUnit" | "Tablet" | "Tv";
         /** @enum {string} */
         PlayerPlatform:
           | "Altibox"
@@ -1063,50 +760,24 @@ export interface external {
           realIp: string;
         };
         ManifestResponse:
-          & Partial<
-            external[
-              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-            ]["components"]["schemas"]["PlayableManifest"]
-          >
-          & Partial<
-            external[
-              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-            ]["components"]["schemas"]["NonPlayableManifest"]
-          >;
+          | external["../playback/openapi.json"]["components"]["schemas"]["PlayableManifest"]
+          | external["../playback/openapi.json"]["components"]["schemas"]["NonPlayableManifest"];
         PlayableManifest: {
           /** @enum {string} */
           playability: "playable";
-          playable: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayableElementVm"];
+          playable: external["../playback/openapi.json"]["components"]["schemas"]["PlayableElementVm"];
           statistics: {
-            scores: external[
-              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-            ]["components"]["schemas"]["ScoresStatisticsVm"];
-            ga: external[
-              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-            ]["components"]["schemas"]["GoogleAnalyticsVm"];
-            conviva: external[
-              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-            ]["components"]["schemas"]["ConvivaStatisticsVm"];
-            luna: external[
-              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-            ]["components"]["schemas"]["LunaStatisticsVm"];
+            scores: external["../playback/openapi.json"]["components"]["schemas"]["ScoresStatisticsVm"];
+            ga: external["../playback/openapi.json"]["components"]["schemas"]["GoogleAnalyticsVm"];
+            conviva: external["../playback/openapi.json"]["components"]["schemas"]["ConvivaStatisticsVm"];
+            luna: external["../playback/openapi.json"]["components"]["schemas"]["LunaStatisticsVm"];
           };
-          nonPlayable: unknown | null;
+          nonPlayable: unknown;
           id: string;
-          streamingMode: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayableStreamingMode"];
-          availability: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["AvailabilityVm"];
-          displayAspectRatio: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["DisplayAspectRatio"];
-          sourceMedium: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayableSourceMedium"];
+          streamingMode: external["../playback/openapi.json"]["components"]["schemas"]["PlayableStreamingMode"];
+          availability: external["../playback/openapi.json"]["components"]["schemas"]["AvailabilityVm"];
+          displayAspectRatio: external["../playback/openapi.json"]["components"]["schemas"]["DisplayAspectRatio"];
+          sourceMedium: external["../playback/openapi.json"]["components"]["schemas"]["PlayableSourceMedium"];
           _links: {
             self: {
               href: string;
@@ -1121,28 +792,18 @@ export interface external {
         NonPlayableManifest: {
           /** @enum {string} */
           playability: "nonPlayable";
-          playable: unknown | null;
+          playable: unknown;
           statistics: {
-            scores: unknown | null;
-            ga: unknown | null;
-            luna: unknown | null;
+            scores: unknown;
+            ga: unknown;
+            luna: unknown;
           };
-          nonPlayable: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["NonPlayableElementVm"];
+          nonPlayable: external["../playback/openapi.json"]["components"]["schemas"]["NonPlayableElementVm"];
           id: string;
-          streamingMode: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayableStreamingMode"];
-          availability: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["AvailabilityVm"];
-          displayAspectRatio: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["DisplayAspectRatio"];
-          sourceMedium: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayableSourceMedium"];
+          streamingMode: external["../playback/openapi.json"]["components"]["schemas"]["PlayableStreamingMode"];
+          availability: external["../playback/openapi.json"]["components"]["schemas"]["AvailabilityVm"];
+          displayAspectRatio: external["../playback/openapi.json"]["components"]["schemas"]["DisplayAspectRatio"];
+          sourceMedium: external["../playback/openapi.json"]["components"]["schemas"]["PlayableSourceMedium"];
           _links: {
             self: {
               href: string;
@@ -1158,31 +819,17 @@ export interface external {
           endSequenceStartTime: string | null;
           duration: string | null;
           /** @description List of mediaAssets */
-          assets: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["MediaUrlVm"][];
+          assets: external["../playback/openapi.json"]["components"]["schemas"]["MediaUrlVm"][];
           /** @description Livebuffer if element is live */
-          liveBuffer:
-            | Partial<
-              external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["LiveBufferVm"]
-            >
-            | null;
+          liveBuffer: external["../playback/openapi.json"]["components"]["schemas"]["LiveBufferVm"] | null;
           /** @description List of subtitles */
-          subtitles: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["SubtitlesVm"][];
+          subtitles: external["../playback/openapi.json"]["components"]["schemas"]["SubtitlesVm"][];
         };
         MediaUrlVm: {
           /** @description The media URL itself. */
           url: string;
-          format: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayableFormat"];
-          mimeType: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayableMimeType"];
+          format: external["../playback/openapi.json"]["components"]["schemas"]["PlayableFormat"];
+          mimeType: external["../playback/openapi.json"]["components"]["schemas"]["PlayableMimeType"];
           /** @description True if program is marked as HDSecure, false otherwise */
           encrypted: boolean;
         };
@@ -1206,9 +853,7 @@ export interface external {
           bufferStartTime: string | null;
           /** @description Live buffer length */
           bufferDuration: string;
-          bufferType: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["LiveBufferType"];
+          bufferType: external["../playback/openapi.json"]["components"]["schemas"]["LiveBufferType"];
         };
         /**
          * @description Type of liveBuffer
@@ -1216,15 +861,9 @@ export interface external {
          */
         LiveBufferType: "fixed" | "growing" | "none" | "sliding";
         SubtitlesVm: {
-          type: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["SubtitleType"];
-          language: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["SubtitleLanguage"];
-          label: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["SubtitleLabel"];
+          type: external["../playback/openapi.json"]["components"]["schemas"]["SubtitleType"];
+          language: external["../playback/openapi.json"]["components"]["schemas"]["SubtitleLanguage"];
+          label: external["../playback/openapi.json"]["components"]["schemas"]["SubtitleLabel"];
           defaultOn: boolean;
           webVtt: string;
         };
@@ -1233,10 +872,7 @@ export interface external {
         /** @enum {string} */
         SubtitleLanguage: "en" | "nb";
         /** @enum {string} */
-        SubtitleLabel:
-          | "English"
-          | "Norsk tekst"
-          | "Tekstet for hørselshemmede";
+        SubtitleLabel: "English" | "Norsk tekst" | "Tekstet for hørselshemmede";
         ScoresStatisticsVm: {
           springStreamSite: string;
           springStreamStream: string;
@@ -1258,7 +894,9 @@ export interface external {
          * * dimension29: Platform
          * [Ekstern doc](https://github.com/nrkno/analytics-docs/blob/master/docs/schema.md)
          */
-        GoogleAnalyticsVm: { [key: string]: string };
+        GoogleAnalyticsVm: {
+          [key: string]: string;
+        };
         ConvivaStatisticsVm: {
           /**
            * @description A string identifying the current video application.
@@ -1275,18 +913,14 @@ export interface external {
            * When duration is unknown, eg channels: -1
            */
           duration: number;
-          streamType: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["ConvivaStreamType"];
+          streamType: external["../playback/openapi.json"]["components"]["schemas"]["ConvivaStreamType"];
           /**
            * @description The URL from where this video content will be downloaded. For
            * manifest-based streaming protocols, it should be the URL of the top-level
            * manifest.
            */
           streamUrl: string;
-          custom: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["ConvivaCustomProperties"];
+          custom: external["../playback/openapi.json"]["components"]["schemas"]["ConvivaCustomProperties"];
         };
         /** @enum {string} */
         ConvivaStreamType: "LIVE" | "VOD";
@@ -1322,9 +956,7 @@ export interface external {
            * Example: underholdning
            */
           category: string;
-          mediaType: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["ConvivaMediaType"];
+          mediaType: external["../playback/openapi.json"]["components"]["schemas"]["ConvivaMediaType"];
           /**
            * @description Name of selected CDN
            * Example: Telenor-Cdn
@@ -1342,9 +974,7 @@ export interface external {
            * Example: tv.nrk.no, nrk.no, nrksuper.no
            */
           serviceName: string;
-          contentType: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["ConvivaContentType"];
+          contentType: external["../playback/openapi.json"]["components"]["schemas"]["ConvivaContentType"];
         };
         /**
          * @description MediaType for current content
@@ -1355,19 +985,10 @@ export interface external {
          * @description Type of content
          * @enum {string}
          */
-        ConvivaContentType:
-          | "Channel"
-          | "Clip"
-          | "Event"
-          | "Podcast"
-          | "Program";
+        ConvivaContentType: "Channel" | "Clip" | "Event" | "Podcast" | "Program";
         LunaStatisticsVm: {
-          config: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["LunaConfig"];
-          data: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["LunaPayload"];
+          config: external["../playback/openapi.json"]["components"]["schemas"]["LunaConfig"];
+          data: external["../playback/openapi.json"]["components"]["schemas"]["LunaPayload"];
         };
         LunaConfig: {
           beacon: string;
@@ -1397,37 +1018,25 @@ export interface external {
            * @description Only applicable for on-demand media elements. Will be null for live media
            * elements.
            */
-          onDemand:
-            | Partial<
-              external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["OnDemandUsageRights"]
-            >
-            | null;
+          onDemand: external["../playback/openapi.json"]["components"]["schemas"]["OnDemandUsageRights"] | null;
           /**
            * @description Only applicable for live media elements. Will be null for on-demand media
            * elements.
            */
           live:
-            | (
-              & Partial<{
-                /** @enum {string} */
-                type: "channel";
-                /** @enum {boolean} */
-                isOngoing: true;
-                transmissionInterval: unknown | null;
-              }>
-              & Partial<{
-                /** @enum {string} */
-                type: "transmission";
-                isOngoing: boolean;
-                transmissionInterval: external[
-                  "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-                ]["components"]["schemas"][
-                  "LiveTransmissionIntervalVm"
-                ];
-              }>
-            )
+            | ({
+              /** @enum {string} */
+              type: "channel";
+              /** @enum {boolean} */
+              isOngoing: true;
+              transmissionInterval: unknown;
+            } | {
+              /** @enum {string} */
+              type: "transmission";
+              isOngoing: boolean;
+              transmissionInterval:
+                external["../playback/openapi.json"]["components"]["schemas"]["LiveTransmissionIntervalVm"];
+            })
             | null;
           externalEmbeddingAllowed: boolean;
         };
@@ -1445,12 +1054,8 @@ export interface external {
         /** @enum {string} */
         PlayableSourceMedium: "audio" | "video";
         NonPlayableElementVm: {
-          reason: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["NonPlayableReason"];
-          messageType: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["NonPlayableMessageType"];
+          reason: external["../playback/openapi.json"]["components"]["schemas"]["NonPlayableReason"];
+          messageType: external["../playback/openapi.json"]["components"]["schemas"]["NonPlayableMessageType"];
           /**
            * @description Standard message for end user describing why the media element is not
            * playable.
@@ -1512,9 +1117,7 @@ export interface external {
         /** @description Image to show before play */
         PosterVm: {
           /** @description List of images in different sizes */
-          images: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PosterImageVm"][];
+          images: external["../playback/openapi.json"]["components"]["schemas"]["PosterImageVm"][];
         };
         /** @description Title to show before play */
         TitlesVm: {
@@ -1522,18 +1125,12 @@ export interface external {
           subtitle: string;
         };
         PreplayVm: {
-          titles: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["TitlesVm"];
+          titles: external["../playback/openapi.json"]["components"]["schemas"]["TitlesVm"];
           /** @description Description to show before play */
           description: string;
-          poster: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PosterVm"];
+          poster: external["../playback/openapi.json"]["components"]["schemas"]["PosterVm"];
           /** @description List of index points */
-          indexPoints: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["IndexPointVm"][];
+          indexPoints: external["../playback/openapi.json"]["components"]["schemas"]["IndexPointVm"][];
         };
         LegalAgeRating: {
           code: string;
@@ -1543,9 +1140,7 @@ export interface external {
         LegalAgeBodyRated: {
           /** @enum {string} */
           status: "rated";
-          rating: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["LegalAgeRating"];
+          rating: external["../playback/openapi.json"]["components"]["schemas"]["LegalAgeRating"];
         };
         LegalAgeBodyExempt: {
           /** @enum {string} */
@@ -1554,16 +1149,8 @@ export interface external {
         LegalAgeVm: {
           legalReference: string;
           body:
-            & Partial<
-              external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["LegalAgeBodyExempt"]
-            >
-            & Partial<
-              external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["LegalAgeBodyRated"]
-            >;
+            | external["../playback/openapi.json"]["components"]["schemas"]["LegalAgeBodyExempt"]
+            | external["../playback/openapi.json"]["components"]["schemas"]["LegalAgeBodyRated"];
         };
         PlayableMetadataVm: {
           /** @description Uri to resolve to get the media manifest */
@@ -1572,63 +1159,27 @@ export interface external {
         PlayableMetadata: {
           /** @enum {string} */
           playability: "playable";
-          playable: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayableMetadataVm"];
-          nonPlayable: unknown | null;
+          playable: external["../playback/openapi.json"]["components"]["schemas"]["PlayableMetadataVm"];
+          nonPlayable: unknown;
           id: string;
-          streamingMode: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayableStreamingMode"];
+          streamingMode: external["../playback/openapi.json"]["components"]["schemas"]["PlayableStreamingMode"];
           duration: string | null;
-          availability: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["AvailabilityVm"];
-          legalAge: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["LegalAgeVm"];
-          preplay: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PreplayVm"];
-          displayAspectRatio: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["DisplayAspectRatio"];
-          skipDialogInfo:
-            | Partial<
-              external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["SkipDialogInfoVm"]
-            >
-            | null;
-          sourceMedium: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayableSourceMedium"];
+          availability: external["../playback/openapi.json"]["components"]["schemas"]["AvailabilityVm"];
+          legalAge: external["../playback/openapi.json"]["components"]["schemas"]["LegalAgeVm"];
+          preplay: external["../playback/openapi.json"]["components"]["schemas"]["PreplayVm"];
+          displayAspectRatio: external["../playback/openapi.json"]["components"]["schemas"]["DisplayAspectRatio"];
+          skipDialogInfo: external["../playback/openapi.json"]["components"]["schemas"]["SkipDialogInfoVm"] | null;
+          sourceMedium: external["../playback/openapi.json"]["components"]["schemas"]["PlayableSourceMedium"];
           _links: {
             self: {
               href: string;
             };
-            manifests:
-              | Partial<
-                {
-                  href: string;
-                  name: external[
-                    "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-                  ]["components"]["schemas"][
-                    "ManifestLinkName"
-                  ];
-                }[]
-              >
-              | null;
-            next:
-              | Partial<
-                external[
-                  "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-                ]["components"]["schemas"]["NextLink"]
-              >
-              | null;
-            series?: external[
-              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-            ]["components"]["schemas"]["SeriesLink"];
+            manifests: {
+              href: string;
+              name: external["../playback/openapi.json"]["components"]["schemas"]["ManifestLinkName"];
+            }[] | null;
+            next: external["../playback/openapi.json"]["components"]["schemas"]["NextLink"] | null;
+            series?: external["../playback/openapi.json"]["components"]["schemas"]["SeriesLink"];
             progress?: {
               href: string;
               /** @enum {boolean} */
@@ -1636,90 +1187,42 @@ export interface external {
             };
           };
           _embedded: {
-            manifests:
-              | Partial<
-                {
-                  id: string;
-                  availabilityLabel: external[
-                    "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-                  ]["components"]["schemas"][
-                    "AvailabilityLabel"
-                  ];
-                  _links: {
-                    self: {
-                      href: string;
-                      name: external[
-                        "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-                      ]["components"]["schemas"][
-                        "ManifestLinkName"
-                      ];
-                    };
-                  };
-                }[]
-              >
-              | null;
+            manifests: {
+              id: string;
+              availabilityLabel: external["../playback/openapi.json"]["components"]["schemas"]["AvailabilityLabel"];
+              _links: {
+                self: {
+                  href: string;
+                  name: external["../playback/openapi.json"]["components"]["schemas"]["ManifestLinkName"];
+                };
+              };
+            }[] | null;
           };
         };
         NonPlayableMetadata: {
           /** @enum {string} */
           playability: "nonPlayable";
-          playable: unknown | null;
-          nonPlayable: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["NonPlayableElementVm"];
+          playable: unknown;
+          nonPlayable: external["../playback/openapi.json"]["components"]["schemas"]["NonPlayableElementVm"];
           id: string;
-          streamingMode: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayableStreamingMode"];
+          streamingMode: external["../playback/openapi.json"]["components"]["schemas"]["PlayableStreamingMode"];
           duration: string | null;
-          availability: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["AvailabilityVm"];
-          legalAge: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["LegalAgeVm"];
-          preplay: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PreplayVm"];
-          displayAspectRatio: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["DisplayAspectRatio"];
-          skipDialogInfo:
-            | Partial<
-              external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["SkipDialogInfoVm"]
-            >
-            | null;
-          sourceMedium: external[
-            "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-          ]["components"]["schemas"]["PlayableSourceMedium"];
+          availability: external["../playback/openapi.json"]["components"]["schemas"]["AvailabilityVm"];
+          legalAge: external["../playback/openapi.json"]["components"]["schemas"]["LegalAgeVm"];
+          preplay: external["../playback/openapi.json"]["components"]["schemas"]["PreplayVm"];
+          displayAspectRatio: external["../playback/openapi.json"]["components"]["schemas"]["DisplayAspectRatio"];
+          skipDialogInfo: external["../playback/openapi.json"]["components"]["schemas"]["SkipDialogInfoVm"] | null;
+          sourceMedium: external["../playback/openapi.json"]["components"]["schemas"]["PlayableSourceMedium"];
           _links: {
             self: {
               href: string;
             };
-            manifests:
-              | Partial<
-                {
-                  href: string;
-                  name: external[
-                    "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-                  ]["components"]["schemas"][
-                    "ManifestLinkName"
-                  ];
-                }[]
-              >
-              | null;
-            next:
-              | Partial<
-                external[
-                  "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-                ]["components"]["schemas"]["NextLink"]
-              >
-              | null;
-            series?: external[
-              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-            ]["components"]["schemas"]["SeriesLink"];
+            manifests: {
+              href: string;
+              name: external["../playback/openapi.json"]["components"]["schemas"]["ManifestLinkName"];
+            }[] | null;
+            next: external["../playback/openapi.json"]["components"]["schemas"]["NextLink"] | null;
+            series?: external["../playback/openapi.json"]["components"]["schemas"]["SeriesLink"];
             progress?: {
               href: string;
               /** @enum {boolean} */
@@ -1727,296 +1230,695 @@ export interface external {
             };
           };
           _embedded: {
-            manifests:
-              | Partial<
-                {
-                  id: string;
-                  availabilityLabel: external[
-                    "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-                  ]["components"]["schemas"][
-                    "AvailabilityLabel"
-                  ];
-                  _links: {
-                    self: {
-                      href: string;
-                      name: external[
-                        "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-                      ]["components"]["schemas"][
-                        "ManifestLinkName"
-                      ];
-                    };
-                  };
-                }[]
-              >
-              | null;
+            manifests: {
+              id: string;
+              availabilityLabel: external["../playback/openapi.json"]["components"]["schemas"]["AvailabilityLabel"];
+              _links: {
+                self: {
+                  href: string;
+                  name: external["../playback/openapi.json"]["components"]["schemas"]["ManifestLinkName"];
+                };
+              };
+            }[] | null;
           };
         };
         MetadataResponse:
-          & Partial<
-            external[
-              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-            ]["components"]["schemas"]["PlayableMetadata"]
-          >
-          & Partial<
-            external[
-              "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-            ]["components"]["schemas"]["NonPlayableMetadata"]
-          >;
+          | external["../playback/openapi.json"]["components"]["schemas"]["PlayableMetadata"]
+          | external["../playback/openapi.json"]["components"]["schemas"]["NonPlayableMetadata"];
+      };
+      responses: never;
+      parameters: never;
+      requestBodies: never;
+      headers: never;
+      pathItems: never;
+    };
+    $defs: Record<string, never>;
+  };
+}
+
+export interface operations {
+  /**
+   * Episode context
+   * @description Takes a episode id and returns the context. Supports ODM and podcast episodes.
+   */
+  GetEpisodeContext: {
+    parameters: {
+      path: {
+        /** @description The episode id */
+        episodeId: string;
       };
     };
-    operations: {
-      getPlaybackDebug: {
-        responses: {
-          /** OK */
-          200: {
-            content: {
-              "application/json": external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["DebugData"];
-            };
-          };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["EpisodeContext"];
         };
       };
-      getPlaybackDnsList: {
-        responses: {
-          /** OK */
-          200: {
-            content: {
-              "application/json": external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["DnsList"];
-            };
-          };
+      /** @description Episode not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Program context
+   * @description Gets navigation aid for a programId.
+   */
+  GetProgramContext: {
+    parameters: {
+      path: {
+        /** @description The program id */
+        programId: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["EpisodeContext"];
         };
       };
-      /** This endpoint is just for clients that doesn't know its context */
-      getPlaybackManifestRedirect: {
-        parameters: {
-          path: {
-            /**
-             * The unique ID for the playback element.
-             * Different kinds of media elements have different kinds of IDs.
-             * - On-demand (PRF): Four letters and eight digits. Example: MSUB19120216
-             * - Klipp (Potion / Foss2): GUID.
-             * - Klipp (Foss1): The letter `f` followed by a sequence of digits.
-             * - Klipp (Guri): A sequence of digits.
-             * - Podcast: Prefix "nrkno-poddkast-". Example: nrkno-poddkast-10908-146680-20122018123000
-             * - Kanal: The name of the channel. Example: nrk1
-             */
-            id: string;
-          };
-          query: {
-            /** Is the client in in Super-universe or not. Used to get correct statistics and content */
-            inSuperUniverse?: string;
-            /** PreferredBandwidth could be used to limit the number of qualities in the HLS manifest. Legal values: low, mid, high, auto */
-            preferredBandwidth?: string;
-            /** PreferredCdn could be used to get the CDN used in the last request. Overrides Cedexis. The value that should be passed in exists as a header, named: CdnName */
-            preferredCdn?: string;
-            /** Use to activate liveToVod on playback */
-            live2Vod?: string;
-          };
-        };
-        responses: {
-          /** OK */
-          200: {
-            content: {
-              "application/json": external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["ManifestResponse"];
-            };
-          };
+      /** @description Program not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Program
+   * @description Gets the program page for a program id
+   */
+  GetProgram: {
+    parameters: {
+      path: {
+        /** @description The program id */
+        programId: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["OdmProgramsHalResource"];
         };
       };
-      getPlaybackProgramManifest: {
-        parameters: {
-          path: {
-            /**
-             * The unique ID for the playback element.
-             * Different kinds of media elements have different kinds of IDs.
-             * - On-demand (PRF): Four letters and eight digits. Example: MSUB19120216
-             */
-            programId: string;
-          };
-          query: {
-            /** Is the client in in Super-universe or not. Used to get correct statistics and content */
-            inSuperUniverse?: string;
-            /** PreferredBandwidth could be used to limit the number of qualities in the HLS manifest. Legal values: low, mid, high, auto */
-            preferredBandwidth?: string;
-            /** PreferredCdn could be used to get the CDN used in the last request. Overrides Cedexis. The value that should be passed in exists as a header, named: CdnName */
-            preferredCdn?: string;
-            /** Used to request HLS manifest for offline. This overrides/ignores preferredBandwith. Tablet/phone information is pulled from User-Agent */
-            offline?: "standard" | "high";
-          };
-        };
-        responses: {
-          /** OK */
-          200: {
-            content: {
-              "application/json": external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["ManifestResponse"];
-            };
-          };
+      /** @description Program not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Series type
+   * @description Gets the radio series type
+   */
+  GetSeriesType: {
+    parameters: {
+      path: {
+        /** @description The series id */
+        seriesId: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["SeriesTypeHalResource"];
         };
       };
-      getPlaybackChannelManifest: {
-        parameters: {
-          path: {
-            /**
-             * The unique ID for the playback element.
-             * Different kinds of media elements have different kinds of IDs.
-             * - Kanal: The name of the channel. Example: nrk1
-             */
-            channelId: string;
-          };
-          query: {
-            /** Is the client in in Super-universe or not. Used to get correct statistics and content */
-            inSuperUniverse?: string;
-            /** PreferredBandwidth could be used to limit the number of qualities in the HLS manifest. Legal values: low, mid, high, auto */
-            preferredBandwidth?: string;
-            /** PreferredCdn could be used to get the CDN used in the last request. Overrides Cedexis. The value that should be passed in exists as a header, named: CdnName */
-            preferredCdn?: string;
-          };
-        };
-        responses: {
-          /** OK */
-          200: {
-            content: {
-              "application/json": external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["ManifestResponse"];
-            };
-          };
+      /** @description Series not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Series
+   * @description Gets a radio series page
+   */
+  GetSeries: {
+    parameters: {
+      query?: {
+        /** @description This parameter only affects Standard and News Series. Default is 10. */
+        pageSize?: number;
+      };
+      path: {
+        /** @description The series id */
+        seriesId: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["SeriesHalResource"];
         };
       };
-      getPlaybackClipManifest: {
-        parameters: {
-          path: {
-            /**
-             * The unique ID for the playback element.
-             * Different kinds of media elements have different kinds of IDs.
-             * - Klipp (Potion / Foss2): GUID.
-             * - Klipp (Foss1): The letter `f` followed by a sequence of digits.
-             * - Klipp (Guri): A sequence of digits.
-             */
-            clipId: string;
-          };
-          query: {
-            /** PreferredBandwidth could be used to limit the number of qualities in the HLS manifest. Legal values: low, mid, high, auto */
-            preferredBandwidth?: string;
-            /** PreferredCdn could be used to get the CDN used in the last request. Overrides Cedexis. The value that should be passed in exists as a header, named: CdnName */
-            preferredCdn?: string;
-          };
-        };
-        responses: {
-          /** OK */
-          200: {
-            content: {
-              "application/json": external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["ManifestResponse"];
-            };
-          };
+      /** @description Series not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Series episodes
+   * @description Gets episodes for a radio series
+   */
+  GetSeriesepisodes: {
+    parameters: {
+      query?: {
+        /** @description Number of episodes returned. Default is 10 */
+        pageSize?: number;
+        /** @description Which page to take from */
+        page?: number;
+        /** @description Sorts episodes by date (Only applies for standard series episodes) */
+        sort?: components["schemas"]["SortDirection"];
+      };
+      path: {
+        /** @description The series id */
+        seriesId: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["EpisodesHalResource"];
         };
       };
-      /** This endpoint is just for clients that doesn't know its context */
-      getPlaybackMetadataRedirect: {
-        parameters: {
-          path: {
-            /**
-             * The unique ID for the playback element.
-             * Different kinds of media elements have different kinds of IDs.
-             * - On-demand (PRF): Four letters and eight digits. Example: MSUB19120216
-             * - Klipp (Potion / Foss2): GUID.
-             * - Klipp (Foss1): The letter `f` followed by a sequence of digits.
-             * - Klipp (Guri): A sequence of digits.
-             * - Podcast: Prefix "nrkno-poddkast-". Example: nrkno-poddkast-10908-146680-20122018123000
-             * - Kanal: The name of the channel. Example: nrk1
-             */
-            id: string;
-          };
-          query: {
-            /** Use to activate liveToVod on playback */
-            live2Vod?: string;
-          };
-        };
-        responses: {
-          /** OK */
-          200: {
-            content: {
-              "application/json": external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["MetadataResponse"];
-            };
-          };
+      /** @description Series not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Series season
+   * @description Gets a season for a radio series
+   */
+  GetSeriesSeason: {
+    parameters: {
+      path: {
+        /** @description The series id */
+        seriesId: string;
+        /** @description The season id */
+        seasonId: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["SeasonHalResource"];
         };
       };
-      getPlaybackProgramMetadata: {
-        parameters: {
-          path: {
-            /**
-             * The unique ID for the playback element.
-             * Different kinds of media elements have different kinds of IDs.
-             * - On-demand (PRF): Four letters and eight digits. Example: MSUB19120216
-             */
-            programId: string;
-          };
-        };
-        responses: {
-          /** OK */
-          200: {
-            content: {
-              "application/json": external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["MetadataResponse"];
-            };
-          };
+      /** @description Series or season not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Series season episodes
+   * @description Gets episodes for a radio series season
+   */
+  GetSeriesSeasonEpisodes: {
+    parameters: {
+      query?: {
+        /** @description Number of episodes returned. Default is 10 */
+        pageSize?: number;
+        /** @description Which page to take from */
+        page?: number;
+        /** @description Sorts episodes by date (only applies for standard series episodes) */
+        sort?: components["schemas"]["SortDirection"];
+      };
+      path: {
+        /** @description The series id */
+        seriesId: string;
+        /** @description The season id */
+        seasonId: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["EpisodesHalResource"];
         };
       };
-      getPlaybackChannelMetadata: {
-        parameters: {
-          path: {
-            /**
-             * The unique ID for the playback element.
-             * Different kinds of media elements have different kinds of IDs.
-             * - Kanal: The name of the channel. Example: nrk1
-             */
-            channelId: string;
-          };
-        };
-        responses: {
-          /** OK */
-          200: {
-            content: {
-              "application/json": external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["MetadataResponse"];
-            };
-          };
+      /** @description Series or season not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Series extramaterial clips
+   * @description Gets clip extramaterials for a radio or podcast series
+   */
+  GetExtramaterialClips: {
+    parameters: {
+      query?: {
+        /** @description Number of clips returned. Default is 10 */
+        pageSize?: number;
+        /** @description Which page to take from. Default is 1 */
+        page?: number;
+        /** @description Sorts videos by date. Default is 'desc' */
+        sort?: components["schemas"]["SortDirection"];
+      };
+      path: {
+        /** @description The series or podcast id */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ExtraMaterialClipsHalResource"];
         };
       };
-      getPlaybackClipMetadata: {
-        parameters: {
-          path: {
-            /**
-             * The unique ID for the playback element.
-             * Different kinds of media elements have different kinds of IDs.
-             * - Klipp (Potion / Foss2): GUID.
-             * - Klipp (Foss1): The letter `f` followed by a sequence of digits.
-             * - Klipp (Guri): A sequence of digits.
-             */
-            clipId: string;
-          };
+      /** @description No podcast or series with id found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Version
+   * @description Gets the preferred series type (ODM or podcast)
+   */
+  GetVersion: {
+    parameters: {
+      path: {
+        /** @description The series or podcast id */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["SeriesHalResource"];
         };
-        responses: {
-          /** OK */
-          200: {
-            content: {
-              "application/json": external[
-                "https://psapi.nrk.no/documentation/openapi/playback/openapi.json"
-              ]["components"]["schemas"]["MetadataResponse"];
-            };
-          };
+      };
+      /** @description Not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Podcast
+   * @description Gets a podcast page
+   */
+  GetPodcast: {
+    parameters: {
+      query?: {
+        /** @description Default is 10. */
+        pageSize?: number;
+      };
+      path: {
+        /** @description The podcast id */
+        podcastId: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["SeriesHalResource"];
+        };
+      };
+      /** @description Podcast not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Podcast episodes
+   * @description Gets episodes for a podcast series
+   */
+  GetPodcastepisodes: {
+    parameters: {
+      query?: {
+        /** @description Number of episodes returned. Default is 10 */
+        pageSize?: number;
+        /** @description Which page to take from */
+        page?: number;
+        /** @description Sorts episodes by date (only applies for standard series episodes) */
+        sort?: components["schemas"]["SortDirection"];
+      };
+      path: {
+        /** @description The podcast id */
+        podcastId: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["EpisodesHalResource"];
+        };
+      };
+      /** @description Podcast not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Podcast episode
+   * @description Gets a podcast episode
+   */
+  GetPodcastEpisode: {
+    parameters: {
+      path: {
+        /** @description The podcast id */
+        podcastId: string;
+        /** @description The podcast episode id */
+        podcastEpisodeId: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PodcastEpisodeHalResource"];
+        };
+      };
+      /** @description Podcast or episode not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Podcast season
+   * @description Gets a season for a podcast series
+   */
+  GetPodcastSeason: {
+    parameters: {
+      path: {
+        /** @description The podcast id */
+        podcastId: string;
+        /** @description The season id */
+        seasonId: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PodcastSeasonHalResource"];
+        };
+      };
+      /** @description Podcast or season not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Podcast season episodes
+   * @description Gets episodes for a podcast series season
+   */
+  GetPodcastSeasonEpisodes: {
+    parameters: {
+      query?: {
+        /** @description Number of episodes returned. Default is 10 */
+        pageSize?: number;
+        /** @description Which page to take from */
+        page?: number;
+        /** @description Sorts episodes by date (only applies for standard series episodes) */
+        sort?: components["schemas"]["SortDirection"];
+      };
+      path: {
+        /** @description The podcast id */
+        podcastId: string;
+        /** @description The season id */
+        seasonId: string;
+      };
+    };
+    responses: {
+      /** @description Success */
+      200: {
+        content: {
+          "application/json": components["schemas"]["EpisodesHalResource"];
+        };
+      };
+      /** @description Podcast or season not found */
+      404: {
+        content: never;
+      };
+    };
+  };
+  /** Debug info for detected client and client-ip */
+  getPlaybackDebug: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": external["../playback/openapi.json"]["components"]["schemas"]["DebugData"];
+        };
+      };
+    };
+  };
+  /** List all DNS-aliases used for streaming. */
+  getPlaybackDnsList: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": external["../playback/openapi.json"]["components"]["schemas"]["DnsList"];
+        };
+      };
+    };
+  };
+  /**
+   * Playback Manifest for the specified program, clip or channel.
+   * @description This endpoint is just for clients that doesn't know its context
+   */
+  getPlaybackManifestRedirect: {
+    parameters: {
+      query?: {
+        /** @description Is the client in in Super-universe or not. Used to get correct statistics and content */
+        inSuperUniverse?: string;
+        /** @description PreferredBandwidth could be used to limit the number of qualities in the HLS manifest. Legal values: low, mid, high, auto */
+        preferredBandwidth?: string;
+        /** @description PreferredCdn could be used to get the CDN used in the last request. Overrides Cedexis. The value that should be passed in exists as a header, named: CdnName */
+        preferredCdn?: string;
+        /** @description Use to activate liveToVod on playback */
+        live2Vod?: string;
+      };
+      path: {
+        /**
+         * @description The unique ID for the playback element.
+         * Different kinds of media elements have different kinds of IDs.
+         * - On-demand (PRF): Four letters and eight digits. Example: MSUB19120216
+         * - Klipp (Potion / Foss2): GUID.
+         * - Klipp (Foss1): The letter `f` followed by a sequence of digits.
+         * - Klipp (Guri): A sequence of digits.
+         * - Podcast: Prefix "nrkno-poddkast-". Example: nrkno-poddkast-10908-146680-20122018123000
+         * - Kanal: The name of the channel. Example: nrk1
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": external["../playback/openapi.json"]["components"]["schemas"]["ManifestResponse"];
+        };
+      };
+    };
+  };
+  /** Playback Manifest for the specified program. */
+  getPlaybackProgramManifest: {
+    parameters: {
+      query?: {
+        /** @description Is the client in in Super-universe or not. Used to get correct statistics and content */
+        inSuperUniverse?: string;
+        /** @description PreferredBandwidth could be used to limit the number of qualities in the HLS manifest. Legal values: low, mid, high, auto */
+        preferredBandwidth?: string;
+        /** @description PreferredCdn could be used to get the CDN used in the last request. Overrides Cedexis. The value that should be passed in exists as a header, named: CdnName */
+        preferredCdn?: string;
+        /** @description Used to request HLS manifest for offline. This overrides/ignores preferredBandwith. Tablet/phone information is pulled from User-Agent */
+        offline?: "standard" | "high";
+      };
+      path: {
+        /**
+         * @description The unique ID for the playback element.
+         * Different kinds of media elements have different kinds of IDs.
+         * - On-demand (PRF): Four letters and eight digits. Example: MSUB19120216
+         */
+        programId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": external["../playback/openapi.json"]["components"]["schemas"]["ManifestResponse"];
+        };
+      };
+    };
+  };
+  /** Playback Manifest for the specified channel. */
+  getPlaybackChannelManifest: {
+    parameters: {
+      query?: {
+        /** @description Is the client in in Super-universe or not. Used to get correct statistics and content */
+        inSuperUniverse?: string;
+        /** @description PreferredBandwidth could be used to limit the number of qualities in the HLS manifest. Legal values: low, mid, high, auto */
+        preferredBandwidth?: string;
+        /** @description PreferredCdn could be used to get the CDN used in the last request. Overrides Cedexis. The value that should be passed in exists as a header, named: CdnName */
+        preferredCdn?: string;
+      };
+      path: {
+        /**
+         * @description The unique ID for the playback element.
+         * Different kinds of media elements have different kinds of IDs.
+         * - Kanal: The name of the channel. Example: nrk1
+         */
+        channelId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": external["../playback/openapi.json"]["components"]["schemas"]["ManifestResponse"];
+        };
+      };
+    };
+  };
+  /** Playback Manifest for the specified clip. */
+  getPlaybackClipManifest: {
+    parameters: {
+      query?: {
+        /** @description PreferredBandwidth could be used to limit the number of qualities in the HLS manifest. Legal values: low, mid, high, auto */
+        preferredBandwidth?: string;
+        /** @description PreferredCdn could be used to get the CDN used in the last request. Overrides Cedexis. The value that should be passed in exists as a header, named: CdnName */
+        preferredCdn?: string;
+      };
+      path: {
+        /**
+         * @description The unique ID for the playback element.
+         * Different kinds of media elements have different kinds of IDs.
+         * - Klipp (Potion / Foss2): GUID.
+         * - Klipp (Foss1): The letter `f` followed by a sequence of digits.
+         * - Klipp (Guri): A sequence of digits.
+         */
+        clipId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": external["../playback/openapi.json"]["components"]["schemas"]["ManifestResponse"];
+        };
+      };
+    };
+  };
+  /**
+   * Playback Metadata for the specified program, clip or channel.
+   * @description This endpoint is just for clients that doesn't know its context
+   */
+  getPlaybackMetadataRedirect: {
+    parameters: {
+      query?: {
+        /** @description Use to activate liveToVod on playback */
+        live2Vod?: string;
+      };
+      path: {
+        /**
+         * @description The unique ID for the playback element.
+         * Different kinds of media elements have different kinds of IDs.
+         * - On-demand (PRF): Four letters and eight digits. Example: MSUB19120216
+         * - Klipp (Potion / Foss2): GUID.
+         * - Klipp (Foss1): The letter `f` followed by a sequence of digits.
+         * - Klipp (Guri): A sequence of digits.
+         * - Podcast: Prefix "nrkno-poddkast-". Example: nrkno-poddkast-10908-146680-20122018123000
+         * - Kanal: The name of the channel. Example: nrk1
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": external["../playback/openapi.json"]["components"]["schemas"]["MetadataResponse"];
+        };
+      };
+    };
+  };
+  /** Playback Metadata for the specified program. */
+  getPlaybackProgramMetadata: {
+    parameters: {
+      path: {
+        /**
+         * @description The unique ID for the playback element.
+         * Different kinds of media elements have different kinds of IDs.
+         * - On-demand (PRF): Four letters and eight digits. Example: MSUB19120216
+         */
+        programId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": external["../playback/openapi.json"]["components"]["schemas"]["MetadataResponse"];
+        };
+      };
+    };
+  };
+  /** Playback Metadata for the specified channel. */
+  getPlaybackChannelMetadata: {
+    parameters: {
+      path: {
+        /**
+         * @description The unique ID for the playback element.
+         * Different kinds of media elements have different kinds of IDs.
+         * - Kanal: The name of the channel. Example: nrk1
+         */
+        channelId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": external["../playback/openapi.json"]["components"]["schemas"]["MetadataResponse"];
+        };
+      };
+    };
+  };
+  /** Playback Metadata for the specified clip . */
+  getPlaybackClipMetadata: {
+    parameters: {
+      path: {
+        /**
+         * @description The unique ID for the playback element.
+         * Different kinds of media elements have different kinds of IDs.
+         * - Klipp (Potion / Foss2): GUID.
+         * - Klipp (Foss1): The letter `f` followed by a sequence of digits.
+         * - Klipp (Guri): A sequence of digits.
+         */
+        clipId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": external["../playback/openapi.json"]["components"]["schemas"]["MetadataResponse"];
         };
       };
     };
