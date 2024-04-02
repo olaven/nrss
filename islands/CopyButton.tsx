@@ -25,7 +25,7 @@ export default function CopyButton({ text, disabled = false, children }: Props) 
         startReset();
       }}
       disabled={!IS_BROWSER || disabled}
-      class="px-2 py-1 border(gray-100 2) hover:bg-gray-200 mx-auto"
+      class="px-2 py-1 border(gray-100 2) hover:bg-gray-200 mx-auto bg-blue-200"
     >
       {clicked ? "Kopiert!" : children}
     </button>
