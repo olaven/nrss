@@ -2,7 +2,8 @@
   "lock": false,
   "tasks": {
     "start": "deno run -A --watch=static/,routes/ dev.ts",
-    "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx"
+    "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
+    "types:nrk": "deno run -A generate-types.ts && deno fmt ./lib"
   },
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.6.8/",
@@ -12,7 +13,8 @@
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
     "twind": "https://esm.sh/twind@0.16.17",
-    "twind/": "https://esm.sh/twind@0.16.17/"
+    "twind/": "https://esm.sh/twind@0.16.17/",
+    "openapi-typescript": "npm:openapi-typescript@6.7.5"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

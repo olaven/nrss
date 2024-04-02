@@ -1,12 +1,19 @@
 import { FreshContext } from "$fresh/server.ts";
 import { parse, toSeconds } from "https://esm.sh/iso8601-duration@2.1.1";
-import { nrkRadio, OriginalEpisode } from "../../../../../lib/nrk.ts";
+import { nrkRadio, PodcastEpisode } from "../../../../../lib/nrk.ts";
 
-// TODO: This type `OriginalEpisode` is missing stuff.
-function toChapters(episode: OriginalEpisode) {
+type Chapter = {
+  title: string | undefined;
+  startTime: number | undefined;
+};
+
+function toChapters(episode: PodcastEpisode): Chapter[] | null {
+  if (!episode.indexPoints) {
+    return null;
+  }
   return episode.indexPoints.map((indexPoint) => ({
     title: indexPoint.title,
-    startTime: toSeconds(parse(indexPoint.startPoint)),
+    startTime: indexPoint.startPoint ? toSeconds(parse(indexPoint.startPoint)) : undefined,
   }));
 }
 
