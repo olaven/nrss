@@ -30,7 +30,7 @@ function toItemTag(seriesId: string, episode: OriginalEpisode) {
 
 async function buildFeed(seriesId: string) {
   const serie = await nrkRadio.getSerieData(seriesId);
-  const imageUrl = serie.squareImage.at(-1)?.url;
+  const imageUrl = serie.squareImage?.at(-1)?.url ?? "";
   const linkValue = `https://radio.nrk.no/podkast/${serie.id}`;
 
   // Quickly adapted from https://raw.githubusercontent.com/olaven/paperpod/1cde9abd3174b26e126aa74fc5a3b63fd078c0fd/packages/converter/src/rss.ts
@@ -88,11 +88,21 @@ async function buildFeed(seriesId: string) {
 
 export const handler = async (_req: Request, ctx: FreshContext): Promise<Response> => {
   const seriesId = ctx.params.seriesId;
-  const feedContent = await buildFeed(seriesId);
+  try {
+    const feedContent = await buildFeed(seriesId);
 
-  return new Response(feedContent, {
-    headers: {
-      "Content-Type": "application/xml",
-    },
-  });
+    return new Response(feedContent, {
+      headers: {
+        "Content-Type": "application/xml",
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ message: "Could not generate feed" }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
 };
