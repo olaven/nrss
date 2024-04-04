@@ -42,8 +42,12 @@ async function withDownloadLink(
   }
 }
 
+// TODO: Replace throws with `console.error` and return `null` if bad response.
 export const nrkRadio = {
   search: async (query: string): Promise<SearchResultList> => {
+    if (query === "") {
+      throw "Empty search query.";
+    }
     const [status, response] = await get<
       searchComponents["schemas"]["searchresult"]
     >(`${nrkAPI}/radio/search/search?q=${query}`);
@@ -99,6 +103,7 @@ export const nrkRadio = {
     if (status === OK && episode) {
       return episode;
     }
-    throw `Error getting episode ${episodeId}. Status: ${status}. Series: ${seriesId}`;
+    console.error(`Error getting episode ${episodeId}. Status: ${status}. Series: ${seriesId}`);
+    return null;
   },
 };

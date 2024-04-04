@@ -16,7 +16,8 @@
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
     "$gfm": "https://deno.land/x/gfm@0.6.0/mod.ts",
-    "openapi-typescript": "npm:openapi-typescript@6.7.5"
+    "openapi-typescript": "npm:openapi-typescript@6.7.5",
+    "$std/": "https://deno.land/std@0.221.0/"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
