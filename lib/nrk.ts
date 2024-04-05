@@ -1,4 +1,5 @@
-import { get, OK } from "https://deno.land/x/kall@v0.1.0/mod.ts";
+// FIXME: Remember to replace this with actual version
+import { get, STATUS_CODE } from "../../kall/mod.ts";
 import { components as searchComponents } from "./nrk-search.ts";
 import { components as catalogComponents } from "./nrk-catalog.ts";
 import { external as playbackComponents } from "./nrk-playback.ts";
@@ -25,17 +26,19 @@ async function withDownloadLink(
   type: catalogComponents["schemas"]["Type"],
 ): Promise<OriginalEpisode> {
   // getting stream link
-  let [playbackStatus, playbackResponse] = await get<Manifest>(
+  let { status: playbackStatus, body: playbackResponse } = await get<Manifest>(
     `${nrkAPI}/playback/manifest/podcast/${episode.episodeId}`,
   );
 
   if (type === "series") {
-    [playbackStatus, playbackResponse] = await get<Manifest>(
+    const { status, body } = await get<Manifest>(
       `${nrkAPI}/playback/manifest/program/${episode.episodeId}`,
     );
+    playbackStatus = status;
+    playbackResponse = body;
   }
 
-  if (playbackStatus === OK && playbackResponse) {
+  if (playbackStatus === STATUS_CODE.OK && playbackResponse) {
     return { ...episode, url: playbackResponse.playable.assets[0].url };
   } else {
     throw `Error getting downloadLink for ${episode.episodeId}, serie: ${episode.originalTitle}. Status: ${playbackStatus}`;
@@ -48,18 +51,18 @@ export const nrkRadio = {
     if (query === "") {
       throw "Empty search query.";
     }
-    const [status, response] = await get<
+    const { status, body } = await get<
       searchComponents["schemas"]["searchresult"]
     >(`${nrkAPI}/radio/search/search?q=${query}`);
-    if (status === OK && response) {
-      return response.results.series?.results;
+    if (status === STATUS_CODE.OK && body) {
+      return body.results.series?.results;
     }
     throw `Something went wrong with ${query} - got status ${status}`;
   },
   getSerieData: async (seriesId: string) => {
     let [
-      [episodeStatus, episodeResponse],
-      [seriesStatus, serieResponse],
+      { status: episodeStatus, body: episodeResponse },
+      { status: seriesStatus, body: serieResponse },
     ] = await Promise.all([
       get<PodcastEpisodes>(
         `${nrkAPI}/radio/catalog/podcast/${seriesId}/episodes`,
@@ -69,10 +72,10 @@ export const nrkRadio = {
       ),
     ]);
 
-    if (episodeStatus !== OK || seriesStatus !== OK) {
+    if (episodeStatus !== STATUS_CODE.OK || seriesStatus !== STATUS_CODE.OK) {
       [
-        [episodeStatus, episodeResponse],
-        [seriesStatus, serieResponse],
+        { status: episodeStatus, body: episodeResponse },
+        { status: seriesStatus, body: serieResponse },
       ] = await Promise.all([
         get<catalogComponents["schemas"]["EpisodesHalResource"]>(
           `https://psapi.nrk.no/radio/catalog/series/${seriesId}/episodes`,
@@ -84,7 +87,7 @@ export const nrkRadio = {
     }
 
     if (
-      episodeStatus === OK && seriesStatus === OK &&
+      episodeStatus === STATUS_CODE.OK && seriesStatus === STATUS_CODE.OK &&
       serieResponse?.series && episodeResponse?._embedded.episodes?.length
     ) {
       const episodes = await Promise.all(
@@ -99,8 +102,8 @@ export const nrkRadio = {
   },
   getEpisode: async (seriesId: string, episodeId: string): Promise<PodcastEpisode | null> => {
     const url = `${nrkAPI}/radio/catalog/podcast/${seriesId}/episodes/${episodeId}`;
-    const [status, episode] = await get<PodcastEpisode>(url);
-    if (status === OK && episode) {
+    const { status, body: episode } = await get<PodcastEpisode>(url);
+    if (status === STATUS_CODE.OK && episode) {
       return episode;
     }
     console.error(`Error getting episode ${episodeId}. Status: ${status}. Series: ${seriesId}`);
