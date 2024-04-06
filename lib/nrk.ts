@@ -37,9 +37,8 @@ async function search(query: string): Promise<SearchResultList | null> {
   return null;
 }
 
-async function getSerieData(
-  seriesId: string,
-): Promise<{ episodes: OriginalEpisode[] } & (RadioSeries["series"] | Podcast["series"]) | null> {
+export type SeriesData = { episodes: OriginalEpisode[] } & (RadioSeries["series"] | Podcast["series"]);
+async function getSerieData(seriesId: string): Promise<SeriesData | null> {
   let [
     { status: episodeStatus, body: episodeResponse },
     { status: seriesStatus, body: serieResponse },

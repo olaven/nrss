@@ -2,6 +2,7 @@ import { nrkRadio, OriginalEpisode } from "../../../lib/nrk.ts";
 import { FreshContext } from "$fresh/server.ts";
 import { declaration, serialize, tag } from "https://raw.githubusercontent.com/olaven/serialize-xml/v0.4.0/mod.ts";
 import { getHostName } from "../../../utils.ts";
+import { SeriesData } from "../../../lib/nrk.ts";
 
 function toItemTag(seriesId: string, episode: OriginalEpisode) {
   const description = episode.titles.subtitle || "";
@@ -28,10 +29,9 @@ function toItemTag(seriesId: string, episode: OriginalEpisode) {
   ]);
 }
 
-async function buildFeed(seriesId: string) {
-  const serie = await nrkRadio.getSerieData(seriesId);
-  const imageUrl = serie.squareImage?.at(-1)?.url ?? "";
-  const linkValue = `https://radio.nrk.no/podkast/${serie.id}`;
+function buildFeed(series: SeriesData) {
+  const imageUrl = series.squareImage?.at(-1)?.url ?? "";
+  const linkValue = `https://radio.nrk.no/podkast/${series.id}`;
 
   // Quickly adapted from https://raw.githubusercontent.com/olaven/paperpod/1cde9abd3174b26e126aa74fc5a3b63fd078c0fd/packages/converter/src/rss.ts
   return serialize(
@@ -43,7 +43,7 @@ async function buildFeed(seriesId: string) {
       "rss",
       [
         tag("channel", [
-          tag("title", serie.titles.title),
+          tag("title", series.titles.title),
           tag("link", linkValue),
           tag("itunes:author", "NRK"),
           /* serie.category.id does not overlap with Apple's supported categories..
@@ -58,7 +58,7 @@ async function buildFeed(seriesId: string) {
           ]),
           tag(
             "description",
-            serie.titles.subtitle || "",
+            series.titles.subtitle || "",
           ),
           tag("ttl", "60"), //60 minutes
           ...(imageUrl
@@ -68,12 +68,12 @@ async function buildFeed(seriesId: string) {
               ]),
               tag("image", [
                 tag("url", imageUrl),
-                tag("title", serie.titles.title),
+                tag("title", series.titles.title),
                 tag("link", linkValue),
               ]),
             ]
             : []),
-          ...serie.episodes.map((episode) => toItemTag(seriesId, episode)),
+          ...series.episodes.map((episode) => toItemTag(series.id, episode)),
         ]),
       ],
       [
@@ -88,8 +88,12 @@ async function buildFeed(seriesId: string) {
 
 export const handler = async (_req: Request, ctx: FreshContext): Promise<Response> => {
   const seriesId = ctx.params.seriesId;
+  const series = await nrkRadio.getSerieData(seriesId);
+  if (!series) {
+    return new Response(`Couldn't find series with seriesId: ${seriesId}`, { status: 404 });
+  }
   try {
-    const feedContent = await buildFeed(seriesId);
+    const feedContent = buildFeed(series);
 
     return new Response(feedContent, {
       headers: {
