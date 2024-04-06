@@ -35,7 +35,7 @@ Deno.test("Verify getting episodeId 'l_0bc5e55a-46b5-48a5-85e5-5a46b5d8a562' for
   assertEquals(result.duration.seconds, 4152);
 });
 
-Deno.test("Verify getting episodeId 'null' for 'trygdekontoret' fails", async () => {
+Deno.test("Verify getting episodeId 'null' for 'trygdekontoret' yields `null`", async () => {
   const result = await nrkRadio.getEpisode("trygdekontoret", "null");
 
   assertEquals(result, null);
