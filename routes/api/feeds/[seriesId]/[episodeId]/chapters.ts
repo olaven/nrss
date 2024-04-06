@@ -1,4 +1,4 @@
-import { FreshContext } from "$fresh/server.ts";
+import { FreshContext, STATUS_CODE } from "$fresh/server.ts";
 import { parse, toSeconds } from "https://esm.sh/iso8601-duration@2.1.1";
 import { nrkRadio, PodcastEpisode } from "../../../../../lib/nrk.ts";
 
@@ -29,7 +29,7 @@ export const handler = async (_req: Request, ctx: FreshContext): Promise<Respons
       headers: {
         "Content-Type": "application/json",
       },
-      status: 500,
+      status: STATUS_CODE.NotFound,
     });
   }
   const chapters = toChapters(episode);

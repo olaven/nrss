@@ -1,5 +1,5 @@
 import { nrkRadio, OriginalEpisode } from "../../../lib/nrk.ts";
-import { FreshContext } from "$fresh/server.ts";
+import { FreshContext, STATUS_CODE } from "$fresh/server.ts";
 import { declaration, serialize, tag } from "https://raw.githubusercontent.com/olaven/serialize-xml/v0.4.0/mod.ts";
 import { getHostName } from "../../../utils.ts";
 import { SeriesData } from "../../../lib/nrk.ts";
@@ -90,7 +90,7 @@ export const handler = async (_req: Request, ctx: FreshContext): Promise<Respons
   const seriesId = ctx.params.seriesId;
   const series = await nrkRadio.getSerieData(seriesId);
   if (!series) {
-    return new Response(`Couldn't find series with seriesId: ${seriesId}`, { status: 404 });
+    return new Response(`Couldn't find series with seriesId: ${seriesId}`, { status: STATUS_CODE.NotFound });
   }
   try {
     const feedContent = buildFeed(series);
@@ -103,7 +103,7 @@ export const handler = async (_req: Request, ctx: FreshContext): Promise<Respons
   } catch (error) {
     console.error(error);
     return new Response(JSON.stringify({ message: "Could not generate feed" }), {
-      status: 500,
+      status: STATUS_CODE.InternalServerError,
       headers: {
         "Content-Type": "application/json",
       },
