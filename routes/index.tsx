@@ -8,8 +8,7 @@ import { nrkRadio, SearchResultList } from "../lib/nrk.ts";
 import { CSS, render } from "$gfm";
 
 type Props = {
-  query: string;
-  origin: string;
+  query: string | null;
   rawMarkdown: string;
   result?: SearchResultList | null;
 };
@@ -23,11 +22,11 @@ export const handler: Handlers<Props> = {
       result = await nrkRadio.search(query);
     }
     const rawMarkdown = await Deno.readTextFile(new URL("../docs/what.md", import.meta.url));
-    return ctx.render({ query: query || "", result, origin: url.origin, rawMarkdown });
+    return ctx.render({ query, result, rawMarkdown });
   },
 };
 
-export default function Home({ data }: PageProps<Props>) {
+export default function Home({ data, url }: PageProps<Props>) {
   return (
     <>
       <Head>
@@ -46,7 +45,7 @@ export default function Home({ data }: PageProps<Props>) {
       <div className="p-4 mx-auto max-w-screen-md">
         <Header />
         <Search defaultValue={data.query} />
-        <SearchResult result={data.result} origin={data.origin} />
+        <SearchResult result={data.result} origin={url.origin} />
         <div
           class="markdown-body"
           dangerouslySetInnerHTML={{ __html: render(data?.rawMarkdown) }}
