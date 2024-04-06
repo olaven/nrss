@@ -2,6 +2,7 @@ import { assertEquals } from "$std/assert/assert_equals.ts";
 import { nrkRadio } from "./nrk.ts";
 import { assertGreaterOrEqual } from "$std/assert/assert_greater_or_equal.ts";
 import { assertExists } from "https://deno.land/std@0.216.0/assert/assert_exists.ts";
+import { forTestingOnly } from "./nrk.ts";
 
 Deno.test("Verify search query `trygd` returns one result: 'Trygdekontoret'", async () => {
   const result = await nrkRadio.search("trygd");
@@ -39,4 +40,12 @@ Deno.test("Verify getting episodeId 'null' for 'trygdekontoret' yields `null`", 
   const result = await nrkRadio.getEpisode("trygdekontoret", "null");
 
   assertEquals(result, null);
+});
+
+Deno.test("Verify getting episode, 'l_0bc5e55a-46b5-48a5-85e5-5a46b5d8a562' with download link works`", async () => {
+  const series = await nrkRadio.getSerieData("trygdekontoret");
+  assertExists(series);
+
+  const result = await forTestingOnly.getEpisodeWithDownloadLink(series.episodes[0], "podcast");
+  assertExists(result);
 });

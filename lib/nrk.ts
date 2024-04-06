@@ -125,3 +125,7 @@ export const nrkRadio = {
   getSerieData,
   getEpisode,
 };
+
+export const forTestingOnly = {
+  getEpisodeWithDownloadLink,
+};
