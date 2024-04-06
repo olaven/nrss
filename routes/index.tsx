@@ -7,18 +7,18 @@ import SeriesCard from "../components/SeriesCard.tsx";
 import { nrkRadio, SearchResultList } from "../lib/nrk.ts";
 import { CSS, render } from "$gfm";
 
-interface HandlerData {
+type Props = {
   query: string;
   origin: string;
   rawMarkdown: string;
-  result?: SearchResultList;
-}
+  result?: SearchResultList | null;
+};
 
-export const handler: Handlers<HandlerData> = {
+export const handler: Handlers<Props> = {
   async GET(request, ctx) {
     const url = new URL(request.url);
     const query = url.searchParams.get("query");
-    let result: SearchResultList | undefined;
+    let result: Props["result"];
     if (query) {
       result = await nrkRadio.search(query);
     }
@@ -27,7 +27,7 @@ export const handler: Handlers<HandlerData> = {
   },
 };
 
-export default function Home({ data }: PageProps<HandlerData>) {
+export default function Home({ data }: PageProps<Props>) {
   return (
     <>
       <Head>
@@ -57,7 +57,7 @@ export default function Home({ data }: PageProps<HandlerData>) {
   );
 }
 
-function SearchResult({ result, origin }: { result: SearchResultList; origin: string }) {
+function SearchResult({ result, origin }: { result: Props["result"]; origin: string }) {
   if (!result) {
     return null;
   }
