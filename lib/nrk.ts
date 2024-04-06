@@ -45,11 +45,11 @@ async function withDownloadLink(
   }
 }
 
-// TODO: Replace throws with `console.error` and return `null` if bad response.
 export const nrkRadio = {
-  search: async (query: string): Promise<SearchResultList> => {
+  search: async (query: string): Promise<SearchResultList | null> => {
     if (query === "") {
-      throw "Empty search query.";
+      console.error("Empty search query.");
+      return null;
     }
     const { status, body } = await get<
       searchComponents["schemas"]["searchresult"]
@@ -57,7 +57,9 @@ export const nrkRadio = {
     if (status === STATUS_CODE.OK && body) {
       return body.results.series?.results;
     }
-    throw `Something went wrong with ${query} - got status ${status}`;
+
+    console.error(`Something went wrong with ${query} - got status ${status}`);
+    return null;
   },
   getSerieData: async (seriesId: string) => {
     let [

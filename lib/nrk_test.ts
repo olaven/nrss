@@ -1,5 +1,4 @@
 import { assertEquals } from "$std/assert/assert_equals.ts";
-import { assertRejects } from "$std/assert/assert_rejects.ts";
 import { nrkRadio } from "./nrk.ts";
 import { assertGreaterOrEqual } from "$std/assert/assert_greater_or_equal.ts";
 import { assertExists } from "https://deno.land/std@0.216.0/assert/assert_exists.ts";
@@ -12,8 +11,9 @@ Deno.test("Verify search query `trygd` returns one result: 'Trygdekontoret'", as
   assertEquals(result[0].seriesId, "trygdekontoret");
 });
 
-Deno.test("Verify empty search query yields error", async () => {
-  await assertRejects(async () => await nrkRadio.search(""));
+Deno.test("Verify empty search query yields `null`", async () => {
+  const result = await nrkRadio.search("");
+  assertEquals(result, null);
 });
 
 Deno.test("Verify getting series data for 'trygdekontoret' works", async () => {
