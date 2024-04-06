@@ -19,33 +19,7 @@ export type SearchResult = ArrayElement<SearchResultList> & {
   description?: string;
 };
 
-type Manifest = playbackComponents["schemas/playback-channel.json"]["components"]["schemas"]["PlayableManifest"];
-
 const nrkAPI = `https://psapi.nrk.no`;
-
-async function withDownloadLink(
-  episode: PodcastEpisodesSingle,
-  type: catalogComponents["schemas"]["Type"],
-): Promise<OriginalEpisode> {
-  // getting stream link
-  let { status: playbackStatus, body: playbackResponse } = await get<Manifest>(
-    `${nrkAPI}/playback/manifest/podcast/${episode.episodeId}`,
-  );
-
-  if (type === "series") {
-    const { status, body } = await get<Manifest>(
-      `${nrkAPI}/playback/manifest/program/${episode.episodeId}`,
-    );
-    playbackStatus = status;
-    playbackResponse = body;
-  }
-
-  if (playbackStatus === STATUS_CODE.OK && playbackResponse) {
-    return { ...episode, url: playbackResponse.playable.assets[0].url };
-  } else {
-    throw `Error getting downloadLink for ${episode.episodeId}, serie: ${episode.originalTitle}. Status: ${playbackStatus}`;
-  }
-}
 
 async function search(query: string): Promise<SearchResultList | null> {
   if (query === "") {
@@ -97,7 +71,7 @@ async function getSerieData(
     serieResponse?.series && episodeResponse?._embedded.episodes?.length
   ) {
     const episodes = await Promise.all(
-      episodeResponse._embedded.episodes.map((episode) => withDownloadLink(episode, serieResponse.type)),
+      episodeResponse._embedded.episodes.map((episode) => getEpisodeWithDownloadLink(episode, serieResponse.type)),
     );
     return {
       ...serieResponse.series,
@@ -118,6 +92,32 @@ async function getEpisode(seriesId: string, episodeId: string): Promise<PodcastE
   }
   console.error(`Error getting episode ${episodeId}. Status: ${status}. Series: ${seriesId}`);
   return null;
+}
+
+type Manifest = playbackComponents["schemas/playback-channel.json"]["components"]["schemas"]["PlayableManifest"];
+
+async function getEpisodeWithDownloadLink(
+  episode: PodcastEpisodesSingle,
+  type: catalogComponents["schemas"]["Type"],
+): Promise<OriginalEpisode> {
+  // getting stream link
+  let { status: playbackStatus, body: playbackResponse } = await get<Manifest>(
+    `${nrkAPI}/playback/manifest/podcast/${episode.episodeId}`,
+  );
+
+  if (type === "series") {
+    const { status, body } = await get<Manifest>(
+      `${nrkAPI}/playback/manifest/program/${episode.episodeId}`,
+    );
+    playbackStatus = status;
+    playbackResponse = body;
+  }
+
+  if (playbackStatus === STATUS_CODE.OK && playbackResponse) {
+    return { ...episode, url: playbackResponse.playable.assets[0].url };
+  } else {
+    throw `Error getting downloadLink for ${episode.episodeId}, serie: ${episode.originalTitle}. Status: ${playbackStatus}`;
+  }
 }
 
 export const nrkRadio = {
