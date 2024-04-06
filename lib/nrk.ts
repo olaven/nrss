@@ -8,6 +8,8 @@ type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
 type PodcastEpisodes = catalogComponents["schemas"]["EpisodesHalResource"];
 type Podcast = catalogComponents["schemas"]["SeriesHalResource"];
 type PodcastEpisodesSingle = catalogComponents["schemas"]["EpisodeHalResource"];
+type RadioSeriesEpisode = catalogComponents["schemas"]["EpisodesHalResource"];
+type RadioSeries = catalogComponents["schemas"]["SeriesHalResource"];
 
 export type Serie = catalogComponents["schemas"]["SeriesViewModel"];
 export type OriginalEpisode = PodcastEpisodesSingle & { url: string };
@@ -61,7 +63,9 @@ export const nrkRadio = {
     console.error(`Something went wrong with ${query} - got status ${status}`);
     return null;
   },
-  getSerieData: async (seriesId: string) => {
+  getSerieData: async (
+    seriesId: string,
+  ): Promise<{ episodes: OriginalEpisode[] } & (RadioSeries["series"] | Podcast["series"]) | null> => {
     let [
       { status: episodeStatus, body: episodeResponse },
       { status: seriesStatus, body: serieResponse },
@@ -79,10 +83,10 @@ export const nrkRadio = {
         { status: episodeStatus, body: episodeResponse },
         { status: seriesStatus, body: serieResponse },
       ] = await Promise.all([
-        get<catalogComponents["schemas"]["EpisodesHalResource"]>(
+        get<RadioSeriesEpisode>(
           `https://psapi.nrk.no/radio/catalog/series/${seriesId}/episodes`,
         ),
-        get<catalogComponents["schemas"]["SeriesHalResource"]>(
+        get<RadioSeries>(
           `https://psapi.nrk.no/radio/catalog/series/${seriesId}`,
         ),
       ]);
@@ -100,7 +104,10 @@ export const nrkRadio = {
         episodes,
       };
     }
-    throw `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`;
+    console.error(
+      `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`,
+    );
+    return null;
   },
   getEpisode: async (seriesId: string, episodeId: string): Promise<PodcastEpisode | null> => {
     const url = `${nrkAPI}/radio/catalog/podcast/${seriesId}/episodes/${episodeId}`;

@@ -19,13 +19,14 @@ Deno.test("Verify empty search query yields `null`", async () => {
 Deno.test("Verify getting series data for 'trygdekontoret' works", async () => {
   const result = await nrkRadio.getSerieData("trygdekontoret");
 
+  assertExists(result);
   assertGreaterOrEqual(result.episodes.length, 1);
 });
 
-// TODO: This doesn't work because there is no try-catch system, it seems.
-// Deno.test("Verify getting series data for 'trygd' does not works", async () => {
-//   await assertThrows(async () => await nrkRadio.getSerieData("trygd"));
-// });
+Deno.test("Verify getting series data for 'trygd' does not works", async () => {
+  const result = await nrkRadio.getSerieData("trygd");
+  assertEquals(result, null);
+});
 
 Deno.test("Verify getting episodeId 'l_0bc5e55a-46b5-48a5-85e5-5a46b5d8a562' for 'trygdekontoret' works", async () => {
   const result = await nrkRadio.getEpisode("trygdekontoret", "l_0bc5e55a-46b5-48a5-85e5-5a46b5d8a562");
