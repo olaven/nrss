@@ -20,17 +20,17 @@ export type SearchResult = ArrayElement<NrkSearchResultList> & {
 };
 export type SeriesData = { episodes: NrkOriginalEpisode[] } & (RadioSeries["series"] | Podcast["series"]);
 
-function parseSeries(nrkSeries: SeriesData): Series {
-  const imageUrl = nrkSeries.squareImage?.at(-1)?.url ?? "";
+function parseSeries(nrkSeriesData: SeriesData): Series {
+  const imageUrl = nrkSeriesData.squareImage?.at(-1)?.url ?? "";
 
   return {
-    id: nrkSeries.id,
-    title: nrkSeries.titles.title,
-    subtitle: nrkSeries.titles.subtitle ?? null,
-    link: `https://radio.nrk.no/podkast/${nrkSeries.id}`,
+    id: nrkSeriesData.id,
+    title: nrkSeriesData.titles.title,
+    subtitle: nrkSeriesData.titles.subtitle ?? null,
+    link: `https://radio.nrk.no/podkast/${nrkSeriesData.id}`,
     imageUrl: imageUrl,
     lastFetchedAt: new Date(),
-    episodes: nrkSeries.episodes.map((episode) => {
+    episodes: nrkSeriesData.episodes.map((episode) => {
       return {
         id: episode.id,
         title: episode.titles.title,
@@ -62,7 +62,7 @@ async function search(query: string): Promise<NrkSearchResultList | null> {
   return null;
 }
 
-async function getSeries(seriesId: string): Promise<Series | null> {
+async function getSeriesData(seriesId: string): Promise<SeriesData | null> {
   let [
     { status: episodeStatus, body: episodeResponse },
     { status: seriesStatus, body: serieResponse },
@@ -100,13 +100,21 @@ async function getSeries(seriesId: string): Promise<Series | null> {
       ...serieResponse.series,
       episodes,
     };
-    const parsedSeries = parseSeries(seriesData);
-    return parsedSeries;
+    return seriesData;
   }
   console.error(
     `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`,
   );
   return null;
+}
+
+async function getSeries(seriesId: string): Promise<Series | null> {
+  const seriesData = await getSeriesData(seriesId);
+  if (!seriesData) {
+    return null;
+  }
+  const parsedSeries = parseSeries(seriesData);
+  return parsedSeries;
 }
 
 async function getEpisode(seriesId: string, episodeId: string): Promise<NrkPodcastEpisode | null> {
@@ -150,4 +158,8 @@ export const nrkRadio = {
   getSeries,
   getEpisode,
   parseSeries,
+};
+
+export const forTestingOnly = {
+  getSeriesData,
 };
