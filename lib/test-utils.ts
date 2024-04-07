@@ -14,6 +14,8 @@ function generateSeries(overrides: Partial<Series> = {}): Series {
         title: faker.word.words(3),
         subtitle: faker.word.words(3),
         link: faker.internet.url(),
+        url: faker.internet.url(),
+        shareLink: faker.internet.url(),
         description: faker.lorem.paragraphs(2),
         id: faker.string.uuid(),
         date: faker.date.recent(),
