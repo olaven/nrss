@@ -1,5 +1,5 @@
-import { SearchResult } from "../lib/nrk.ts";
 import CopyButton from "../islands/CopyButton.tsx";
+import { SearchResult } from "../lib/nrk/nrk.ts";
 
 export default function SeriesCard(props: { serie: SearchResult; origin: string }) {
   const feedUrl = new URL(`/api/feeds/${props.serie.seriesId}`, props.origin);

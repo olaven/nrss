@@ -4,21 +4,21 @@ import Footer from "../components/Footer.tsx";
 import Header from "../components/Header.tsx";
 import Search from "../components/Search.tsx";
 import SeriesCard from "../components/SeriesCard.tsx";
-import { nrkRadio, SearchResultList } from "../lib/nrk.ts";
 import { CSS, render } from "$gfm";
+import { nrkRadio, NrkSearchResultList } from "../lib/nrk/nrk.ts";
 
 interface HandlerData {
   query: string;
   origin: string;
   rawMarkdown: string;
-  result?: SearchResultList;
+  result?: NrkSearchResultList;
 }
 
 export const handler: Handlers<HandlerData> = {
   async GET(request, ctx) {
     const url = new URL(request.url);
     const query = url.searchParams.get("query");
-    let result: SearchResultList | undefined;
+    let result: NrkSearchResultList | undefined;
     if (query) {
       result = await nrkRadio.search(query);
     }
@@ -57,7 +57,7 @@ export default function Home({ data }: PageProps<HandlerData>) {
   );
 }
 
-function SearchResult({ result, origin }: { result: SearchResultList; origin: string }) {
+function SearchResult({ result, origin }: { result: NrkSearchResultList; origin: string }) {
   if (!result) {
     return null;
   }
