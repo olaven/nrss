@@ -1,5 +1,4 @@
-// FIXME: Remember to replace this with actual version
-import { get, STATUS_CODE } from "../../kall/mod.ts";
+import { get, STATUS_CODE } from "https://deno.land/x/kall@v2.0.0/mod.ts";
 import { components as searchComponents } from "./nrk-search.ts";
 import { components as catalogComponents } from "./nrk-catalog.ts";
 import { external as playbackComponents } from "./nrk-playback.ts";
