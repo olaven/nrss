@@ -2,15 +2,15 @@ import openapiTS from "openapi-typescript";
 
 const nrkTypes: { filename: string; url: URL }[] = [
   {
-    filename: "./lib/nrk-search.ts",
+    filename: "./lib/nrk/nrk-search.ts",
     url: new URL("https://psapi.nrk.no/documentation/openapi/search-radio/v1/openapi.yml"),
   },
   {
-    filename: "./lib/nrk-catalog.ts",
+    filename: "./lib/nrk/nrk-catalog.ts",
     url: new URL("https://psapi.nrk.no/documentation/openapi/programsider-radio/openapi.yml"),
   },
   {
-    filename: "./lib/nrk-playback.ts",
+    filename: "./lib/nrk/nrk-playback.ts",
     url: new URL("https://psapi.nrk.no/documentation/openapi/playback/2.0/openapi.json"),
   },
 ] as const;
