@@ -2,7 +2,8 @@ export type Episode = {
   id: string;
   title: string;
   subtitle: string | null;
-  link: string;
+  url: string;
+  shareLink: string;
   date: Date;
   durationInSeconds: number;
 };

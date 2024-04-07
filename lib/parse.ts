@@ -17,7 +17,8 @@ function series(nrkSeries: NrkSerieData): Series {
         id: episode.id,
         title: episode.titles.title,
         subtitle: episode.titles.subtitle ?? null,
-        link: episode._links.share?.href ?? "",
+        url: episode.url,
+        shareLink: episode._links.share?.href ?? "",
         date: new Date(episode.date),
         durationInSeconds: episode.durationInSeconds,
       };

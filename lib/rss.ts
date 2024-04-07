@@ -64,7 +64,7 @@ function assembleEpisode(options: { series: Series; episode: Episode }) {
 
   return tag("item", [
     tag("title", episode.title),
-    tag("link", episode.link),
+    tag("link", episode.shareLink),
     tag("description", description),
     tag("itunes:summary", description),
     tag("guid", episode.id, [["isPermaLink", "false"]]),
@@ -78,7 +78,7 @@ function assembleEpisode(options: { series: Series; episode: Episode }) {
       ["type", "application/json+chapters"],
     ]),
     tag("enclosure", "", [
-      ["url", episode.link],
+      ["url", episode.url],
       ["length", episode.durationInSeconds.toString()],
       ["type", "audio/mpeg3"],
     ]),
