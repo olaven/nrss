@@ -2,6 +2,7 @@ import { get, STATUS_CODE } from "https://deno.land/x/kall@v2.0.0/mod.ts";
 import { components as searchComponents } from "./nrk-search.ts";
 import { components as catalogComponents } from "./nrk-catalog.ts";
 import { external as playbackComponents } from "./nrk-playback.ts";
+import { Series } from "../storage.ts";
 
 type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
 type PodcastEpisodes = catalogComponents["schemas"]["EpisodesHalResource"];
@@ -10,17 +11,42 @@ type PodcastEpisodesSingle = catalogComponents["schemas"]["EpisodeHalResource"];
 type RadioSeriesEpisode = catalogComponents["schemas"]["EpisodesHalResource"];
 type RadioSeries = catalogComponents["schemas"]["SeriesHalResource"];
 
-export type Serie = catalogComponents["schemas"]["SeriesViewModel"];
-export type OriginalEpisode = PodcastEpisodesSingle & { url: string };
-export type PodcastEpisode = catalogComponents["schemas"]["PodcastEpisodeHalResource"];
-export type SearchResultList = searchComponents["schemas"]["seriesResult"]["results"];
-export type SearchResult = ArrayElement<SearchResultList> & {
+export type NrkSerie = catalogComponents["schemas"]["SeriesViewModel"];
+export type NrkOriginalEpisode = PodcastEpisodesSingle & { url: string };
+export type NrkPodcastEpisode = catalogComponents["schemas"]["PodcastEpisodeHalResource"];
+export type NrkSearchResultList = searchComponents["schemas"]["seriesResult"]["results"];
+export type SearchResult = ArrayElement<NrkSearchResultList> & {
   description?: string;
 };
+export type SeriesData = { episodes: NrkOriginalEpisode[] } & (RadioSeries["series"] | Podcast["series"]);
+
+function parseSeries(nrkSeries: SeriesData): Series {
+  const imageUrl = nrkSeries.squareImage?.at(-1)?.url ?? "";
+
+  return {
+    id: nrkSeries.id,
+    title: nrkSeries.titles.title,
+    subtitle: nrkSeries.titles.subtitle ?? null,
+    link: `https://radio.nrk.no/podkast/${nrkSeries.id}`,
+    imageUrl: imageUrl,
+    lastFetchedAt: new Date(),
+    episodes: nrkSeries.episodes.map((episode) => {
+      return {
+        id: episode.id,
+        title: episode.titles.title,
+        subtitle: episode.titles.subtitle ?? null,
+        url: episode.url,
+        shareLink: episode._links.share?.href ?? "",
+        date: new Date(episode.date),
+        durationInSeconds: episode.durationInSeconds,
+      };
+    }),
+  };
+}
 
 const nrkAPI = `https://psapi.nrk.no`;
 
-async function search(query: string): Promise<SearchResultList | null> {
+async function search(query: string): Promise<NrkSearchResultList | null> {
   if (query === "") {
     console.error("Empty search query.");
     return null;
@@ -36,8 +62,7 @@ async function search(query: string): Promise<SearchResultList | null> {
   return null;
 }
 
-export type SeriesData = { episodes: OriginalEpisode[] } & (RadioSeries["series"] | Podcast["series"]);
-async function getSerieData(seriesId: string): Promise<SeriesData | null> {
+async function getSeries(seriesId: string): Promise<Series | null> {
   let [
     { status: episodeStatus, body: episodeResponse },
     { status: seriesStatus, body: serieResponse },
@@ -71,10 +96,12 @@ async function getSerieData(seriesId: string): Promise<SeriesData | null> {
     const episodes = await Promise.all(
       episodeResponse._embedded.episodes.map((episode) => getEpisodeWithDownloadLink(episode, serieResponse.type)),
     );
-    return {
+    const seriesData = {
       ...serieResponse.series,
       episodes,
     };
+    const parsedSeries = parseSeries(seriesData);
+    return parsedSeries;
   }
   console.error(
     `Error getting episodes for ${seriesId}: EpisodeStatus: ${episodeStatus}. SerieStatus: ${seriesStatus}`,
@@ -82,9 +109,9 @@ async function getSerieData(seriesId: string): Promise<SeriesData | null> {
   return null;
 }
 
-async function getEpisode(seriesId: string, episodeId: string): Promise<PodcastEpisode | null> {
+async function getEpisode(seriesId: string, episodeId: string): Promise<NrkPodcastEpisode | null> {
   const url = `${nrkAPI}/radio/catalog/podcast/${seriesId}/episodes/${episodeId}`;
-  const { status, body: episode } = await get<PodcastEpisode>(url);
+  const { status, body: episode } = await get<NrkPodcastEpisode>(url);
   if (status === STATUS_CODE.OK && episode) {
     return episode;
   }
@@ -97,7 +124,7 @@ type Manifest = playbackComponents["schemas/playback-channel.json"]["components"
 async function getEpisodeWithDownloadLink(
   episode: PodcastEpisodesSingle,
   type: catalogComponents["schemas"]["Type"],
-): Promise<OriginalEpisode> {
+): Promise<NrkOriginalEpisode> {
   // getting stream link
   let { status: playbackStatus, body: playbackResponse } = await get<Manifest>(
     `${nrkAPI}/playback/manifest/podcast/${episode.episodeId}`,
@@ -120,10 +147,7 @@ async function getEpisodeWithDownloadLink(
 
 export const nrkRadio = {
   search,
-  getSerieData,
+  getSeries,
   getEpisode,
-};
-
-export const forTestingOnly = {
-  getEpisodeWithDownloadLink,
+  parseSeries,
 };

@@ -8,6 +8,9 @@
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "types:nrk": "deno run -A generate-types.ts && deno fmt ./lib"
   },
+  "unstable": [
+    "kv"
+  ],
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.6.8/",
     "preact": "https://esm.sh/preact@10.19.6",
@@ -17,6 +20,7 @@
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
     "$gfm": "https://deno.land/x/gfm@0.6.0/mod.ts",
     "openapi-typescript": "npm:openapi-typescript@6.7.5",
+    "serialize-xml": "https://raw.githubusercontent.com/olaven/serialize-xml/v0.4.0/mod.ts",
     "$std/": "https://deno.land/std@0.221.0/"
   },
   "compilerOptions": {

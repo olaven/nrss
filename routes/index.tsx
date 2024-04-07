@@ -4,13 +4,13 @@ import Footer from "../components/Footer.tsx";
 import Header from "../components/Header.tsx";
 import Search from "../components/Search.tsx";
 import SeriesCard from "../components/SeriesCard.tsx";
-import { nrkRadio, SearchResultList } from "../lib/nrk.ts";
 import { CSS, render } from "$gfm";
+import { nrkRadio, NrkSearchResultList } from "../lib/nrk/nrk.ts";
 
 type Props = {
   query: string | null;
   rawMarkdown: string;
-  result?: SearchResultList | null;
+  result?: NrkSearchResultList | null;
 };
 
 export const handler: Handlers<Props> = {
