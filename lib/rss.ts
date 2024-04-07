@@ -1,8 +1,8 @@
-import { declaration, serialize, tag } from "serialize-xml";
+import { declaration, serialize, Tag, tag } from "serialize-xml";
 import { getHostName } from "../utils.ts";
 import { Episode, Series } from "./storage.ts";
 
-function assembleFeed(series: Series) {
+function assembleFeed(series: Series): string {
   // Originally adapted from https://raw.githubusercontent.com/olaven/paperpod/1cde9abd3174b26e126aa74fc5a3b63fd078c0fd/packages/converter/src/rss.ts
   return serialize(
     declaration([
@@ -44,7 +44,7 @@ function assembleFeed(series: Series) {
               ]),
             ]
             : []),
-          ...series.episodes.map((episode) => assembleEpisode({ series, episode })),
+          ...series.episodes.map((episode) => assembleEpisode(episode, series.id)),
         ]),
       ],
       [
@@ -57,9 +57,7 @@ function assembleFeed(series: Series) {
   );
 }
 
-function assembleEpisode(options: { series: Series; episode: Episode }) {
-  const { series, episode } = options;
-
+function assembleEpisode(episode: Episode, seriesId: Series["id"]): Tag {
   const description = episode.subtitle || "";
 
   return tag("item", [
@@ -73,7 +71,7 @@ function assembleEpisode(options: { series: Series; episode: Episode }) {
     tag("podcast:chapters", "", [
       [
         "url",
-        `${getHostName()}/api/feeds/${series.id}/${episode.id}/chapters`,
+        `${getHostName()}/api/feeds/${seriesId}/${episode.id}/chapters`,
       ],
       ["type", "application/json+chapters"],
     ]),
@@ -87,4 +85,8 @@ function assembleEpisode(options: { series: Series; episode: Episode }) {
 
 export const rss = {
   assembleFeed,
+};
+
+export const forTestingOnly = {
+  assembleEpisode,
 };

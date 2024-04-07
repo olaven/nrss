@@ -6,7 +6,8 @@
   "tasks": {
     "start": "deno run -A --watch=static/,routes/ dev.ts",
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
-    "types:nrk": "deno run -A generate-types.ts && deno fmt ./lib"
+    "types:nrk": "deno run -A generate-types.ts && deno fmt ./lib",
+    "test": "deno test -A"
   },
   "unstable": [
     "kv"
