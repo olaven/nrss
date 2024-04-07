@@ -1,7 +1,6 @@
-import { assertEquals } from "$std/assert/assert_equals.ts";
+import { assertEquals, assertExists, assertGreaterOrEqual } from "$std/assert/mod.ts";
 import { nrkRadio } from "./nrk.ts";
-import { assertGreaterOrEqual } from "$std/assert/assert_greater_or_equal.ts";
-import { assertExists } from "https://deno.land/std@0.216.0/assert/assert_exists.ts";
+import { forTestingOnly } from "./nrk.ts";
 
 Deno.test("Verify search query `trygd` returns one result: 'Trygdekontoret'", async () => {
   const result = await nrkRadio.search("trygd");
@@ -16,6 +15,21 @@ Deno.test("Verify empty search query yields `null`", async () => {
 });
 
 Deno.test("Verify getting series data for 'trygdekontoret' works", async () => {
+  const result = await forTestingOnly.getSeriesData("trygdekontoret");
+  assertExists(result);
+  assertGreaterOrEqual(result.episodes.length, 1);
+});
+
+Deno.test("Verify getting series data for 'trygdekontoret' works", async () => {
+  const seriesData = await forTestingOnly.getSeriesData("trygdekontoret");
+  assertExists(seriesData);
+  const result = nrkRadio.parseSeries(seriesData);
+  assertExists(result);
+  assertGreaterOrEqual(result.episodes.length, 1);
+  assertEquals(result.title, "Trygdekontoret");
+});
+
+Deno.test("Verify getting series for 'trygdekontoret' works", async () => {
   const result = await nrkRadio.getSeries("trygdekontoret");
   assertExists(result);
   assertGreaterOrEqual(result.episodes.length, 1);
