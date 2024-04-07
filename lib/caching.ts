@@ -1,27 +1,22 @@
 import { nrkRadio } from "./nrk/nrk.ts";
-import { parse } from "./parse.ts";
 import { Series, storage } from "./storage.ts";
 import * as datetime from "datetime";
 
 const SYNC_INTERVAL_HOURS = 1;
 
 async function initialFetch(options: { id: string }) {
-  const fromNrk = await nrkRadio.getSerieData(options.id);
-  const parsed = parse.series(fromNrk);
-
-  const stored = storage.write(parsed);
+  const series = await nrkRadio.getSeries(options.id);
+  const stored = storage.write(series);
   if (!stored) {
     throw new Error(`Failed to store series ${options.id}`);
   }
 
-  return parsed;
+  return series;
 }
 
 async function updateFetch(existingSeries: Series) {
-  const fromNrk = await nrkRadio.getSerieData(existingSeries.id);
-  const parsed = parse.series(fromNrk);
-
-  const newEpisodes = parsed.episodes.filter((episode) => {
+  const series = await nrkRadio.getSeries(existingSeries.id);
+  const newEpisodes = series.episodes.filter((episode) => {
     return !existingSeries.episodes.find((serieEpisode) => serieEpisode.id === episode.id);
   });
 
