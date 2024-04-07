@@ -1,6 +1,6 @@
 import { FreshContext } from "$fresh/server.ts";
 import { parse, toSeconds } from "https://esm.sh/iso8601-duration@2.1.1";
-import { nrkRadio, PodcastEpisode } from "../../../../../lib/nrk.ts";
+import { nrkRadio, PodcastEpisode } from "../../../../../lib/nrk/nrk.ts";
 
 type Chapter = {
   title: string | undefined;

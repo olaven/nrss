@@ -1,28 +1,83 @@
-import * as datetime from "datetime"
-import { Series } from "./storage.ts"
+import { nrkRadio } from "./nrk/nrk.ts";
+import { parse } from "./parse.ts";
+import { Series, storage } from "./storage.ts";
+import * as datetime from "datetime";
 
-const UPDATE_INTERVAL_HOURS = 1;
-function getAction(options: {
-    existingSeries: Series | null,
-}) {
-    const { existingSeries } = options;
-    if (existingSeries === null) {
-        return "INITIAL_FETCH";
-    }
+const SYNC_INTERVAL_HOURS = 1;
 
-    const timeSinceLastFetch = datetime.difference(
-        new Date(),
-        existingSeries.lastFetched,
-        {
-            units: ["hours"],
-        }
-    )
+async function initialFetch(options: { id: string }) {
+  const fromNrk = await nrkRadio.getSerieData(options.id);
+  const parsed = parse.series(fromNrk);
 
-    if (timeSinceLastFetch.hours &&
-        timeSinceLastFetch.hours > UPDATE_INTERVAL_HOURS) {
-        return "UPDATE";
-    }
+  const stored = storage.write(parsed);
+  if (!stored) {
+    throw new Error(`Failed to store series ${options.id}`);
+  }
 
-    return "RETURN_AS_IS";
+  return parsed;
 }
 
+async function updateFetch(existingSeries: Series) {
+  const fromNrk = await nrkRadio.getSerieData(existingSeries.id);
+  const parsed = parse.series(fromNrk);
+
+  const newEpisodes = parsed.episodes.filter((episode) => {
+    return !existingSeries.episodes.find((serieEpisode) => serieEpisode.id === episode.id);
+  });
+
+  const updated = {
+    ...existingSeries,
+    lastFetch: new Date(),
+    /**
+     * Since we don't control the API,
+     * we should not make assumptions about the order,
+     * but rather sort the episode to what we want.
+     */
+    episodes: [...newEpisodes, ...existingSeries.episodes]
+      .sort((a, b) => a.date.getTime() > b.date.getTime() ? -1 : 1),
+  };
+
+  const updateSuccessful = await storage.write(updated);
+  if (!updateSuccessful) {
+    throw new Error(`Failed to update series ${existingSeries.id}`);
+  }
+
+  return updated;
+}
+
+async function getSeries(options: { id: string }): Promise<Series> {
+  const seriesFromStorage = await storage.read(options);
+
+  /**
+   * We don't have the feed in storage,
+   * and we need to fetch it for the first time.
+   */
+  if (seriesFromStorage === null) {
+    // TODO: schedule a job to fetch the entire backlog https://github.com/olaven/NRSS/issues/24
+    return await initialFetch(options);
+  }
+
+  const timeSinceLastFetch =
+    datetime.difference(seriesFromStorage.lastFetchedAt, new Date(), { units: ["hours"] }).hours;
+
+  // we have the feed in storage and it's not too old
+  if (
+    seriesFromStorage !== null &&
+    timeSinceLastFetch !== null &&
+    timeSinceLastFetch !== undefined &&
+    timeSinceLastFetch <= SYNC_INTERVAL_HOURS
+  ) {
+    return seriesFromStorage;
+  }
+
+  /**
+   * We have the feed in storage, but it's too old
+   * and needs to be refreshed.
+   */
+  const updatedSeries = await updateFetch(seriesFromStorage);
+  return updatedSeries;
+}
+
+export const caching = {
+  getSeries,
+};

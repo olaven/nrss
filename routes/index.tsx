@@ -4,8 +4,8 @@ import Footer from "../components/Footer.tsx";
 import Header from "../components/Header.tsx";
 import Search from "../components/Search.tsx";
 import SeriesCard from "../components/SeriesCard.tsx";
-import { nrkRadio, SearchResultList } from "../lib/nrk.ts";
 import { CSS, render } from "$gfm";
+import { nrkRadio, SearchResultList } from "../lib/nrk/nrk.ts";
 
 interface HandlerData {
   query: string;
