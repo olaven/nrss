@@ -52,6 +52,22 @@ async function updateFetch(existingSeries: Series): Promise<UpdatedSeries | null
   return updated;
 }
 
+function getTimeSinceLastFetch(inputDate: Date, againstDate = new Date()): number | null {
+  return datetime.difference(inputDate, againstDate, { units: ["hours"] }).hours ?? null;
+}
+
+function isSeriesFromStorageNew(
+  seriesFromStorage: Series,
+  syncInterval = SYNC_INTERVAL_HOURS,
+  timeSinceLastFetch = getTimeSinceLastFetch(seriesFromStorage.lastFetchedAt),
+) {
+  return !Number.isNaN(timeSinceLastFetch) &&
+    seriesFromStorage !== null &&
+    timeSinceLastFetch !== null &&
+    timeSinceLastFetch !== undefined &&
+    timeSinceLastFetch <= syncInterval;
+}
+
 async function getSeries(options: { id: string }): Promise<Series | null> {
   const seriesFromStorage = await storage.read(options);
 
@@ -64,16 +80,8 @@ async function getSeries(options: { id: string }): Promise<Series | null> {
     return await initialFetch(options);
   }
 
-  const timeSinceLastFetch =
-    datetime.difference(seriesFromStorage.lastFetchedAt, new Date(), { units: ["hours"] }).hours;
-
   // we have the feed in storage and it's not too old
-  if (
-    seriesFromStorage !== null &&
-    timeSinceLastFetch !== null &&
-    timeSinceLastFetch !== undefined &&
-    timeSinceLastFetch <= SYNC_INTERVAL_HOURS
-  ) {
+  if (isSeriesFromStorageNew(seriesFromStorage)) {
     return seriesFromStorage;
   }
 
@@ -87,4 +95,9 @@ async function getSeries(options: { id: string }): Promise<Series | null> {
 
 export const caching = {
   getSeries,
+};
+
+export const forTestingOnly = {
+  getTimeSinceLastFetch,
+  isSeriesFromStorageNew,
 };

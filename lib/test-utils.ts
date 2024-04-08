@@ -11,6 +11,7 @@ function generateSeries(overrides: Partial<Series> = {}): Series {
     lastFetchedAt: faker.date.recent(),
     episodes: new Array(faker.number.int({ min: 0, max: 100 }))
       .fill(null).map(() => (generateEpisode(overrides))),
+    ...overrides,
   };
 }
 
