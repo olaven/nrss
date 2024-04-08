@@ -146,11 +146,12 @@ async function getEpisodeWithDownloadLink(
     playbackResponse = body;
   }
 
-  if (playbackStatus === STATUS_CODE.OK && playbackResponse) {
-    return { ...episode, url: playbackResponse.playable.assets[0].url };
-  } else {
-    throw `Error getting downloadLink for ${episode.episodeId}, serie: ${episode.originalTitle}. Status: ${playbackStatus}`;
+  if (playbackStatus !== STATUS_CODE.OK && !playbackResponse) {
+    throw new Error(
+      `Error getting downloadLink for ${episode.episodeId}, serie: ${episode.originalTitle}. Status: ${playbackStatus}`,
+    );
   }
+  return { ...episode, url: playbackResponse.playable.assets[0].url };
 }
 
 export const nrkRadio = {

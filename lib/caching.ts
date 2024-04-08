@@ -48,7 +48,8 @@ async function updateFetch(existingSeries: Series): Promise<UpdatedSeries | null
 
   const updateSuccessful = await storage.write(updated);
   if (!updateSuccessful) {
-    throw new Error(`Failed to update series ${existingSeries.id}`);
+    console.log(`Failed to update series ${existingSeries.id}`);
+    return null;
   }
 
   return updated;
