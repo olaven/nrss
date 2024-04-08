@@ -37,13 +37,13 @@ async function updateFetch(existingSeries: Series): Promise<UpdatedSeries | null
    * we should not make assumptions about the order,
    * but rather sort the episode to what we want.
    */
-  const episodesSorted = [...newEpisodes, ...existingSeries.episodes]
+  const episodesSortedDescending = [...newEpisodes, ...existingSeries.episodes]
     .sort((a, b) => a.date.getTime() > b.date.getTime() ? -1 : 1);
 
   const updated = {
     ...existingSeries,
     lastFetch: new Date(),
-    episodes: episodesSorted,
+    episodes: episodesSortedDescending,
   };
 
   const updateSuccessful = await storage.write(updated);
