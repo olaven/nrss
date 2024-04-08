@@ -1,6 +1,5 @@
 import { assertEquals } from "$std/assert/mod.ts";
 import { forTestingOnly } from "./caching.ts";
-import { storage } from "./storage.ts";
 import { testUtils } from "./test-utils.ts";
 
 Deno.test("Verify getTimeSinceLastFetch for correct difference", () => {
