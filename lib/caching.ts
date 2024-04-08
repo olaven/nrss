@@ -23,7 +23,7 @@ type UpdatedSeries = {
   lastFetch: Date;
   episodes: Episode[];
 } & Series;
-async function updateFetch(existingSeries: Series): Promise<UpdatedSeries | null> {
+async function updateFetch(existingSeries: Series): Promise<UpdatedSeries | Series | null> {
   const series = await nrkRadio.getSeries(existingSeries.id);
   if (!series) {
     return null;
@@ -31,6 +31,10 @@ async function updateFetch(existingSeries: Series): Promise<UpdatedSeries | null
   const newEpisodes = series.episodes.filter((episode) => {
     return !existingSeries.episodes.find((serieEpisode) => serieEpisode.id === episode.id);
   });
+
+  if (newEpisodes.length === 0) {
+    return existingSeries;
+  }
 
   /**
    * Since we don't control the API,
