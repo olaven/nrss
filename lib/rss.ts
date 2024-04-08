@@ -1,5 +1,5 @@
 import { declaration, serialize, Tag, tag } from "serialize-xml";
-import { getHostName } from "../utils.ts";
+import { getHostName } from "./utils.ts";
 import { Episode, Series } from "./storage.ts";
 
 function assembleFeed(series: Series): string {
