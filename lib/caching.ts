@@ -20,6 +20,10 @@ async function updateFetch(existingSeries: Series) {
     return !existingSeries.episodes.find((serieEpisode) => serieEpisode.id === episode.id);
   });
 
+  if (newEpisodes.length === 0) {
+    return existingSeries;
+  }
+
   const updated = {
     ...existingSeries,
     lastFetch: new Date(),
