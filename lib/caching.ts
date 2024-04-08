@@ -32,16 +32,18 @@ async function updateFetch(existingSeries: Series): Promise<UpdatedSeries | null
     return !existingSeries.episodes.find((serieEpisode) => serieEpisode.id === episode.id);
   });
 
+  /**
+   * Since we don't control the API,
+   * we should not make assumptions about the order,
+   * but rather sort the episode to what we want.
+   */
+  const episodesSorted = [...newEpisodes, ...existingSeries.episodes]
+    .sort((a, b) => a.date.getTime() > b.date.getTime() ? -1 : 1);
+
   const updated = {
     ...existingSeries,
     lastFetch: new Date(),
-    /**
-     * Since we don't control the API,
-     * we should not make assumptions about the order,
-     * but rather sort the episode to what we want.
-     */
-    episodes: [...newEpisodes, ...existingSeries.episodes]
-      .sort((a, b) => a.date.getTime() > b.date.getTime() ? -1 : 1),
+    episodes: episodesSorted,
   };
 
   const updateSuccessful = await storage.write(updated);
