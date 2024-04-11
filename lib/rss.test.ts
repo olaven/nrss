@@ -1,6 +1,14 @@
-import { assertEquals, assertExists } from "asserts";
+import { assertEquals, assertExists } from "$std/assert/mod.ts";
 import { testUtils } from "./test-utils.ts";
 import { rss } from "./rss.ts";
+import { forTestingOnly } from "./rss.ts";
+
+// NOTE: Could probably be expanded upon.
+Deno.test("generate tag for episode", () => {
+  const episode = testUtils.generateEpisode();
+  const tag = forTestingOnly.assembleEpisode(episode, "someId");
+  assertExists(tag);
+});
 
 Deno.test("generated rss contains the series title", () => {
   const series = testUtils.generateSeries();

@@ -1,6 +1,7 @@
-import { FreshContext } from "$fresh/server.ts";
+import { FreshContext, STATUS_CODE } from "$fresh/server.ts";
 import { parse, toSeconds } from "https://esm.sh/iso8601-duration@2.1.1";
 import { NrkPodcastEpisode, nrkRadio } from "../../../../../lib/nrk/nrk.ts";
+import { responseJSON } from "../../../../../lib/utils.ts";
 
 type Chapter = {
   title: string | undefined;
@@ -25,12 +26,7 @@ export const handler = async (_req: Request, ctx: FreshContext): Promise<Respons
   const episode = await nrkRadio.getEpisode(seriesId, episodeId);
 
   if (!episode) {
-    return new Response(JSON.stringify({ message: `Episode ${episodeId} is missing` }), {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      status: 500,
-    });
+    return responseJSON({ message: `Episode ${episodeId} is missing` }, STATUS_CODE.NotFound);
   }
   const chapters = toChapters(episode);
   const body = {
@@ -38,9 +34,5 @@ export const handler = async (_req: Request, ctx: FreshContext): Promise<Respons
     chapters,
   };
 
-  return new Response(JSON.stringify(body), {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  return responseJSON(body, STATUS_CODE.OK);
 };

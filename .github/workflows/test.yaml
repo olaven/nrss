@@ -1,0 +1,18 @@
+name: Test
+
+on:
+  push:
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Setup deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - name: Run checks
+        run: deno task check
+      - name: Run test
+        run: deno task test

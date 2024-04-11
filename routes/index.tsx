@@ -7,27 +7,26 @@ import SeriesCard from "../components/SeriesCard.tsx";
 import { CSS, render } from "$gfm";
 import { nrkRadio, NrkSearchResultList } from "../lib/nrk/nrk.ts";
 
-interface HandlerData {
-  query: string;
-  origin: string;
+type Props = {
+  query: string | null;
   rawMarkdown: string;
-  result?: NrkSearchResultList;
-}
+  result?: NrkSearchResultList | null;
+};
 
-export const handler: Handlers<HandlerData> = {
+export const handler: Handlers<Props> = {
   async GET(request, ctx) {
     const url = new URL(request.url);
     const query = url.searchParams.get("query");
-    let result: NrkSearchResultList | undefined;
+    let result: Props["result"];
     if (query) {
       result = await nrkRadio.search(query);
     }
     const rawMarkdown = await Deno.readTextFile(new URL("../docs/what.md", import.meta.url));
-    return ctx.render({ query: query || "", result, origin: url.origin, rawMarkdown });
+    return ctx.render({ query, result, rawMarkdown });
   },
 };
 
-export default function Home({ data }: PageProps<HandlerData>) {
+export default function Home({ data, url }: PageProps<Props>) {
   return (
     <>
       <Head>
@@ -46,7 +45,7 @@ export default function Home({ data }: PageProps<HandlerData>) {
       <div className="p-4 mx-auto max-w-screen-md">
         <Header />
         <Search defaultValue={data.query} />
-        <SearchResult result={data.result} origin={data.origin} />
+        <SearchResult result={data.result} origin={url.origin} />
         <div
           class="markdown-body"
           dangerouslySetInnerHTML={{ __html: render(data?.rawMarkdown) }}
@@ -57,7 +56,7 @@ export default function Home({ data }: PageProps<HandlerData>) {
   );
 }
 
-function SearchResult({ result, origin }: { result: NrkSearchResultList; origin: string }) {
+function SearchResult({ result, origin }: { result: Props["result"]; origin: string }) {
   if (!result) {
     return null;
   }
