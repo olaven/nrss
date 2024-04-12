@@ -1,6 +1,7 @@
 import CopyButton from "../islands/CopyButton.tsx";
 import { SearchResult } from "../lib/nrk/nrk.ts";
 import { ButtonLink } from "./Button.tsx";
+import IconPodcast from "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/brand-apple-podcast.tsx";
 
 export default function SeriesCard(props: { serie: SearchResult; origin: string }) {
   const feedUrl = new URL(`/api/feeds/${props.serie.seriesId}`, props.origin);
@@ -11,11 +12,11 @@ export default function SeriesCard(props: { serie: SearchResult; origin: string 
         <h3 className="text-xl font-semibold">{props.serie.title}</h3>
         <p className="text-md">{props.serie.description}</p>
         <img src={image.uri} width={image.width} alt="" />
-        <ButtonLink href={`podcast:${feedUrl.toString()}`} className="block">
-          📻 Åpne i din podkast-app
+        <ButtonLink href={`podcast:${feedUrl.toString()}`} className="block flex items-center gap-2">
+          <IconPodcast /> Åpne i din podkast-app
         </ButtonLink>
         <div className="w-full flex">
-          <CopyButton copyText={feedUrl.toString()} className="whitespace-nowrap">
+          <CopyButton copyText={feedUrl.toString()} className="whitespace-nowrap flex items-center gap-2">
             Kopier URL
           </CopyButton>
           <pre className="w-full font-mono bg-black text-white select-all p-2 overflow-x-auto">
