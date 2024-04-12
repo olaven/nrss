@@ -10,10 +10,18 @@ export default function SeriesCard(props: { serie: SearchResult; origin: string 
         <h3 className="text-xl font-semibold">{props.serie.title}</h3>
         <p className="text-md">{props.serie.description}</p>
         <img src={image.uri} width={image.width} alt="" />
-        <code className="font-mono bg-black text-white select-all p-2">{feedUrl.toString()}</code>
-        <CopyButton text={feedUrl.toString()}>
-          Kopier URL
-        </CopyButton>
+        <a
+          className="block w-max bg-blue-100 text-black p-2 border-black border"
+          href={`podcast:${feedUrl.toString()}`}
+        >
+          📻 Åpne i din podkast-app
+        </a>
+        <div className="">
+          <code className="font-mono bg-black text-white select-all p-2">{feedUrl.toString()}</code>
+          <CopyButton text={feedUrl.toString()}>
+            Kopier URL
+          </CopyButton>
+        </div>
       </div>
     </div>
   );
