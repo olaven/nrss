@@ -1,5 +1,6 @@
 import CopyButton from "../islands/CopyButton.tsx";
 import { SearchResult } from "../lib/nrk/nrk.ts";
+import { ButtonLink } from "./Button.tsx";
 
 export default function SeriesCard(props: { serie: SearchResult; origin: string }) {
   const feedUrl = new URL(`/api/feeds/${props.serie.seriesId}`, props.origin);
@@ -10,12 +11,9 @@ export default function SeriesCard(props: { serie: SearchResult; origin: string 
         <h3 className="text-xl font-semibold">{props.serie.title}</h3>
         <p className="text-md">{props.serie.description}</p>
         <img src={image.uri} width={image.width} alt="" />
-        <a
-          className="block w-max bg-blue-100 text-black p-2 border-black border"
-          href={`podcast:${feedUrl.toString()}`}
-        >
+        <ButtonLink href={`podcast:${feedUrl.toString()}`} className="block">
           📻 Åpne i din podkast-app
-        </a>
+        </ButtonLink>
         <div className="">
           <code className="font-mono bg-black text-white select-all p-2">{feedUrl.toString()}</code>
           <CopyButton text={feedUrl.toString()}>

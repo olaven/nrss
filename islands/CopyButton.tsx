@@ -1,14 +1,16 @@
-import Preact from "preact";
+import { ComponentChildren, JSX } from "preact";
 import { useState } from "preact/hooks";
 import { IS_BROWSER } from "$fresh/runtime.ts";
+import { Button } from "../components/Button.tsx";
 
 type Props = {
-  text: string;
-  children: Preact.ComponentChildren;
+  copyText: string;
+  children: ComponentChildren;
   disabled?: boolean;
-};
+} & JSX.HTMLAttributes<HTMLButtonElement>;
 
-export default function CopyButton({ text, disabled = false, children }: Props) {
+export default function CopyButton(props: Props) {
+  const { copyText, disabled = false, children, ...buttonProps } = props;
   const [clicked, setClicked] = useState(false);
 
   const startReset = () => {
@@ -18,16 +20,16 @@ export default function CopyButton({ text, disabled = false, children }: Props) 
   };
 
   return (
-    <button
+    <Button
       onClick={() => {
-        navigator.clipboard.writeText(text.toString());
+        navigator.clipboard.writeText(copyText.toString());
         setClicked(true);
         startReset();
       }}
       disabled={!IS_BROWSER || disabled}
-      class="px-2 py-1 border(gray-100 2) hover:bg-gray-200 mx-auto bg-blue-200"
+      {...buttonProps}
     >
       {clicked ? "Kopiert!" : children}
-    </button>
+    </Button>
   );
 }
