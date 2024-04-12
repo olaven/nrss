@@ -13,7 +13,7 @@ type Props = {
 } & JSX.HTMLAttributes<HTMLButtonElement>;
 
 export default function CopyButton(props: Props) {
-  const { copyText, disabled = false, children, ...buttonProps } = props;
+  const { copyText, disabled = false, children, className = "", ...buttonProps } = props;
   const [clicked, setClicked] = useState(false);
 
   const startReset = () => {
@@ -30,6 +30,7 @@ export default function CopyButton(props: Props) {
         startReset();
       }}
       disabled={!IS_BROWSER || disabled}
+      className={`${className} ${clicked ? "bg-green-500" : ""}`}
       {...buttonProps}
     >
       {clicked
