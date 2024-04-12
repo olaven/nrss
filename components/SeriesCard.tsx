@@ -14,11 +14,13 @@ export default function SeriesCard(props: { serie: SearchResult; origin: string 
         <ButtonLink href={`podcast:${feedUrl.toString()}`} className="block">
           📻 Åpne i din podkast-app
         </ButtonLink>
-        <div className="">
-          <code className="font-mono bg-black text-white select-all p-2">{feedUrl.toString()}</code>
-          <CopyButton text={feedUrl.toString()}>
+        <div className="w-full flex">
+          <CopyButton copyText={feedUrl.toString()} className="whitespace-nowrap">
             Kopier URL
           </CopyButton>
+          <pre className="w-full font-mono bg-black text-white select-all p-2 overflow-x-auto">
+            {feedUrl.toString()}
+          </pre>
         </div>
       </div>
     </div>
