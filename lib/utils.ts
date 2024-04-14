@@ -14,15 +14,16 @@ type EnumValues<T> = T[keyof T];
 type Status = EnumValues<typeof STATUS_CODE>;
 
 export function responseJSON(body: unknown | null, status: Status) {
-  return response(body, status, "json");
+  const stringifiedBody = JSON.stringify(body);
+  return response(stringifiedBody, status, "json");
 }
 
-export function responseXML(body: unknown | null, status: Status) {
+export function responseXML(body: string, status: Status) {
   return response(body, status, "xml");
 }
 
-function response(body: unknown | null, status: number, type: "json" | "xml") {
-  return new Response(JSON.stringify(body), {
+function response(body: string, status: number, type: "json" | "xml") {
+  return new Response(body, {
     status,
     headers: {
       "Content-Type": `application/${type}`,

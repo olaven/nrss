@@ -11,6 +11,10 @@ export const handler = async (_req: Request, ctx: FreshContext): Promise<Respons
     return responseJSON({ message: "Series not found" }, STATUS_CODE.NotFound);
   }
   const feed = rss.assembleFeed(series);
+  console.log(feed);
 
-  return responseXML(feed, STATUS_CODE.OK);
+  const xml = responseXML(feed, STATUS_CODE.OK);
+  console.log({ feed, xml });
+
+  return xml;
 };
