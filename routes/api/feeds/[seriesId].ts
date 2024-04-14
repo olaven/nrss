@@ -13,7 +13,6 @@ export const handler = async (_req: Request, ctx: FreshContext): Promise<Respons
   const feed = rss.assembleFeed(series);
 
   const xml = responseXML(feed, STATUS_CODE.OK);
-  console.log({ feed, xml });
 
   return xml;
 };
