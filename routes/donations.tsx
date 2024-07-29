@@ -24,7 +24,7 @@ export default () => {
         <p>
           Jeg ønsker at NRSS skal være gratis tilgjengelig for alle. Imidlertid koster det penger og tid å drifte og
           vedlikeholde en nettside. Dersom du har råd til det (og bare da!) setter jeg stor pris på om du vil støtte
-          prosjektet med et valgfritt beløp via Vipps.
+          prosjektet med et valgfritt, månedlig beløp via Vipps.
         </p>
 
         <form
@@ -71,6 +71,11 @@ export default () => {
           </a>.
         </p>
       </div>
+      <footer
+        className={"mt-8"}
+      >
+        Krets AS - 922 739 625
+      </footer>
     </div>
   );
 };
