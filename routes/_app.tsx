@@ -1,4 +1,6 @@
 import { PageProps } from "$fresh/server.ts";
+import Footer from "../components/Footer.tsx";
+import Header from "../components/Header.tsx";
 
 export default function App({ Component }: PageProps) {
   return (
@@ -14,7 +16,9 @@ export default function App({ Component }: PageProps) {
         <title>NRSS</title>
       </head>
       <body class="bg-slate-50">
+        <Header></Header>
         <Component />
+        <Footer></Footer>
       </body>
     </html>
   );

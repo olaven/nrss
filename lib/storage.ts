@@ -24,20 +24,20 @@ function seriesKey(series: { id: string }) {
   return ["series", series.id];
 }
 
-async function read(options: { id: string }): Promise<Series | null> {
+async function readSeries(options: { id: string }): Promise<Series | null> {
   const { id } = options;
   const key = seriesKey({ id });
   const read = await kv.get<Series>(key);
   return read.value;
 }
 
-async function write(series: Series): Promise<boolean> {
+async function writeSeries(series: Series): Promise<boolean> {
   const key = seriesKey(series);
   const stored = await kv.set(key, series);
   return stored.ok;
 }
 
 export const storage = {
-  read,
-  write,
+  readSeries,
+  writeSeries,
 };

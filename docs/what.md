@@ -8,7 +8,3 @@ egen app fremfor å bygge oppunder åpne standarder som RSS.
 Søk på NRK-podcasten du vil høre på. Kopier deretter URL-en under bildet. Lim denne inn i akkurat den
 podcastspilleren du måtte foretrekke! Se [her](https://help.omnystudio.com/en/articles/5222518-podcast-apps-that-support-add-rss-feed)
 for en oversikt over hvordan det gjøres i populære podcastspillere.
-
-## Penger og sånt
-
-Denne siden har mye trafikk! Det er jeg veldig takknemlig for. Imidlertid koster det derfor en del penger å ha det kjørende. _Dersom du har anledning til det_ (og bare da!), oppfordrer jeg til å [slenge over en kaffeslant eller to](/donations) slik at NRSS fortsatt kan være gratis tilgjengelig for de som ikke har det.

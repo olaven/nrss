@@ -1,11 +1,10 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
-import Footer from "../components/Footer.tsx";
-import Header from "../components/Header.tsx";
 import Search from "../components/Search.tsx";
 import SeriesCard from "../components/SeriesCard.tsx";
 import { CSS, render } from "$gfm";
 import { nrkRadio, NrkSearchResultList } from "../lib/nrk/nrk.ts";
+import { DonationSection } from "../islands/DonationSection.tsx";
 
 type Props = {
   query: string | null;
@@ -43,14 +42,13 @@ export default function Home({ data, url }: PageProps<Props>) {
         />
       </Head>
       <div className="p-4 mx-auto max-w-screen-md">
-        <Header />
         <Search defaultValue={data.query} />
         <SearchResult result={data.result} origin={url.origin} />
         <div
           class="markdown-body"
           dangerouslySetInnerHTML={{ __html: render(data?.rawMarkdown) }}
         />
-        <Footer />
+        <DonationSection />
       </div>
     </>
   );

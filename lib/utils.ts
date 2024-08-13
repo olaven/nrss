@@ -5,8 +5,14 @@ export function getHostName() {
   if (deploymentId) {
     return `https://nrss-${deploymentId}.deno.dev`;
   } else {
-    // assume env
-    return "http://localhost:8000";
+    const proxyUrl = Deno.env.get("PROXY_URL");
+    if (proxyUrl) {
+      console.debug(`Using proxy URL ${proxyUrl}`);
+      return proxyUrl;
+    } else {
+      console.debug(`Assuming localhost`);
+      return "http://localhost:8000";
+    }
   }
 }
 
