@@ -41,41 +41,13 @@ const getAccessToken = async function () {
   return data.access_token as string;
 };
 
-/**
- curl -X POST https://apitest.vipps.no/recurring/v3/agreements/ \
--H "Content-Type: application/json" \
--H "Authorization: Bearer YOUR-ACCESS-TOKEN" \
--H "Ocp-Apim-Subscription-Key: YOUR-SUBSCRIPTION-KEY" \
--H "Merchant-Serial-Number: YOUR-MSN" \
--H 'Idempotency-Key: YOUR-IDEMPOTENCY-KEY' \
--H "Vipps-System-Name: acme" \
--H "Vipps-System-Version: 3.1.2" \
--H "Vipps-System-Plugin-Name: acme-webshop" \
--H "Vipps-System-Plugin-Version: 4.5.6" \
--d '{
-   "interval": {
-      "unit" : "WEEK",
-      "count": 2
-   },
-   "pricing": {
-      "amount": 1000,
-      "currency": "NOK"
-   },
-   "merchantRedirectUrl": "https://example.com/redirect-url",
-   "merchantAgreementUrl": "https://example.com/agreement-url",
-   "phoneNumber": "12345678",
-   "productName": "Test product"
-}'
- */
-
-export const createAgreement = async function () {
+export const createAgreement = async function (email: string) {
   const token = await getAccessToken();
-  const idempotencyKey = crypto.randomUUID();
   const response = await fetch(`${config.baseUrl}/recurring/v3/agreements/`, {
     method: "POST",
     headers: {
       authorization: `Bearer ${token}`,
-      "Idempotency-Key": idempotencyKey,
+      "Idempotency-Key": email,
       ...standardVippsHeaders,
     },
     body: JSON.stringify({
@@ -101,6 +73,24 @@ export const createAgreement = async function () {
     };
   } else {
     const errorMessage = `Failed to create Vipps agreement ${response.status} ${await response.text()}`;
+    console.error(errorMessage);
+    return new Error(errorMessage);
+  }
+};
+
+export const getAgreement = async function (agreementId: string) {
+  const token = await getAccessToken();
+  const response = await fetch(`${config.baseUrl}/recurring/v3/agreements/${agreementId}`, {
+    headers: {
+      authorization: `Bearer ${token}`,
+      ...standardVippsHeaders,
+    },
+  });
+
+  if (response.status === STATUS_CODE.OK) {
+    return response.json();
+  } else {
+    const errorMessage = `Failed to get Vipps agreement ${response.status} ${await response.text()}`;
     console.error(errorMessage);
     return new Error(errorMessage);
   }
