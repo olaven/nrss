@@ -18,26 +18,43 @@ export type Series = {
   episodes: Episode[];
 };
 
+export type VippsAgreement = {
+  id: string;
+  agreementId: string;
+  userEmail: string;
+  createdAt: Date;
+  revokedAt: Date | null;
+};
+
 const kv = await Deno.openKv();
 
-function seriesKey(series: { id: string }) {
-  return ["series", series.id];
+type Identifiable = { id: string };
+type Collection = "series" | "vipps-agreements";
+
+function read<T extends Identifiable>(collection: Collection) {
+  return async function (series: Identifiable) {
+    const key = [collection, series.id];
+    const read = await kv.get(key);
+    return read.value as T | null;
+  };
 }
 
-async function readSeries(options: { id: string }): Promise<Series | null> {
-  const { id } = options;
-  const key = seriesKey({ id });
-  const read = await kv.get<Series>(key);
-  return read.value;
+function write<T extends Identifiable>(collection: Collection) {
+  return async function (entity: T) {
+    const key = [collection, entity.id];
+    const stored = await kv.set(key, entity);
+    return stored.ok;
+  };
 }
 
-async function writeSeries(series: Series): Promise<boolean> {
-  const key = seriesKey(series);
-  const stored = await kv.set(key, series);
-  return stored.ok;
-}
+const readSeries = read<Series>("series");
+const writeSeries = write<Series>("series");
+const readVippsAgreement = read<VippsAgreement>("vipps-agreements");
+const writeVippsAgreement = write<VippsAgreement>("vipps-agreements");
 
 export const storage = {
   readSeries,
   writeSeries,
+  readVippsAgreement,
+  writeVippsAgreement,
 };

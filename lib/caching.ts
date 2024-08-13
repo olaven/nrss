@@ -10,7 +10,7 @@ async function initialFetch(options: { id: string }): Promise<Series | null> {
   if (!series) {
     return null;
   }
-  const stored = storage.write(series);
+  const stored = storage.writeSeries(series);
   if (!stored) {
     console.error(`Failed to store series ${options.id}`);
     return null;
@@ -50,7 +50,7 @@ async function updateFetch(existingSeries: Series): Promise<UpdatedSeries | Seri
     episodes: episodesSortedDescending,
   };
 
-  const updateSuccessful = await storage.write(updated);
+  const updateSuccessful = await storage.writeSeries(updated);
   if (!updateSuccessful) {
     console.log(`Failed to update series ${existingSeries.id}`);
     return null;
@@ -76,7 +76,7 @@ function isSeriesFromStorageNew(
 }
 
 async function getSeries(options: { id: string }): Promise<Series | null> {
-  const seriesFromStorage = await storage.read(options);
+  const seriesFromStorage = await storage.readSeries(options);
 
   /**
    * We don't have the feed in storage,
