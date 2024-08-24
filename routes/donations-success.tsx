@@ -1,24 +1,37 @@
-import { PageProps } from "$fresh/server.ts";
-import { getAgreement } from "../lib/vipps/vipps.ts";
+import { Handlers, PageProps } from "$fresh/server.ts";
+import { storage } from "../lib/storage.ts";
+import { validateEmail } from "../lib/utils.ts";
 
-export const handler: Handlers<Props> = {
+export const handler: Handlers = {
   async GET(request, ctx) {
-    // TODO: somehow get the agreement ID
-    // TODO: implement cancel page
-
-    const agreementId = "123";
-    const agreement = await getAgreement(agreementId);
-    if (agreement instanceof Error) {
-      console.error("Failed to get Vipps agreement", agreement);
-      return ctx.redirect("/donations-error");
+    const url = new URL(request.url);
+    const email = url.searchParams.get("email");
+    if (!email) {
+      console.error("Missing email in query params", request.url);
+      return Response.redirect("/donations-error");
     }
 
-    return ctx.render({ agreement });
+    if (!validateEmail(email)) {
+      console.error("Invalid email server side", email);
+      return Response.redirect("/donations-error");
+    }
+
+    const agreement = await storage.readVippsAgreement({ id: email });
+    if (!agreement) {
+      console.error("Missing agreement for email", email);
+      return Response.redirect("/donations-error");
+    }
+
+    const validatedAgreement = await storage.writeVippsAgreement({
+      ...agreement,
+      validAt: new Date(),
+    });
+
+    return ctx.render({ agreement: validatedAgreement });
   },
 };
 
 export default function ({ data }: PageProps<{
-  // TODO: confirm interface when you know it
   agreement: {
     status: string;
     id: string;

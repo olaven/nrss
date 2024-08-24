@@ -1,5 +1,5 @@
 import "jsr:@std/dotenv/load";
-import { getHostName } from "../utils.ts";
+import { getHostUrl } from "../utils.ts";
 import { STATUS_CODE } from "$fresh/server.ts";
 
 const config = {
@@ -47,7 +47,7 @@ export const createAgreement = async function (email: string) {
     method: "POST",
     headers: {
       authorization: `Bearer ${token}`,
-      "Idempotency-Key": email,
+      "Idempotency-Key": `${email}-${Date.now()}`,
       ...standardVippsHeaders,
     },
     body: JSON.stringify({
@@ -60,8 +60,9 @@ export const createAgreement = async function (email: string) {
         "currency": "NOK",
         "type": "VARIABLE",
       },
-      "merchantRedirectUrl": `${getHostName()}/donations-success`,
-      "merchantAgreementUrl": `${getHostName()}/donations`,
+      // email is used to identify the user in the success page
+      "merchantRedirectUrl": `${getHostUrl()}/donations-success?email=${email}`,
+      "merchantAgreementUrl": `${getHostUrl()}`,
       "productName": "Månedlig støtte til NRSS",
     }),
   });
@@ -70,6 +71,7 @@ export const createAgreement = async function (email: string) {
     const body = response.json();
     return body as unknown as {
       vippsConfirmationUrl: string;
+      agreementId: string;
     };
   } else {
     const errorMessage = `Failed to create Vipps agreement ${response.status} ${await response.text()}`;
@@ -91,6 +93,29 @@ export const getAgreement = async function (agreementId: string) {
     return response.json();
   } else {
     const errorMessage = `Failed to get Vipps agreement ${response.status} ${await response.text()}`;
+    console.error(errorMessage);
+    return new Error(errorMessage);
+  }
+};
+
+export const cancelAgreement = async function (agreementId: string) {
+  const token = await getAccessToken();
+  const response = await fetch(`${config.baseUrl}/recurring/v3/agreements/${agreementId}`, {
+    method: "PATCH",
+    headers: {
+      authorization: `Bearer ${token}`,
+      "Idempotency-Key": `${agreementId}-${Date.now()}`,
+      ...standardVippsHeaders,
+    },
+    body: JSON.stringify({
+      "status": "STOPPED",
+    }),
+  });
+
+  if (response.status === STATUS_CODE.NoContent) {
+    return true;
+  } else {
+    const errorMessage = `Failed to cancel Vipps agreement ${response.status} ${await response.text()}`;
     console.error(errorMessage);
     return new Error(errorMessage);
   }

@@ -1,18 +1,16 @@
 import { STATUS_CODE } from "$fresh/server.ts";
 
-export function getHostName() {
+export function getHostUrl() {
   const deploymentId = Deno.env.get("DENO_DEPLOYMENT_ID");
+  const tunnelUrl = Deno.env.get("TUNNEL_URL");
   if (deploymentId) {
     return `https://nrss-${deploymentId}.deno.dev`;
+  } else if (tunnelUrl) {
+    console.debug(`Using tunnel URL: ${tunnelUrl}`);
+    return tunnelUrl;
   } else {
-    const proxyUrl = Deno.env.get("PROXY_URL");
-    if (proxyUrl) {
-      console.debug(`Using proxy URL ${proxyUrl}`);
-      return proxyUrl;
-    } else {
-      console.debug(`Assuming localhost`);
-      return "http://localhost:8000";
-    }
+    console.debug(`Assuming localhost`);
+    return "http://localhost:8000";
   }
 }
 

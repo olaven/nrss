@@ -1,5 +1,5 @@
 import { declaration, serialize, Tag, tag } from "serialize-xml";
-import { getHostName } from "./utils.ts";
+import { getHostUrl } from "./utils.ts";
 import { Episode, Series } from "./storage.ts";
 
 function assembleFeed(series: Series): string {
@@ -71,7 +71,7 @@ function assembleEpisode(episode: Episode, seriesId: Series["id"]): Tag {
     tag("podcast:chapters", "", [
       [
         "url",
-        `${getHostName()}/api/feeds/${seriesId}/${episode.id}/chapters`,
+        `${getHostUrl()}/api/feeds/${seriesId}/${episode.id}/chapters`,
       ],
       ["type", "application/json+chapters"],
     ]),

@@ -19,10 +19,12 @@ export type Series = {
 };
 
 export type VippsAgreement = {
+  // the user identifier / email
   id: string;
+  // the agreement id from Vipps
   agreementId: string;
-  userEmail: string;
   createdAt: Date;
+  validAt: Date | null;
   revokedAt: Date | null;
 };
 
