@@ -22,23 +22,16 @@ export const handler: Handlers = {
       return Response.redirect("/donations-error");
     }
 
-    const validatedAgreement = await storage.writeVippsAgreement({
+    await storage.writeVippsAgreement({
       ...agreement,
       validAt: new Date(),
     });
 
-    return ctx.render({ agreement: validatedAgreement });
+    return ctx.render({});
   },
 };
 
-export default function ({ data }: PageProps<{
-  agreement: {
-    status: string;
-    id: string;
-  };
-
-  status: string;
-}>) {
+export default function ({}: PageProps<unknown>) {
   return (
     <div className="my-16 text-center flex flex-col items-center  min-h-screen ">
       <h1 className="text-6xl mb-8">
