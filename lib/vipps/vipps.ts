@@ -1,3 +1,4 @@
+// deno-lint-ignore-file ban-ts-comment
 import "jsr:@std/dotenv/load";
 import { getHostUrl } from "../utils.ts";
 import { STATUS_CODE } from "$fresh/server.ts";
@@ -30,6 +31,7 @@ const getAccessToken = async function () {
   console.log(`Fetching ${`${config.baseUrl}/accesstoken/get`}`);
   const response = await fetch(`${config.baseUrl}/accesstoken/get`, {
     method: "POST",
+    // @ts-ignore
     headers: {
       "client_id": config.clientId,
       "client_secret": config.clientSecret,
@@ -45,6 +47,7 @@ export const createAgreement = async function (email: string) {
   const token = await getAccessToken();
   const response = await fetch(`${config.baseUrl}/recurring/v3/agreements/`, {
     method: "POST",
+    // @ts-ignore
     headers: {
       authorization: `Bearer ${token}`,
       "Idempotency-Key": `${email}-${Date.now()}`,
@@ -83,6 +86,7 @@ export const createAgreement = async function (email: string) {
 export const getAgreement = async function (agreementId: string) {
   const token = await getAccessToken();
   const response = await fetch(`${config.baseUrl}/recurring/v3/agreements/${agreementId}`, {
+    // @ts-ignore
     headers: {
       authorization: `Bearer ${token}`,
       ...standardVippsHeaders,
@@ -102,6 +106,7 @@ export const cancelAgreement = async function (agreementId: string) {
   const token = await getAccessToken();
   const response = await fetch(`${config.baseUrl}/recurring/v3/agreements/${agreementId}`, {
     method: "PATCH",
+    // @ts-ignore
     headers: {
       authorization: `Bearer ${token}`,
       "Idempotency-Key": `${agreementId}-${Date.now()}`,

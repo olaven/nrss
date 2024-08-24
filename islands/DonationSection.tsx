@@ -49,6 +49,7 @@ export const DonationSection = function () {
                 }
               }}
             >
+              {/* @ts-ignore */}
               <vipps-mobilepay-button
                 type="submit"
                 brand="vipps"
@@ -60,6 +61,7 @@ export const DonationSection = function () {
                 branded="true"
                 loading="false"
               >
+                {/* @ts-ignore */}
               </vipps-mobilepay-button>
             </a>
             valid: {emailValid.toString()}

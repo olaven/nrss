@@ -6,7 +6,7 @@ import * as vipps from "../lib/vipps/vipps.ts";
 import { validateEmail } from "../lib/utils.ts";
 
 type Props = {
-  email: string;
+  email: string | null;
   error: string | null;
   cancelled: boolean;
 };
