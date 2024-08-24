@@ -62,7 +62,6 @@ function descriptionWithDonationPromotion(description: string): string {
     `Takk for at du bruker NRSS 🙏🌟 Vurder å støtte utviklingen via Vipps med omtrent det samme som prisen på en kaffekopp. Se mer på ${getHostUrl()}.`;
 
   return `
-  --------------------------------\n
   ${promotion}                    \n
   --------------------------------\n
   ${description}
