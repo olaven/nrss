@@ -8,7 +8,6 @@ const config = {
   clientSecret: Deno.env.get("VIPPS_CLIENT_SECRET"),
   ocpApimSubscriptionKeyPrimary: Deno.env.get("VIPPS_OCP_APIM_SUBSCRIPTION_KEY_PRIMARY"),
   ocpApimSubscriptionKeySecondary: Deno.env.get("VIPPS_OCM_APIM_SUBSCRIPTION_KEY_SECONDARY"),
-  testMobileNumber: Deno.env.get("VIPPS_TEST_MOBILE_NUMBER"),
   msn: Deno.env.get("VIPPS_MSN"),
   baseUrl: Deno.env.get("VIPPS_API_BASE_URL"),
 };
