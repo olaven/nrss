@@ -1,5 +1,5 @@
 import { declaration, serialize, Tag, tag } from "serialize-xml";
-import { getHostName } from "./utils.ts";
+import { getHostUrl } from "./utils.ts";
 import { Episode, Series } from "./storage.ts";
 
 function assembleFeed(series: Series): string {
@@ -57,8 +57,19 @@ function assembleFeed(series: Series): string {
   );
 }
 
+function descriptionWithDonationPromotion(description: string): string {
+  const promotion =
+    `Takk for at du bruker NRSS 🙏🌟 Vurder å støtte utviklingen via Vipps med omtrent det samme som prisen på en kaffekopp. Se mer på ${getHostUrl()}`;
+
+  return `
+  ${promotion}                    \n
+  --------------------------------\n
+  ${description}
+  `;
+}
+
 function assembleEpisode(episode: Episode, seriesId: Series["id"]): Tag {
-  const description = episode.subtitle || "";
+  const description = descriptionWithDonationPromotion(episode.subtitle || "");
 
   return tag("item", [
     tag("title", episode.title),
@@ -71,7 +82,7 @@ function assembleEpisode(episode: Episode, seriesId: Series["id"]): Tag {
     tag("podcast:chapters", "", [
       [
         "url",
-        `${getHostName()}/api/feeds/${seriesId}/${episode.id}/chapters`,
+        `${getHostUrl()}/api/feeds/${seriesId}/${episode.id}/chapters`,
       ],
       ["type", "application/json+chapters"],
     ]),

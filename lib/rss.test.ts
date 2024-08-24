@@ -25,3 +25,11 @@ Deno.test("generated rss contains all episode titles", () => {
     assertEquals(feed.includes(episode.title), true);
   });
 });
+
+Deno.test("generated rss contains promo with link to donations page", () => {
+  const series = testUtils.generateSeries();
+  const feed = rss.assembleFeed(series);
+
+  console.log(feed);
+  feed.includes("Vurder å støtte utviklingen via Vipps");
+});

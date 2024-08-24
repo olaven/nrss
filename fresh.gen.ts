@@ -5,8 +5,13 @@
 import * as $_app from "./routes/_app.tsx";
 import * as $api_feeds_seriesId_ from "./routes/api/feeds/[seriesId].ts";
 import * as $api_feeds_seriesId_episodeId_chapters from "./routes/api/feeds/[seriesId]/[episodeId]/chapters.ts";
+import * as $api_trigger_donation_vipps from "./routes/api/trigger-donation/vipps.ts";
+import * as $donations_cancel from "./routes/donations-cancel.tsx";
+import * as $donations_error from "./routes/donations-error.tsx";
+import * as $donations_success from "./routes/donations-success.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $CopyButton from "./islands/CopyButton.tsx";
+import * as $DonationSection from "./islands/DonationSection.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -14,10 +19,15 @@ const manifest = {
     "./routes/_app.tsx": $_app,
     "./routes/api/feeds/[seriesId].ts": $api_feeds_seriesId_,
     "./routes/api/feeds/[seriesId]/[episodeId]/chapters.ts": $api_feeds_seriesId_episodeId_chapters,
+    "./routes/api/trigger-donation/vipps.ts": $api_trigger_donation_vipps,
+    "./routes/donations-cancel.tsx": $donations_cancel,
+    "./routes/donations-error.tsx": $donations_error,
+    "./routes/donations-success.tsx": $donations_success,
     "./routes/index.tsx": $index,
   },
   islands: {
     "./islands/CopyButton.tsx": $CopyButton,
+    "./islands/DonationSection.tsx": $DonationSection,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
