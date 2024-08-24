@@ -64,7 +64,6 @@ export const DonationSection = function () {
                 {/* @ts-ignore */}
               </vipps-mobilepay-button>
             </a>
-            valid: {emailValid.toString()}
           </form>
           <p
             className={"text-sm text-gray-500"}
