@@ -45,6 +45,7 @@ const getAccessToken = async function () {
 
 export const createAgreement = async function (email: string) {
   const token = await getAccessToken();
+  const amount = 5000; // 50 NOK
   const response = await fetch(`${config.baseUrl}/recurring/v3/agreements/`, {
     method: "POST",
     // @ts-ignore
@@ -58,10 +59,14 @@ export const createAgreement = async function (email: string) {
         "unit": "MONTH",
         "count": 1,
       },
+      "initialCharge": {
+        "amount": amount,
+        "description": "Initial charge",
+        "transactionType": "DIRECT_CAPTURE",
+      },
       "pricing": {
-        "suggestedMaxAmount": 5000, // 50,- NOK
+        "amount": amount,
         "currency": "NOK",
-        "type": "VARIABLE",
       },
       // email is used to identify the user in the success page
       "merchantRedirectUrl": `${getHostUrl()}/donations-success?email=${email}`,

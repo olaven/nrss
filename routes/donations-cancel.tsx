@@ -50,7 +50,7 @@ export default function ({ data }: PageProps<Props>) {
       className={"p-4 mx-auto max-w-screen-md text-center"}
     >
       <h1
-        className={"text-4xl"}
+        className={"text-3xl mb-6"}
       >
         Avslutt støtte til NRSS
       </h1>
@@ -63,21 +63,22 @@ export default function ({ data }: PageProps<Props>) {
         </p>
       )}
       {data.cancelled && (
-        <p>
-          Støtten er nå avsluttet. Tusen takk for at du har støttet NRSS 🙏🌟
+        <p className={"text-left m-4"}>
+          Støtten er nå avsluttet. <br />
+          <b>Tusen takk for at du har støttet NRSS 🙏</b>
         </p>
       )}
       {!data.cancelled && (
-        <form>
+        <form className={"flex flex-col w-full"}>
           <Input
             type={"email"}
             placeholder={"din@epost.no"}
             required
             name={"email"}
             id={"email"}
-          >
-          </Input>
+          />
           <Button
+            className={"w-full"}
             type={"submit"}
           >
             Avslutt

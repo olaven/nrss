@@ -18,7 +18,7 @@ export const handler = async function (req: Request): Promise<Response> {
   }
 
   const existingAgreement = await storage.readVippsAgreement({ id: email });
-  if (existingAgreement) {
+  if (existingAgreement && existingAgreement.revokedAt === null) {
     console.error("Agreement already exists", email);
     return Response.redirect(errorPage);
   }

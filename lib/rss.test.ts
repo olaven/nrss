@@ -31,5 +31,5 @@ Deno.test("generated rss contains promo with link to donations page", () => {
   const feed = rss.assembleFeed(series);
 
   console.log(feed);
-  feed.includes("Vurder å støtte utviklingen via Vipps med valgfritt beløp");
+  feed.includes("Vurder å støtte utviklingen via Vipps");
 });

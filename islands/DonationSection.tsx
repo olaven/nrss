@@ -26,11 +26,11 @@ export const DonationSection = function () {
         <p>
           Jeg ønsker at NRSS skal være gratis tilgjengelig for alle. Imidlertid koster det penger og tid å drifte og
           vedlikeholde en nettside. Dersom du har råd til det (og bare da!) setter jeg stor pris på om du vil støtte
-          prosjektet med et valgfritt, månedlig beløp via Vipps.
+          prosjektet med et lite, månedlig beløp via Vipps.
         </p>
 
         <div className="justify-center my-8">
-          <form className={"flex"}>
+          <form className={"flex flex-col mx-4"}>
             <Input
               type={"email"}
               placeholder={"din@epost.no"}
@@ -43,6 +43,7 @@ export const DonationSection = function () {
             <a
               // don't navigate if email is not valid
               href={emailInput ? `/api/trigger-donation/vipps?email=${emailInput}` : undefined}
+              className={"mt-2"}
               onClick={(e) => {
                 if (!emailValid) {
                   e.preventDefault();
@@ -70,17 +71,14 @@ export const DonationSection = function () {
           >
             Eposten brukes utelukkende som referanse dersom du ønsker å avslutte støtten. Du kommer ikke til å motta
             noen eposter.
+            <b>
+              Du kan når som helst avslutte støtten fra{" "}
+              <a className="text-blue-600 underline" href="/donations-cancel">
+                denne siden
+              </a>.
+            </b>
           </p>
         </div>
-
-        <p>
-          <b>
-            Du kan når som helst avslutte støtten fra{" "}
-            <a className="text-blue-600 underline" href="/donations-cancel">
-              denne siden
-            </a>.
-          </b>
-        </p>
 
         <p className="mt-4">
           Opplever du problemer med betalingen, eller har du andre spørsmål? Ta{" "}
