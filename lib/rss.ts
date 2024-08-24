@@ -57,8 +57,20 @@ function assembleFeed(series: Series): string {
   );
 }
 
+function descriptionWithDonationPromotion(description: string): string {
+  const promotion =
+    `Takk for at du bruker NRSS 🙏🌟 Vurder å støtte utviklingen via Vipps med valgfritt beløp. Se mer på ${getHostUrl()}.`;
+
+  return `
+  --------------------------------\n
+  ${promotion}                    \n
+  --------------------------------\n
+  ${description}
+  `;
+}
+
 function assembleEpisode(episode: Episode, seriesId: Series["id"]): Tag {
-  const description = episode.subtitle || "";
+  const description = descriptionWithDonationPromotion(episode.subtitle || "");
 
   return tag("item", [
     tag("title", episode.title),

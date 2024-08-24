@@ -64,7 +64,7 @@ export default function ({ data }: PageProps<Props>) {
       )}
       {data.cancelled && (
         <p>
-          Støtten er nå avsluttet. Tusen takk for at du har støttet NRSS!
+          Støtten er nå avsluttet. Tusen takk for at du har støttet NRSS 🙏🌟
         </p>
       )}
       {!data.cancelled && (
