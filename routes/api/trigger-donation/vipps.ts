@@ -17,6 +17,12 @@ export const handler = async function (req: Request): Promise<Response> {
     return Response.redirect(errorPage);
   }
 
+  const existingAgreement = await storage.readVippsAgreement({ id: email });
+  if (existingAgreement) {
+    console.error("Agreement already exists", email);
+    return Response.redirect(errorPage);
+  }
+
   const agreement = await createAgreement(email);
   if (agreement instanceof Error) {
     console.error("Failed to create Vipps agreement", agreement);
