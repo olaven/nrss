@@ -1,4 +1,4 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { Handlers } from "$fresh/server.ts";
 import { storage } from "../lib/storage.ts";
 import { validateEmail } from "../lib/utils.ts";
 
