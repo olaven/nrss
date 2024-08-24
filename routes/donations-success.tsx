@@ -31,7 +31,7 @@ export const handler: Handlers = {
   },
 };
 
-export default function ({}: PageProps<unknown>) {
+export default function () {
   return (
     <div className="my-16 text-center flex flex-col items-center  min-h-screen ">
       <h1 className="text-6xl mb-8">
