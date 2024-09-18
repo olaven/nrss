@@ -9,6 +9,7 @@ public accessible RSS-feeds for their produced podcasts via their
 ## Local development
 
 1. [Install Deno](https://deno.land/manual/getting_started/installation)
+1. `cp .env.example .env`
 1. Run the app: `deno task start`
 1. Open [localhost:8000](http://localhost:8000) in your browser
 
