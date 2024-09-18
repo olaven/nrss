@@ -61,11 +61,7 @@ function descriptionWithDonationPromotion(description: string): string {
   const promotion =
     `Takk for at du bruker NRSS 🙏🌟 Vurder å støtte utviklingen via Vipps med omtrent det samme som prisen på en kaffekopp. Se mer på https://nrss.deno.dev/`;
 
-  return `
-  ${promotion}                    \n
-  --------------------------------\n
-  ${description}
-  `;
+  return `${description}\n\n${promotion}`;
 }
 
 function assembleEpisode(episode: Episode, seriesId: Series["id"]): Tag {
