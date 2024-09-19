@@ -2,8 +2,10 @@ import { nrkRadio } from "./nrk/nrk.ts";
 import { Series, storage } from "./storage.ts";
 import * as datetime from "$std/datetime/mod.ts";
 import { Episode } from "./storage.ts";
+import { Buffer } from "node:buffer";
 
 const SYNC_INTERVAL_HOURS = 1;
+const DENO_KV_MAX_BYTES = 65_536;
 
 async function initialFetch(options: { id: string }): Promise<Series | null> {
   const series = await nrkRadio.getSeries(options.id);
@@ -23,6 +25,7 @@ type UpdatedSeries = {
   lastFetch: Date;
   episodes: Episode[];
 } & Series;
+
 async function updateFetch(existingSeries: Series): Promise<UpdatedSeries | Series | null> {
   const series = await nrkRadio.getSeries(existingSeries.id);
   if (!series) {
@@ -44,19 +47,44 @@ async function updateFetch(existingSeries: Series): Promise<UpdatedSeries | Seri
   const episodesSortedDescending = [...newEpisodes, ...existingSeries.episodes]
     .sort((a, b) => a.date.getTime() > b.date.getTime() ? -1 : 1);
 
-  const updated = {
+  const withNewEpisodes = {
     ...existingSeries,
     lastFetch: new Date(),
     episodes: episodesSortedDescending,
   };
 
-  const updateSuccessful = await storage.writeSeries(updated);
+  /**
+   * The KV store has a limit of 64kb per value.
+   * A pragmatic (not perfect) solution is to trim the series
+   * down until we're within the limit.
+   *
+   * Other ideas for the future:
+   * - splitting the series into multiple keys
+   * - using a different storage solution
+   */
+  const trimmed = trimSeriesToSize(withNewEpisodes, DENO_KV_MAX_BYTES);
+
+  const updateSuccessful = await storage.writeSeries(trimmed);
   if (!updateSuccessful) {
     console.log(`Failed to update series ${existingSeries.id}`);
     return null;
   }
 
-  return updated;
+  return trimmed;
+}
+
+function trimSeriesToSize(series: Series, bytes: number): Series {
+  const currentBytes = Buffer.byteLength(JSON.stringify(series));
+  if (currentBytes <= bytes) {
+    return series;
+  }
+
+  const trimmed = {
+    ...series,
+    episodes: series.episodes.slice(0, -1),
+  };
+
+  return trimSeriesToSize(trimmed, bytes);
 }
 
 function getTimeSinceLastFetch(inputDate: Date, againstDate = new Date()): number | null {

@@ -6,10 +6,8 @@ export function getHostUrl() {
   if (deploymentId) {
     return `https://nrss-${deploymentId}.deno.dev`;
   } else if (tunnelUrl) {
-    console.debug(`Using tunnel URL: ${tunnelUrl}`);
     return tunnelUrl;
   } else {
-    console.debug(`Assuming localhost`);
     return "http://localhost:8000";
   }
 }
