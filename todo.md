@@ -1,7 +1,7 @@
 # Bugs 
 - [ ] enter on sponsor input reloads the page 
-  - [ ] reproduce 
-  - [ ] fix 
+  - [x] reproduce 
+  - [x] fix 
   - [ ] report back to user (MFA email)
 - [ ] user (MFA email) gets an error with one of his emails (see mail thread)
   - [x] reproduce 
