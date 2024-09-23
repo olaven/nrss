@@ -30,7 +30,12 @@ export const DonationSection = function () {
         </p>
 
         <div className="justify-center my-8">
-          <form className={"flex flex-col mx-4"}>
+          <form
+            className={"flex flex-col mx-4"}
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+          >
             <Input
               type={"email"}
               placeholder={"din@epost.no"}

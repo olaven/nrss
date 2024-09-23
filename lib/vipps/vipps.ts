@@ -1,5 +1,6 @@
 // deno-lint-ignore-file ban-ts-comment
 import "jsr:@std/dotenv/load";
+import { encodeHex } from "jsr:@std/encoding/hex";
 import { getHostUrl } from "../utils.ts";
 import { STATUS_CODE } from "$fresh/server.ts";
 
@@ -50,7 +51,8 @@ export const createAgreement = async function (email: string) {
     // @ts-ignore
     headers: {
       authorization: `Bearer ${token}`,
-      "Idempotency-Key": `${email}-${Date.now()}`,
+      // anonymized and trimmed to not be too long (then it fails)
+      "Idempotency-Key": `${encodeHex(email).slice(0, 10)}-${Date.now()}`,
       ...standardVippsHeaders,
     },
     body: JSON.stringify({
