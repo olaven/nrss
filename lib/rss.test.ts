@@ -38,12 +38,12 @@ Deno.test("generated rss contains promo with link to donations page", () => {
   const feed = rss.assembleFeed(series);
 
   const indexOfFirstPromotion = feed.indexOf(
-    "NRSS er avhengig av din Vipps-støtte"
+    "NRSS er avhengig av din Vipps-støtte",
   );
   const indexOfSecondPromotion = feed.indexOf("Vurder å støtte utviklingen");
   assertLess(
     indexOfFirstPromotion,
     indexOfSecondPromotion,
-    "First promotion should come before the second"
+    "First promotion should come before the second",
   );
 });
