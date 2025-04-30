@@ -27,24 +27,21 @@ function assembleFeed(series: Series): string {
             tag("itunes:name", "NRK"),
             tag("itunes:email", "nrkpodcast@nrk.no"),
           ]),
-          tag(
-            "description",
-            series.subtitle || "",
-          ),
+          tag("description", series.subtitle || ""),
           tag("ttl", "60"), //60 minutes
           ...(series.imageUrl
             ? [
-              tag("itunes:image", "", [
-                ["href", series.imageUrl],
-              ]),
-              tag("image", [
-                tag("url", series.imageUrl),
-                tag("title", series.title),
-                tag("link", series.link),
-              ]),
-            ]
+                tag("itunes:image", "", [["href", series.imageUrl]]),
+                tag("image", [
+                  tag("url", series.imageUrl),
+                  tag("title", series.title),
+                  tag("link", series.link),
+                ]),
+              ]
             : []),
-          ...series.episodes.map((episode) => assembleEpisode(episode, series.id)),
+          ...series.episodes.map((episode) =>
+            assembleEpisode(episode, series.id)
+          ),
         ]),
       ],
       [
@@ -52,16 +49,16 @@ function assembleFeed(series: Series): string {
         ["xmlns:itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd"],
         ["xmlns:content", "http://purl.org/rss/1.0/modules/content/"],
         ["xmlns:podcast", "https://podcastindex.org/namespace/1.0"],
-      ],
-    ),
+      ]
+    )
   );
 }
 
 function descriptionWithDonationPromotion(description: string): string {
-  const promotion =
-    `Takk for at du bruker NRSS 🙏🌟 Vurder å støtte utviklingen via Vipps med omtrent det samme som prisen på en kaffekopp. Se mer på https://nrss.deno.dev/`;
+  const firstPromotion = `⬇️NRSS er avhengig av din Vipps-støtte⬇️`;
+  const secondPromotion = `Takk for at du bruker NRSS 🙏🌟 Vurder å støtte utviklingen via Vipps med omtrent det samme som prisen på en kaffekopp. Se mer på https://nrss.deno.dev/`;
 
-  return `${description}\n\n${promotion}`;
+  return `${firstPromotion}\n\n${description}\n\n${secondPromotion}`;
 }
 
 function assembleEpisode(episode: Episode, seriesId: Series["id"]): Tag {
@@ -76,10 +73,7 @@ function assembleEpisode(episode: Episode, seriesId: Series["id"]): Tag {
     tag("pubDate", new Date(episode.date).toUTCString()),
     tag("itunes:duration", episode.durationInSeconds.toString()),
     tag("podcast:chapters", "", [
-      [
-        "url",
-        `${getHostUrl()}/api/feeds/${seriesId}/${episode.id}/chapters`,
-      ],
+      ["url", `${getHostUrl()}/api/feeds/${seriesId}/${episode.id}/chapters`],
       ["type", "application/json+chapters"],
     ]),
     tag("enclosure", "", [
