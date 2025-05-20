@@ -93,9 +93,12 @@ export const createAgreement = async function (email: string) {
   }
 };
 
-export const getAgreement = async function (agreementId: string): Promise<{
-  status: "PENDING" | "ACTIVE" | "STOPPED" | "EXPIRED";
-}> {
+export const getAgreement = async function (agreementId: string): Promise<
+  | {
+    status: "PENDING" | "ACTIVE" | "STOPPED" | "EXPIRED";
+  }
+  | Error
+> {
   const token = await getAccessToken();
   const response = await fetch(
     `${config.baseUrl}/recurring/v3/agreements/${agreementId}`,

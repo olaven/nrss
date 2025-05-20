@@ -27,6 +27,7 @@ export const handler = async function (req: Request): Promise<Response> {
 
   if (
     agreementInVipps &&
+    !(agreementInVipps instanceof Error) &&
     agreementInVipps.status !== "ACTIVE" &&
     hasActiveAgreement
   ) {
