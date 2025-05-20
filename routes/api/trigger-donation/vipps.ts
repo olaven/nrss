@@ -1,6 +1,7 @@
 import { getHostUrl, validateEmail } from "../../../lib/utils.ts";
 import { storage } from "../../../lib/storage.ts";
 import { createAgreement } from "../../../lib/vipps/vipps.ts";
+import { getAgreement } from "../../../lib/vipps/vipps.ts";
 
 export const handler = async function (req: Request): Promise<Response> {
   const email = new URLSearchParams(req.url.split("?")[1] || "").get("email");
@@ -21,11 +22,26 @@ export const handler = async function (req: Request): Promise<Response> {
   const hasActiveAgreement = existingAgreement &&
     existingAgreement.validAt !== null &&
     existingAgreement.revokedAt === null;
+
+  const agreementInVipps = existingAgreement && (await getAgreement(existingAgreement.agreementId));
+
   if (
+    agreementInVipps &&
+    agreementInVipps.status !== "ACTIVE" &&
     hasActiveAgreement
   ) {
-    console.error("Agreement already exists", email);
-    return Response.redirect(errorPage);
+    // Somehow the Vipps agreement is not active in our system anymore.
+    // We should reflect the new status in our system.
+    await storage.writeVippsAgreement({
+      ...existingAgreement,
+      revokedAt: new Date(),
+    });
+  } else {
+    // i.e. the agreement in our system was in sync with Vipps.
+    if (hasActiveAgreement) {
+      console.error("Agreement already exists", email);
+      return Response.redirect(errorPage);
+    }
   }
 
   const agreement = await createAgreement(email);
