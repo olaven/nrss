@@ -7,8 +7,12 @@ import { STATUS_CODE } from "$fresh/server.ts";
 const config = {
   clientId: Deno.env.get("VIPPS_CLIENT_ID"),
   clientSecret: Deno.env.get("VIPPS_CLIENT_SECRET"),
-  ocpApimSubscriptionKeyPrimary: Deno.env.get("VIPPS_OCP_APIM_SUBSCRIPTION_KEY_PRIMARY"),
-  ocpApimSubscriptionKeySecondary: Deno.env.get("VIPPS_OCM_APIM_SUBSCRIPTION_KEY_SECONDARY"),
+  ocpApimSubscriptionKeyPrimary: Deno.env.get(
+    "VIPPS_OCP_APIM_SUBSCRIPTION_KEY_PRIMARY",
+  ),
+  ocpApimSubscriptionKeySecondary: Deno.env.get(
+    "VIPPS_OCM_APIM_SUBSCRIPTION_KEY_SECONDARY",
+  ),
   msn: Deno.env.get("VIPPS_MSN"),
   baseUrl: Deno.env.get("VIPPS_API_BASE_URL"),
 };
@@ -33,8 +37,8 @@ const getAccessToken = async function () {
     method: "POST",
     // @ts-ignore
     headers: {
-      "client_id": config.clientId,
-      "client_secret": config.clientSecret,
+      client_id: config.clientId,
+      client_secret: config.clientSecret,
       ...standardVippsHeaders,
     },
   });
@@ -56,23 +60,23 @@ export const createAgreement = async function (email: string) {
       ...standardVippsHeaders,
     },
     body: JSON.stringify({
-      "interval": {
-        "unit": "MONTH",
-        "count": 1,
+      interval: {
+        unit: "MONTH",
+        count: 1,
       },
-      "initialCharge": {
-        "amount": amount,
-        "description": "Initial charge",
-        "transactionType": "DIRECT_CAPTURE",
+      initialCharge: {
+        amount: amount,
+        description: "Initial charge",
+        transactionType: "DIRECT_CAPTURE",
       },
-      "pricing": {
-        "amount": amount,
-        "currency": "NOK",
+      pricing: {
+        amount: amount,
+        currency: "NOK",
       },
       // email is used to identify the user in the success page
-      "merchantRedirectUrl": `${getHostUrl()}/donations-success?email=${email}`,
-      "merchantAgreementUrl": `${getHostUrl()}`,
-      "productName": "Månedlig støtte til NRSS",
+      merchantRedirectUrl: `${getHostUrl()}/donations-success?email=${email}`,
+      merchantAgreementUrl: `${getHostUrl()}`,
+      productName: "Månedlig støtte til NRSS",
     }),
   });
 
@@ -89,15 +93,23 @@ export const createAgreement = async function (email: string) {
   }
 };
 
-export const getAgreement = async function (agreementId: string) {
+export const getAgreement = async function (agreementId: string): Promise<
+  | {
+    status: "PENDING" | "ACTIVE" | "STOPPED" | "EXPIRED";
+  }
+  | Error
+> {
   const token = await getAccessToken();
-  const response = await fetch(`${config.baseUrl}/recurring/v3/agreements/${agreementId}`, {
-    // @ts-ignore
-    headers: {
-      authorization: `Bearer ${token}`,
-      ...standardVippsHeaders,
+  const response = await fetch(
+    `${config.baseUrl}/recurring/v3/agreements/${agreementId}`,
+    {
+      // @ts-ignore
+      headers: {
+        authorization: `Bearer ${token}`,
+        ...standardVippsHeaders,
+      },
     },
-  });
+  );
 
   if (response.status === STATUS_CODE.OK) {
     return response.json();
@@ -110,18 +122,21 @@ export const getAgreement = async function (agreementId: string) {
 
 export const cancelAgreement = async function (agreementId: string) {
   const token = await getAccessToken();
-  const response = await fetch(`${config.baseUrl}/recurring/v3/agreements/${agreementId}`, {
-    method: "PATCH",
-    // @ts-ignore
-    headers: {
-      authorization: `Bearer ${token}`,
-      "Idempotency-Key": `${agreementId}-${Date.now()}`,
-      ...standardVippsHeaders,
+  const response = await fetch(
+    `${config.baseUrl}/recurring/v3/agreements/${agreementId}`,
+    {
+      method: "PATCH",
+      // @ts-ignore
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Idempotency-Key": `${agreementId}-${Date.now()}`,
+        ...standardVippsHeaders,
+      },
+      body: JSON.stringify({
+        status: "STOPPED",
+      }),
     },
-    body: JSON.stringify({
-      "status": "STOPPED",
-    }),
-  });
+  );
 
   if (response.status === STATUS_CODE.NoContent) {
     return true;
