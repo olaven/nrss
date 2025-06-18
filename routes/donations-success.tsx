@@ -5,7 +5,9 @@ import { validateEmail } from "../lib/utils.ts";
 export const handler: Handlers = {
   async GET(request, ctx) {
     const url = new URL(request.url);
-    const email = url.searchParams.get("email");
+    const urlEncodedEmail = url.searchParams.get("urlEncodedEmail");
+    const email = urlEncodedEmail ? decodeURIComponent(urlEncodedEmail) : null;
+
     if (!email) {
       console.error("Missing email in query params", request.url);
       return Response.redirect("/donations-error");
@@ -34,9 +36,7 @@ export const handler: Handlers = {
 export default function () {
   return (
     <div className="my-16 text-center flex flex-col items-center  min-h-screen ">
-      <h1 className="text-6xl mb-8">
-        🙏🌟😊💖
-      </h1>
+      <h1 className="text-6xl mb-8">🙏🌟😊💖</h1>
       <p className="text-4xl mb-4">
         Tusen takk! Jeg er veldig takknemlig for all støtte.
       </p>

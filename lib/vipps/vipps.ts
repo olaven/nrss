@@ -3,6 +3,7 @@ import "jsr:@std/dotenv/load";
 import { encodeHex } from "jsr:@std/encoding/hex";
 import { getHostUrl } from "../utils.ts";
 import { STATUS_CODE } from "$fresh/server.ts";
+import { base } from "npm:@faker-js/faker";
 
 const config = {
   clientId: Deno.env.get("VIPPS_CLIENT_ID"),
@@ -50,6 +51,12 @@ const getAccessToken = async function () {
 export const createAgreement = async function (email: string) {
   const token = await getAccessToken();
   const amount = 5000; // 50 NOK
+
+  // in case of special characters, like sub-addresses added
+  // with +, e.g. "name+subscriptions@domain.com"
+  const urlEncodedEmail = encodeURIComponent(email);
+  const redirectUrl = `${getHostUrl()}/donations-success?urlEncodedEmail=${urlEncodedEmail}`;
+  console.log(redirectUrl, "HER ER DET");
   const response = await fetch(`${config.baseUrl}/recurring/v3/agreements/`, {
     method: "POST",
     // @ts-ignore
@@ -74,7 +81,7 @@ export const createAgreement = async function (email: string) {
         currency: "NOK",
       },
       // email is used to identify the user in the success page
-      merchantRedirectUrl: `${getHostUrl()}/donations-success?email=${email}`,
+      merchantRedirectUrl: redirectUrl,
       merchantAgreementUrl: `${getHostUrl()}`,
       productName: "Månedlig støtte til NRSS",
     }),
