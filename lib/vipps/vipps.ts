@@ -55,7 +55,6 @@ export const createAgreement = async function (email: string) {
   // with +, e.g. "name+subscriptions@domain.com"
   const urlEncodedEmail = encodeURIComponent(email);
   const redirectUrl = `${getHostUrl()}/donations-success?urlEncodedEmail=${urlEncodedEmail}`;
-  console.log(redirectUrl, "HER ER DET");
   const response = await fetch(`${config.baseUrl}/recurring/v3/agreements/`, {
     method: "POST",
     // @ts-ignore
