@@ -1,9 +1,8 @@
 // deno-lint-ignore-file ban-ts-comment
+import { STATUS_CODE } from "$fresh/server.ts";
 import "jsr:@std/dotenv/load";
 import { encodeHex } from "jsr:@std/encoding/hex";
 import { getHostUrl } from "../utils.ts";
-import { STATUS_CODE } from "$fresh/server.ts";
-import { base } from "npm:@faker-js/faker";
 
 const config = {
   clientId: Deno.env.get("VIPPS_CLIENT_ID"),
