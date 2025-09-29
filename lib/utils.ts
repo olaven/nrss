@@ -24,6 +24,12 @@ export function responseXML(body: string, status: Status) {
   return response(body, status, "xml");
 }
 
+export const withExpiry = <T>(response: Response, ttlInSeconds: number) => {
+  const clonedResponse = response.clone();
+  clonedResponse.headers.set("Cache-Control", `max-age=${ttlInSeconds}`);
+  return clonedResponse;
+};
+
 function response(body: string, status: number, type: "json" | "xml") {
   return new Response(body, {
     status,
