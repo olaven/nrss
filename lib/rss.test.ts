@@ -47,3 +47,12 @@ Deno.test("generated rss contains promo with link to donations page", () => {
     "First promotion should come before the second",
   );
 });
+
+Deno.test("first promotion is removed", () => {
+  const series = testUtils.generateSeries();
+  const feed = rss.assembleFeed(series);
+  const indexOfFirstPromotion = feed.indexOf(
+    "NRSS er avhengig av din Vipps-støtte",
+  );
+  assertEquals(indexOfFirstPromotion, -1, "First promotion should be removed");
+});

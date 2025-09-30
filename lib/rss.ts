@@ -53,11 +53,10 @@ function assembleFeed(series: Series): string {
 }
 
 function descriptionWithDonationPromotion(description: string): string {
-  const firstPromotion = `⬇️NRSS er avhengig av din Vipps-støtte⬇️`;
-  const secondPromotion =
+  const promotion =
     `Takk for at du bruker NRSS 🙏🌟 Vurder å støtte utviklingen via Vipps med omtrent det samme som prisen på en kaffekopp. Se mer på https://nrss.deno.dev/`;
 
-  return `${firstPromotion}\n\n${description}\n\n${secondPromotion}`;
+  return `${description}\n\n${promotion}`;
 }
 
 function assembleEpisode(episode: Episode, seriesId: Series["id"]): Tag {
