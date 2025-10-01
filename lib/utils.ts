@@ -27,6 +27,7 @@ export function responseXML(body: string, status: Status) {
 export const withExpiry = <T>(response: Response, ttlInSeconds: number) => {
   const clonedResponse = response.clone();
   clonedResponse.headers.set("Cache-Control", `max-age=${ttlInSeconds}`);
+  clonedResponse.headers.set("Expires", new Date(Date.now() + ttlInSeconds * 1000).toUTCString());
   return clonedResponse;
 };
 
