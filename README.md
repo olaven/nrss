@@ -1,5 +1,9 @@
 # NRSS - RSS feeds for NRK's podcasts
 
+⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+**OBS**: Tjenesten er nede nå pga. endringer hos hostingtjenesten jeg bruker. Jeg jobber med å få et bedre alternativ på beina, men jeg har dessverre ikke tid til å gjøre dette før om noen uker. I mellomtiden er du velkommen til å bruke tjenesten i henhold til [lisensen](./LICENSE). 
+⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+
 Live version: [nrss.deno.dev](https://nrss.deno.dev/)
 
 A webapp built with Deno's [Fresh](https://fresh.deno.dev/) that generates
