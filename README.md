@@ -2,7 +2,7 @@
 
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
-**OBS**: Tjenesten er nede nå pga. endringer hos hostingtjenesten jeg bruker. Jeg jobber med å få et bedre alternativ på beina, men jeg har dessverre ikke tid til å gjøre dette før om noen uker. I mellomtiden er du velkommen til å bruke tjenesten i henhold til [lisensen](./LICENSE). 
+**OBS**: Tjenesten er nede nå pga. endringer hos hostingtjenesten jeg bruker. Jeg jobber med å få et bedre alternativ på beina, men jeg har dessverre ikke tid til å gjøre dette før om noen uker. I mellomtiden er du velkommen til å kjøre tjenesten selv i henhold til [lisensen](./LICENSE). 
 
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
