@@ -1,0 +1,57 @@
+services:
+  nrss:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nrss:local
+    restart: unless-stopped
+    environment:
+      APP_BASE_URL: http://localhost:8000
+      DENO_DIR: /deno-dir
+      # Optional: enable Vipps donations by setting all VIPPS_* values.
+      # VIPPS_CLIENT_ID: ""
+      # VIPPS_CLIENT_SECRET: ""
+      # VIPPS_OCP_APIM_SUBSCRIPTION_KEY_PRIMARY: ""
+      # VIPPS_OCM_APIM_SUBSCRIPTION_KEY_SECONDARY: ""
+      # VIPPS_MSN: ""
+      # VIPPS_API_BASE_URL: ""
+    volumes:
+      - nrss_deno_dir:/deno-dir
+    ports:
+      - "8000:8000"
+
+  nrss-traefik:
+    profiles: ["traefik"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nrss:local
+    restart: unless-stopped
+    environment:
+      APP_BASE_URL: https://nrss.example.com
+      DENO_DIR: /deno-dir
+      # Optional: enable Vipps donations by setting all VIPPS_* values.
+      # VIPPS_CLIENT_ID: ""
+      # VIPPS_CLIENT_SECRET: ""
+      # VIPPS_OCP_APIM_SUBSCRIPTION_KEY_PRIMARY: ""
+      # VIPPS_OCM_APIM_SUBSCRIPTION_KEY_SECONDARY: ""
+      # VIPPS_MSN: ""
+      # VIPPS_API_BASE_URL: ""
+    volumes:
+      - nrss_deno_dir:/deno-dir
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.nrss.rule=Host(`nrss.example.com`)
+      - traefik.http.routers.nrss.entrypoints=websecure
+      - traefik.http.routers.nrss.tls=true
+      - traefik.http.routers.nrss.tls.certresolver=letsencrypt
+      - traefik.http.services.nrss.loadbalancer.server.port=8000
+    networks:
+      - traefik
+
+volumes:
+  nrss_deno_dir:
+
+networks:
+  traefik:
+    external: true
