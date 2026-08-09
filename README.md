@@ -2,7 +2,7 @@
 
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
-**OBS**: Tjenesten er nede nå pga. endringer hos hostingtjenesten jeg bruker. Jeg jobber med å få et bedre alternativ på beina, men jeg har dessverre ikke tid til å gjøre dette før om noen uker. I mellomtiden er du velkommen til å kjøre tjenesten selv i henhold til [lisensen](./LICENSE). 
+**OBS**: Tjenesten er nede nå pga. endringer hos hostingtjenesten jeg bruker. Jeg jobber med å få et bedre alternativ på beina, men jeg har dessverre ikke tid til å gjøre dette før om noen uker. I mellomtiden er du velkommen til å kjøre tjenesten selv i henhold til [lisensen](./LICENSE).
 
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
@@ -18,6 +18,52 @@ public accessible RSS-feeds for their produced podcasts via their
 1. `cp .env.example .env`
 1. Run the app: `deno task start`
 1. Open [localhost:8000](http://localhost:8000) in your browser
+
+## Self-hosting
+
+NRSS can run on any platform that supports Docker or running Deno processes.
+
+### Environment variables
+
+- `APP_BASE_URL` (recommended in production): canonical public URL, e.g. `https://nrss.example.com`.
+- `VIPPS_*`: optional; only required if you enable donation endpoints.
+
+When Vipps variables are missing, donation routes are disabled and return `404`.
+
+### Docker
+
+Build and run directly:
+
+```bash
+docker build -t nrss .
+docker run --rm -p 8000:8000 --env APP_BASE_URL=https://nrss.example.com nrss
+```
+
+### Docker Compose + Traefik
+
+The provided `docker-compose.yml` supports two modes.
+
+Local mode (no Traefik):
+
+```bash
+docker-compose up -d nrss
+```
+
+Traefik mode (HTTPS + domain routing):
+
+```bash
+docker-compose --profile traefik up -d nrss-traefik
+```
+
+For Traefik mode:
+
+1. Set `APP_BASE_URL` to your public HTTPS URL.
+1. Update Traefik router host rule from `nrss.example.com` to your domain.
+1. Ensure Traefik and NRSS share the same Docker network.
+1. Keep `VIPPS_*` unset unless you explicitly want donations enabled.
+
+Traefik already forwards `X-Forwarded-Host` and `X-Forwarded-Proto`. NRSS uses
+`APP_BASE_URL` first, then forwarded request headers, then localhost fallback.
 
 ## What is this?
 
