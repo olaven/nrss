@@ -1,9 +1,14 @@
 import { Handlers } from "$fresh/server.ts";
 import { storage } from "../lib/storage.ts";
 import { validateEmail } from "../lib/utils.ts";
+import { isVippsEnabled } from "../lib/vipps/vipps.ts";
 
 export const handler: Handlers = {
   async GET(request, ctx) {
+    if (!isVippsEnabled()) {
+      return new Response("Not Found", { status: 404 });
+    }
+
     const url = new URL(request.url);
     const urlEncodedEmail = url.searchParams.get("urlEncodedEmail");
     const email = urlEncodedEmail ? decodeURIComponent(urlEncodedEmail) : null;

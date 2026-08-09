@@ -1,5 +1,17 @@
 import { assertEquals, assertNotEquals } from "$std/assert/mod.ts";
-import { responseJSON, responseXML, withExpiry } from "./utils.ts";
+import { getHostUrl, responseJSON, responseXML, withExpiry } from "./utils.ts";
+
+const BASE_ENV_KEYS = [
+  "APP_BASE_URL",
+  "DENO_DEPLOYMENT_ID",
+  "TUNNEL_URL",
+] as const;
+
+function clearBaseUrlEnv() {
+  for (const key of BASE_ENV_KEYS) {
+    Deno.env.delete(key);
+  }
+}
 
 Deno.test("JSON response is stringified", async () => {
   const body = { message: "Hello, World!" };
@@ -52,3 +64,47 @@ Deno.test(
     );
   },
 );
+
+Deno.test("getHostUrl prefers APP_BASE_URL", () => {
+  clearBaseUrlEnv();
+  Deno.env.set("APP_BASE_URL", "https://example.com/");
+
+  assertEquals(getHostUrl(), "https://example.com");
+
+  clearBaseUrlEnv();
+});
+
+Deno.test("getHostUrl uses forwarded headers when request is available", () => {
+  clearBaseUrlEnv();
+  const request = new Request("http://localhost:8000", {
+    headers: {
+      "x-forwarded-host": "nrss.example.com",
+      "x-forwarded-proto": "https",
+    },
+  });
+
+  assertEquals(getHostUrl(request), "https://nrss.example.com");
+
+  clearBaseUrlEnv();
+});
+
+Deno.test(
+  "getHostUrl uses host header when forwarded headers are missing",
+  () => {
+    clearBaseUrlEnv();
+    const request = new Request("http://localhost:8000", {
+      headers: {
+        host: "nrss.example.com",
+      },
+    });
+
+    assertEquals(getHostUrl(request), "https://nrss.example.com");
+
+    clearBaseUrlEnv();
+  },
+);
+
+Deno.test("getHostUrl falls back to localhost default", () => {
+  clearBaseUrlEnv();
+  assertEquals(getHostUrl(), "http://localhost:8000");
+});

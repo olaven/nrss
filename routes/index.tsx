@@ -5,11 +5,13 @@ import SeriesCard from "../components/SeriesCard.tsx";
 import { CSS, render } from "$gfm";
 import { nrkRadio, NrkSearchResultList } from "../lib/nrk/nrk.ts";
 import { DonationSection } from "../islands/DonationSection.tsx";
+import { isVippsEnabled } from "../lib/vipps/vipps.ts";
 
 type Props = {
   query: string | null;
   rawMarkdown: string;
   result?: NrkSearchResultList | null;
+  vippsEnabled: boolean;
 };
 
 export const handler: Handlers<Props> = {
@@ -21,7 +23,7 @@ export const handler: Handlers<Props> = {
       result = await nrkRadio.search(query);
     }
     const rawMarkdown = await Deno.readTextFile(new URL("../docs/what.md", import.meta.url));
-    return ctx.render({ query, result, rawMarkdown });
+    return ctx.render({ query, result, rawMarkdown, vippsEnabled: isVippsEnabled() });
   },
 };
 
@@ -48,7 +50,7 @@ export default function Home({ data, url }: PageProps<Props>) {
           class="markdown-body"
           dangerouslySetInnerHTML={{ __html: render(data?.rawMarkdown) }}
         />
-        <DonationSection />
+        {data.vippsEnabled && <DonationSection />}
       </div>
     </>
   );

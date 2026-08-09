@@ -1,11 +1,14 @@
 import { getHostUrl, validateEmail } from "../../../lib/utils.ts";
 import { storage } from "../../../lib/storage.ts";
-import { createAgreement } from "../../../lib/vipps/vipps.ts";
-import { getAgreement } from "../../../lib/vipps/vipps.ts";
+import { createAgreement, getAgreement, isVippsEnabled } from "../../../lib/vipps/vipps.ts";
 
 export const handler = async function (req: Request): Promise<Response> {
+  if (!isVippsEnabled()) {
+    return new Response("Not Found", { status: 404 });
+  }
+
   const email = new URLSearchParams(req.url.split("?")[1] || "").get("email");
-  const errorPage = `${getHostUrl()}/donations-error`;
+  const errorPage = `${getHostUrl(req)}/donations-error`;
 
   if (!email) {
     console.error("Missing email in query params", req.url);
@@ -45,7 +48,7 @@ export const handler = async function (req: Request): Promise<Response> {
     }
   }
 
-  const agreement = await createAgreement(email);
+  const agreement = await createAgreement(email, req);
   if (agreement instanceof Error) {
     console.error("Failed to create Vipps agreement", agreement);
     return Response.redirect(errorPage);

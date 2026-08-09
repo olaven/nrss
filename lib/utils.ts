@@ -1,12 +1,41 @@
 import { STATUS_CODE } from "$fresh/server.ts";
 
-export function getHostUrl() {
+function trimTrailingSlash(input: string): string {
+  return input.endsWith("/") ? input.slice(0, -1) : input;
+}
+
+export function getHostUrl(request?: Request) {
+  const appBaseUrl = Deno.env.get("APP_BASE_URL");
+  if (appBaseUrl) {
+    return trimTrailingSlash(appBaseUrl);
+  }
+
+  if (request) {
+    const forwardedHost = request.headers
+      .get("x-forwarded-host")
+      ?.split(",")[0]
+      .trim();
+    const forwardedProto = request.headers
+      .get("x-forwarded-proto")
+      ?.split(",")[0]
+      .trim();
+    if (forwardedHost && forwardedProto) {
+      return `${forwardedProto}://${forwardedHost}`;
+    }
+
+    const host = request.headers.get("host");
+    if (host) {
+      const protocol = host.startsWith("localhost") || host.startsWith("127.0.0.1") ? "http" : "https";
+      return `${protocol}://${host}`;
+    }
+  }
+
   const deploymentId = Deno.env.get("DENO_DEPLOYMENT_ID");
   const tunnelUrl = Deno.env.get("TUNNEL_URL");
   if (deploymentId) {
     return `https://nrss-${deploymentId}.deno.dev`;
   } else if (tunnelUrl) {
-    return tunnelUrl;
+    return trimTrailingSlash(tunnelUrl);
   } else {
     return "http://localhost:8000";
   }
@@ -27,7 +56,10 @@ export function responseXML(body: string, status: Status) {
 export const withExpiry = <T>(response: Response, ttlInSeconds: number) => {
   const clonedResponse = response.clone();
   clonedResponse.headers.set("Cache-Control", `max-age=${ttlInSeconds}`);
-  clonedResponse.headers.set("Expires", new Date(Date.now() + ttlInSeconds * 1000).toUTCString());
+  clonedResponse.headers.set(
+    "Expires",
+    new Date(Date.now() + ttlInSeconds * 1000).toUTCString(),
+  );
   return clonedResponse;
 };
 

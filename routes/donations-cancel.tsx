@@ -13,6 +13,10 @@ type Props = {
 
 export const handler: Handlers<Props> = {
   async GET(request, ctx) {
+    if (!vipps.isVippsEnabled()) {
+      return new Response("Not Found", { status: 404 });
+    }
+
     const url = new URL(request.url);
     const email = url.searchParams.get("email");
 
