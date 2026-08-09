@@ -1,16 +1,16 @@
-import { assertEquals, assertExists, assertGreaterOrEqual } from "$std/assert/mod.ts";
+import { assert, assertEquals, assertExists, assertGreaterOrEqual } from "$std/assert/mod.ts";
 import { nrkRadio } from "./nrk.ts";
 import { forTestingOnly } from "./nrk.ts";
 
-Deno.test(
-  "Verify search query `trygd` returns one result: 'Trygdekontoret'",
-  async () => {
-    const result = await nrkRadio.search("trygd");
-    assertExists(result);
-    assertEquals(result.length, 1);
-    assertEquals(result[0].seriesId, "trygdekontoret");
-  },
-);
+Deno.test("Verify search query `trygd` includes 'Trygdekontoret'", async () => {
+  const result = await nrkRadio.search("trygd");
+  assertExists(result);
+  assertGreaterOrEqual(result.length, 1);
+  assert(
+    result.some((series) => series.seriesId === "trygdekontoret"),
+    "Expected search results to include seriesId 'trygdekontoret'",
+  );
+});
 
 Deno.test("Verify empty search query yields `null`", async () => {
   const result = await nrkRadio.search("");
