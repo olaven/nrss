@@ -22,13 +22,31 @@ public accessible RSS-feeds for their produced podcasts via their
 ## Self-hosting
 
 NRSS can run on any platform that supports Docker or running Deno processes.
+This project still runs on the Deno + Fresh runtime; self-hosting support adds
+deployment options, not a runtime migration.
+
+### Quick start
+
+Local mode (no Traefik):
+
+```bash
+docker-compose up -d nrss
+```
+
+Traefik mode (HTTPS + domain routing):
+
+```bash
+docker-compose --profile traefik up -d nrss-traefik
+```
 
 ### Environment variables
 
 - `APP_BASE_URL` (recommended in production): canonical public URL, e.g. `https://nrss.example.com`.
 - `VIPPS_*`: optional; only required if you enable donation endpoints.
 
-When Vipps variables are missing, donation routes are disabled and return `404`.
+When Vipps variables are missing, donations are disabled by default. Related
+routes (`/api/trigger-donation/vipps`, `/donations-success`,
+`/donations-cancel`) return `404`.
 
 ### Docker
 
@@ -64,6 +82,17 @@ For Traefik mode:
 
 Traefik already forwards `X-Forwarded-Host` and `X-Forwarded-Proto`. NRSS uses
 `APP_BASE_URL` first, then forwarded request headers, then localhost fallback.
+
+### Container registry
+
+On version tags, GitHub Actions publishes a container image to GHCR using
+`.github/workflows/publish-ghcr.yaml`.
+
+Expected image name:
+
+```bash
+ghcr.io/<owner>/nrss:<tag>
+```
 
 ## What is this?
 
