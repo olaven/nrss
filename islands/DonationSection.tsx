@@ -2,7 +2,11 @@ import { useEffect, useState } from "preact/hooks";
 import { Input } from "../components/Input.tsx";
 import { validateEmail } from "../lib/utils.ts";
 
-export const DonationSection = function () {
+type DonationSectionProps = {
+  supportEmail: string;
+};
+
+export const DonationSection = function ({ supportEmail }: DonationSectionProps) {
   const [emailInput, setEmailInput] = useState<string>("");
   const [emailValid, setEmailValid] = useState(false);
 
@@ -87,7 +91,7 @@ export const DonationSection = function () {
 
         <p className="mt-4">
           Opplever du problemer med betalingen, eller har du andre spørsmål? Ta{" "}
-          <a className="text-blue-600 underline" href="mailto:olav@sundfoer.com">
+          <a className="text-blue-600 underline" href={`mailto:${supportEmail}`}>
             kontakt på mail
           </a>.
         </p>

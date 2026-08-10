@@ -2,6 +2,7 @@
 import { STATUS_CODE } from "$fresh/server.ts";
 import "jsr:@std/dotenv/load";
 import { encodeHex } from "jsr:@std/encoding/hex";
+import { getVippsSystemName } from "../config.ts";
 import { getHostUrl } from "../utils.ts";
 
 const VIPPS_ENV_KEYS = {
@@ -54,7 +55,7 @@ function getStandardVippsHeaders(config: VippsConfig) {
     "Content-Type": "application/json",
     "Ocp-Apim-Subscription-Key": config.ocpApimSubscriptionKeyPrimary,
     "Merchant-Serial-Number": config.msn,
-    "Vipps-System-Name": "Krets AS",
+    "Vipps-System-Name": getVippsSystemName(),
   } as const;
 }
 

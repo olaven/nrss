@@ -1,6 +1,7 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Button } from "../components/Button.tsx";
 import { Input } from "../components/Input.tsx";
+import { getSupportEmail } from "../lib/config.ts";
 import { storage } from "../lib/storage.ts";
 import * as vipps from "../lib/vipps/vipps.ts";
 import { validateEmail } from "../lib/utils.ts";
@@ -49,6 +50,8 @@ export const handler: Handlers<Props> = {
 };
 
 export default function ({ data }: PageProps<Props>) {
+  const supportEmail = getSupportEmail();
+
   return (
     <div
       className={"p-4 mx-auto max-w-screen-md text-center"}
@@ -61,7 +64,7 @@ export default function ({ data }: PageProps<Props>) {
       {data.error && (
         <p className={"text-red-500"}>
           En feil oppsto: "{data.error}". Ta gjerne{" "}
-          <a className="text-blue-600 underline" href="mailto:olav@sundfoer.com">
+          <a className="text-blue-600 underline" href={`mailto:${supportEmail}`}>
             kontakt på mail
           </a>.
         </p>

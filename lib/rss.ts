@@ -1,6 +1,7 @@
 import { declaration, serialize, Tag, tag } from "serialize-xml";
 import { getHostUrl } from "./utils.ts";
 import { Episode, Series } from "./storage.ts";
+import { isVippsEnabled } from "./vipps/vipps.ts";
 
 function assembleFeed(series: Series): string {
   // Originally adapted from https://raw.githubusercontent.com/olaven/paperpod/1cde9abd3174b26e126aa74fc5a3b63fd078c0fd/packages/converter/src/rss.ts
@@ -53,8 +54,12 @@ function assembleFeed(series: Series): string {
 }
 
 function descriptionWithDonationPromotion(description: string): string {
+  if (!isVippsEnabled()) {
+    return description;
+  }
+
   const promotion =
-    `Takk for at du bruker NRSS 🙏🌟 Vurder å støtte utviklingen via Vipps med omtrent det samme som prisen på en kaffekopp. Se mer på https://nrss.deno.dev/`;
+    `Takk for at du bruker NRSS 🙏🌟 Vurder å støtte utviklingen via Vipps med omtrent det samme som prisen på en kaffekopp. Se mer på ${getHostUrl()}`;
 
   return `${description}\n\n${promotion}`;
 }

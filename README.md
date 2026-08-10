@@ -41,8 +41,10 @@ docker-compose --profile traefik up -d nrss-traefik
 
 ### Environment variables
 
-- `APP_BASE_URL` (recommended in production): canonical public URL, e.g. `https://nrss.example.com`.
+- `APP_BASE_URL` (required in production): canonical public URL, e.g. `https://nrss.example.com`.
+- `SUPPORT_EMAIL` (required when donations are enabled): contact address shown in donation-related UI.
 - `VIPPS_*`: optional; only required if you enable donation endpoints.
+- `VIPPS_SYSTEM_NAME` (required when Vipps is enabled): merchant/system name sent to Vipps.
 
 When Vipps variables are missing, donations are disabled by default. Related
 routes (`/api/trigger-donation/vipps`, `/donations-success`,
