@@ -1,7 +1,7 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Button } from "../components/Button.tsx";
 import { Input } from "../components/Input.tsx";
-import { storage } from "../lib/storage.ts";
+import { readVippsAgreement, writeVippsAgreement } from "../lib/storage/agreement.ts";
 import * as vipps from "../lib/vipps/vipps.ts";
 import { validateEmail } from "../lib/utils.ts";
 
@@ -25,7 +25,7 @@ export const handler: Handlers<Props> = {
       return ctx.render({ email: null, error: "Ugyldig e-post", cancelled: false });
     }
 
-    const agreement = await storage.readVippsAgreement({ id: email });
+    const agreement = await readVippsAgreement({ id: email });
     if (!agreement) {
       console.error("Mangler avtale for e-post", email);
       return ctx.render({ email: null, error: `Ingen abonnement funnet for "${email}"`, cancelled: false });
@@ -35,7 +35,7 @@ export const handler: Handlers<Props> = {
     if (vippsResponse instanceof Error) {
       return ctx.render({ email, error: "Kunne ikke kansellere Vipps-abonnement", cancelled: false });
     }
-    await storage.writeVippsAgreement({
+    await writeVippsAgreement({
       ...agreement,
       revokedAt: new Date(),
     });

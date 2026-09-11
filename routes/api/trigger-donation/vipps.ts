@@ -1,5 +1,5 @@
 import { getHostUrl, validateEmail } from "../../../lib/utils.ts";
-import { storage } from "../../../lib/storage.ts";
+import { readVippsAgreement, writeVippsAgreement } from "../../../lib/storage/agreement.ts";
 import { createAgreement } from "../../../lib/vipps/vipps.ts";
 import { getAgreement } from "../../../lib/vipps/vipps.ts";
 
@@ -18,7 +18,7 @@ export const handler = async function (req: Request): Promise<Response> {
     return Response.redirect(errorPage);
   }
 
-  const existingAgreement = await storage.readVippsAgreement({ id: email });
+  const existingAgreement = await readVippsAgreement({ id: email });
   const hasActiveAgreement = existingAgreement &&
     existingAgreement.validAt !== null &&
     existingAgreement.revokedAt === null;
@@ -33,7 +33,7 @@ export const handler = async function (req: Request): Promise<Response> {
   ) {
     // Somehow the Vipps agreement is not active in our system anymore.
     // We should reflect the new status in our system.
-    await storage.writeVippsAgreement({
+    await writeVippsAgreement({
       ...existingAgreement,
       revokedAt: new Date(),
     });
@@ -53,7 +53,7 @@ export const handler = async function (req: Request): Promise<Response> {
 
   // associate the agreement with the user here
   // so it can be updated in the success page
-  await storage.writeVippsAgreement({
+  await writeVippsAgreement({
     id: email,
     agreementId: agreement.agreementId,
     createdAt: new Date(),

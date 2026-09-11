@@ -1,18 +1,19 @@
 import { nrkRadio } from "./nrk/nrk.ts";
-import { Series, storage } from "./storage.ts";
+import { Episode, readSeries, Series, writeSeries } from "./storage/series.ts";
 import * as datetime from "$std/datetime/mod.ts";
-import { Episode } from "./storage.ts";
 import { Buffer } from "node:buffer";
 
 const SYNC_INTERVAL_HOURS = 1;
-const DENO_KV_MAX_BYTES = 65_536;
+// Legacy cap carried over from Deno KV's 64kb-per-value limit; Postgres's
+// jsonb column has no such limit, but we keep trimming to bound feed size.
+const MAX_SERIES_BYTES = 65_536;
 
 async function initialFetch(options: { id: string }): Promise<Series | null> {
   const series = await nrkRadio.getSeries(options.id);
   if (!series) {
     return null;
   }
-  const stored = storage.writeSeries(series);
+  const stored = writeSeries(series);
   if (!stored) {
     console.error(`Failed to store series ${options.id}`);
     return null;
@@ -54,17 +55,16 @@ async function updateFetch(existingSeries: Series): Promise<UpdatedSeries | Seri
   };
 
   /**
-   * The KV store has a limit of 64kb per value.
    * A pragmatic (not perfect) solution is to trim the series
-   * down until we're within the limit.
+   * down until we're within MAX_SERIES_BYTES.
    *
    * Other ideas for the future:
    * - splitting the series into multiple keys
    * - using a different storage solution
    */
-  const trimmed = trimSeriesToSize(withNewEpisodes, DENO_KV_MAX_BYTES);
+  const trimmed = trimSeriesToSize(withNewEpisodes, MAX_SERIES_BYTES);
 
-  const updateSuccessful = await storage.writeSeries(trimmed);
+  const updateSuccessful = await writeSeries(trimmed);
   if (!updateSuccessful) {
     console.log(`Failed to update series ${existingSeries.id}`);
     return null;
@@ -104,7 +104,7 @@ function isSeriesFromStorageNew(
 }
 
 async function getSeries(options: { id: string }): Promise<Series | null> {
-  const seriesFromStorage = await storage.readSeries(options);
+  const seriesFromStorage = await readSeries(options);
 
   /**
    * We don't have the feed in storage,

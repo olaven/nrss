@@ -1,5 +1,5 @@
 import { fakerNB_NO as faker } from "npm:@faker-js/faker";
-import { Episode, Series } from "./storage.ts";
+import { Episode, Series } from "./storage/series.ts";
 
 function generateSeries(overrides: Partial<Series> = {}): Series {
   return {

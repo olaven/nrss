@@ -1,5 +1,5 @@
 import { get, STATUS_CODE } from "https://deno.land/x/kall@v2.0.0/mod.ts";
-import { Series } from "../storage.ts";
+import { Series } from "../storage/series.ts";
 import { components as catalogComponents } from "./nrk-catalog.ts";
 import { external as playbackComponents } from "./nrk-playback.ts";
 import { components as searchComponents } from "./nrk-search.ts";
