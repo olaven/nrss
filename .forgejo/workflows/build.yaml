@@ -1,0 +1,48 @@
+# Builds and deploys nrss the same way as olaven.org / researchbot — see
+# olaven/konfig .agents/plans/CONTAINER-DEPLOY-PLAN.md.
+#
+# Push to main → build + push image to the in-cluster Forgejo registry →
+# bump cluster/values/nrss.yaml in konfig → konfig's deploy.yaml applies it.
+# Total human effort after setup: `git push`.
+name: build-and-deploy
+on:
+  push:
+    branches: [main]
+
+env:
+  # in-cluster push: dodges the Cloudflare 100 MB request-body cap
+  REGISTRY: forgejo-http.default.svc.cluster.local:3000
+  IMAGE: olaven/nrss
+
+jobs:
+  build-push-bump:
+    runs-on: docker-cli        # docker:29.5.2-cli — run: steps only, no actions/*
+    steps:
+      - name: Clone at pushed commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          apk add --no-cache git
+          git clone "http://x:${GITHUB_TOKEN}@${REGISTRY}/olaven/nrss.git" app
+          git -C app checkout "${GITHUB_SHA}"
+
+      - name: Build and push image
+        env:
+          CI_TOKEN: ${{ secrets.CI_TOKEN }}
+        run: |
+          echo "${CI_TOKEN}" | docker login "${REGISTRY}" -u olaven --password-stdin
+          docker build -t "${REGISTRY}/${IMAGE}:${GITHUB_SHA}" app
+          docker push "${REGISTRY}/${IMAGE}:${GITHUB_SHA}"
+
+      - name: Bump image tag in konfig
+        env:
+          CI_TOKEN: ${{ secrets.CI_TOKEN }}
+        run: |
+          git clone "http://olaven:${CI_TOKEN}@${REGISTRY}/olaven/konfig.git"
+          cd konfig
+          sed -i "s|^  tag: .*|  tag: \"${GITHUB_SHA}\"|" cluster/values/nrss.yaml
+          git config user.name  "forgejo-actions"
+          git config user.email "actions@git.olaven.org"
+          git add cluster/values/nrss.yaml
+          git commit -m "nrss: deploy ${GITHUB_SHA}"
+          git push
