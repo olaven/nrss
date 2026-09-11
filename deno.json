@@ -1,7 +1,7 @@
 {
   "lock": false,
   "name": "NRSS",
-  "source": "https://github.com/olaven/NRSS",
+  "source": "https://git.olaven.org/olaven/nrss",
   "author": " Olav Sundfør <olav@sundfoer.com>",
   "tasks": {
     "start": "deno run -A --watch=static/,routes/ dev.ts",
