@@ -48,7 +48,10 @@ export default function Home({ data, url }: PageProps<Props>) {
           class="markdown-body"
           dangerouslySetInnerHTML={{ __html: render(data?.rawMarkdown) }}
         />
-        <DonationSection />
+        {/* For now, remove the donations - I plan to add them back later, but 
+        I want to make sure the new setup is (relatively) stable before I 
+        ask people for money.
+        <DonationSection /> */}
       </div>
     </>
   );
