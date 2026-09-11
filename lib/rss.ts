@@ -1,6 +1,6 @@
 import { declaration, serialize, Tag, tag } from "serialize-xml";
 import { getHostUrl } from "./utils.ts";
-import { Episode, Series } from "./storage.ts";
+import { Episode, Series } from "./storage/series.ts";
 
 function assembleFeed(series: Series): string {
   // Originally adapted from https://raw.githubusercontent.com/olaven/paperpod/1cde9abd3174b26e126aa74fc5a3b63fd078c0fd/packages/converter/src/rss.ts

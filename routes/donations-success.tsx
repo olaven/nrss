@@ -1,5 +1,5 @@
 import { Handlers } from "$fresh/server.ts";
-import { storage } from "../lib/storage.ts";
+import { readVippsAgreement, writeVippsAgreement } from "../lib/storage/agreement.ts";
 import { validateEmail } from "../lib/utils.ts";
 
 export const handler: Handlers = {
@@ -18,13 +18,13 @@ export const handler: Handlers = {
       return Response.redirect("/donations-error");
     }
 
-    const agreement = await storage.readVippsAgreement({ id: email });
+    const agreement = await readVippsAgreement({ id: email });
     if (!agreement) {
       console.error("Missing agreement for email", email);
       return Response.redirect("/donations-error");
     }
 
-    await storage.writeVippsAgreement({
+    await writeVippsAgreement({
       ...agreement,
       validAt: new Date(),
     });
