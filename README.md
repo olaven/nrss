@@ -1,5 +1,10 @@
 # NRSS - RSS feeds for NRK's podcasts
 
+## 🎈 Oppe igjen 🍻
+NRSS er oppe igjen, etter [en del nedetid](https://github.com/olaven/nrss/commit/1e2a7872127cac3a2c57f77acabad7e24e1848ce). jeg har tatt over hostingen selv og flyttet tjenesten til https://nrss.olaven.org. Kildekoden finnes på https://git.olaven.org. [Github-repoet](https://github.com/olaven/nrss) vil være et speil i overskuelig fremtid. Den gamle URL-en fungerer ikke lenger og er utilgjengelig for meg.. Det betyr at **alle podcaster må legge stil på nytt**, fra https://git.olaven.org. Beklager dette. 
+
+## Om prosjektet
+
 Live version: [nrss.olaven.org](https://nrss.olaven.org/)
 
 A webapp built with Deno's [Fresh](https://fresh.deno.dev/) that generates
