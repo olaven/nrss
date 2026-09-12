@@ -17,10 +17,17 @@ const config = {
   baseUrl: Deno.env.get("VIPPS_API_BASE_URL"),
 };
 
-// ensure all environment variables are set
-for (const [key, value] of Object.entries(config)) {
-  if (!value) {
-    throw new Error(`Missing environment variable: ${key}`);
+// For now, remove the donations - I plan to add them back later, but 
+// I want to make sure the new setup is (relatively) stable before I 
+// ask people for money.
+export const vipsEnabled = Deno.env.get("VIPPS_ENABLED") === "true";
+
+if (vipsEnabled) {
+  // ensure all environment variables are set
+  for (const [key, value] of Object.entries(config)) {
+    if (!value) {
+      throw new Error(`Missing environment variable: ${key}`);
+    }
   }
 }
 

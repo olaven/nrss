@@ -5,6 +5,7 @@ import SeriesCard from "../components/SeriesCard.tsx";
 import { CSS, render } from "$gfm";
 import { nrkRadio, NrkSearchResultList } from "../lib/nrk/nrk.ts";
 import { DonationSection } from "../islands/DonationSection.tsx";
+import { vipsEnabled as vippsEnabled } from "../lib/vipps/vipps.ts";
 
 type Props = {
   query: string | null;
@@ -48,10 +49,8 @@ export default function Home({ data, url }: PageProps<Props>) {
           class="markdown-body"
           dangerouslySetInnerHTML={{ __html: render(data?.rawMarkdown) }}
         />
-        {/* For now, remove the donations - I plan to add them back later, but 
-        I want to make sure the new setup is (relatively) stable before I 
-        ask people for money.
-        <DonationSection /> */}
+        
+        {vippsEnabled && <DonationSection />}
       </div>
     </>
   );
