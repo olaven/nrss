@@ -1,15 +1,10 @@
 import { STATUS_CODE } from "$fresh/server.ts";
 
 export function getHostUrl() {
-  const deploymentId = Deno.env.get("DENO_DEPLOYMENT_ID");
-  const tunnelUrl = Deno.env.get("TUNNEL_URL");
-  if (deploymentId) {
-    return `https://nrss-${deploymentId}.deno.dev`;
-  } else if (tunnelUrl) {
-    return tunnelUrl;
-  } else {
-    return "http://localhost:8000";
-  }
+  // Public base URL, e.g. https://nrss.olaven.org. Required when running behind
+  // a proxy, where the app has no other way of knowing its public address.
+  const hostUrl = Deno.env.get("HOST_URL");
+  return hostUrl ? hostUrl.replace(/\/+$/, "") : "http://localhost:8000";
 }
 
 type EnumValues<T> = T[keyof T];
