@@ -22,12 +22,33 @@ export default function CopyButton(props: Props) {
     }, 2_000);
   };
 
+  const copy = async (text: string) => {
+    // navigator.clipboard is undefined in non-secure contexts (plain HTTP,
+    // some in-app webviews), so fall back to a temporary textarea.
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  };
+
   return (
     <Button
-      onClick={() => {
-        navigator.clipboard.writeText(copyText.toString());
-        setClicked(true);
-        startReset();
+      onClick={async () => {
+        try {
+          await copy(copyText.toString());
+          setClicked(true);
+          startReset();
+        } catch (error) {
+          console.error("Failed to copy feed URL", error);
+        }
       }}
       disabled={!IS_BROWSER || disabled}
       className={`${className} ${clicked ? "bg-green-500" : ""}`}
