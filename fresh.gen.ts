@@ -3,6 +3,7 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import * as $_app from "./routes/_app.tsx";
+import * as $_middleware from "./routes/_middleware.ts";
 import * as $api_feeds_seriesId_ from "./routes/api/feeds/[seriesId].ts";
 import * as $api_feeds_seriesId_episodeId_chapters from "./routes/api/feeds/[seriesId]/[episodeId]/chapters.ts";
 import * as $api_trigger_donation_vipps from "./routes/api/trigger-donation/vipps.ts";
@@ -17,6 +18,7 @@ import { type Manifest } from "$fresh/server.ts";
 const manifest = {
   routes: {
     "./routes/_app.tsx": $_app,
+    "./routes/_middleware.ts": $_middleware,
     "./routes/api/feeds/[seriesId].ts": $api_feeds_seriesId_,
     "./routes/api/feeds/[seriesId]/[episodeId]/chapters.ts": $api_feeds_seriesId_episodeId_chapters,
     "./routes/api/trigger-donation/vipps.ts": $api_trigger_donation_vipps,
