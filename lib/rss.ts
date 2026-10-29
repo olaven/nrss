@@ -13,9 +13,16 @@ function assembleFeed(series: Series): string {
       "rss",
       [
         tag("channel", [
+          tag("atom:link", "", [
+            ["href", `${getHostUrl()}/api/feeds/${series.id}`],
+            ["rel", "self"],
+            ["type", "application/rss+xml"],
+          ]),
           tag("title", series.title),
           tag("link", series.link),
+          tag("language", "no"),
           tag("itunes:author", "NRK"),
+          tag("itunes:explicit", "false"),
           /**
            * serie.category.id does not overlap with Apple's supported categories..
            * These podcast feeds are not going to be indexed in itunes anyways, so
@@ -44,6 +51,7 @@ function assembleFeed(series: Series): string {
       ],
       [
         ["version", "2.0"],
+        ["xmlns:atom", "http://www.w3.org/2005/Atom"],
         ["xmlns:itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd"],
         ["xmlns:content", "http://purl.org/rss/1.0/modules/content/"],
         ["xmlns:podcast", "https://podcastindex.org/namespace/1.0"],
